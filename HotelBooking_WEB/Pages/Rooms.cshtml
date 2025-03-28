@@ -1,0 +1,92 @@
+﻿@page
+@model HotelBooking_WEB.Pages.RoomsModel
+@{
+    ViewData["Title"] = "Комнаты";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<div class="container py-5">
+    <h1 class="text-center mb-4" style="color: #1a73e8;">Доступные комнаты</h1>
+    @if (Model.Rooms != null && Model.Rooms.Any())
+    {
+        <div class="row g-4">
+            @foreach (var room in Model.Rooms)
+            {
+                <div class="col-md-4">
+                    <div class="room-card card h-100 shadow">
+                        <div class="card-img-container">
+                            @if (room.RoomImages != null && Model.Rooms.Where(r => r.Id == room.Id).First().RoomImages.Any())
+                            {
+                                <img src="@Model.Rooms.Where(r => r.Id == room.Id).First().RoomImages.First().ImageUrl" class="img-fluid rounded-start" alt="@Model.Rooms.Where(r => r.Id == room.Id).First().RoomName">
+                            }
+                            else
+                            {
+                                <img src="Default.png" class="img-fluid rounded-start" alt="Номер без фото">
+                            }
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">@room.RoomName</h3>
+                            <p class="card-text"><strong>Вместимость:</strong> @room.Capacity чел.</p>
+                            <p class="card-text"><strong>Цена за ночь:</strong> @room.PricePerNight.ToString("C")</p>
+                            @if (room.IsAvailable)
+                            {
+                                <a asp-page="/Booking" 
+                                   asp-route-roomId="@room.Id"
+                                   class="btn btn-primary mt-3 book-btn">
+                                   Забронировать
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary mt-3" disabled>Недоступно</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <h2 class="text-center mb-4" style="color: #1a73e8;">Нет доступных комнат.</h2>
+    }
+</div>
+
+<style>
+    .card-img-container {
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .room-card:hover .card-img-top {
+        transform: scale(1.1);
+    }
+
+    .room-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+    .book-btn {
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+        .book-btn:hover {
+            background-color: #0056b3;
+        }
+</style>

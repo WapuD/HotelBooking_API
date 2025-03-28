@@ -4,10 +4,9 @@ using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<HBContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("HBContext") ?? throw new InvalidOperationException("Connection string 'HBContext' not found.")));
 
-builder.Services.AddDbContext<HotelBooking_APIContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("HotelBooking_APIContext") ??
-    throw new InvalidOperationException("Connection string 'HotelBooking_APIContext' not found.")));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

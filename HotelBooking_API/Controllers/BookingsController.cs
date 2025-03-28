@@ -14,9 +14,9 @@ namespace HotelBooking_API.Controllers
     [ApiController]
     public class BookingsController : ControllerBase
     {
-        private readonly HotelBooking_APIContext _context;
+        private readonly HBContext _context;
 
-        public BookingsController(HotelBooking_APIContext context)
+        public BookingsController(HBContext context)
         {
             _context = context;
         }

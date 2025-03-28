@@ -3,6 +3,7 @@ using System;
 using HotelBooking_API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,10 +11,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HotelBooking_API.Migrations
 {
-    [DbContext(typeof(HotelBooking_APIContext))]
-    partial class HotelBooking_APIContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(HBContext))]
+    [Migration("20250327233428_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,6 +145,16 @@ namespace HotelBooking_API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -152,8 +165,7 @@ namespace HotelBooking_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("Name");
 
                     b.ToTable("Hotel");
 
@@ -163,6 +175,8 @@ namespace HotelBooking_API.Migrations
                             Id = 1,
                             Address = "Москва, ул. Ленина, 10",
                             City = "Уфа",
+                            Description = "Отель Премиум",
+                            ImageUrl = "Premium.png",
                             Name = "Отель Премиум",
                             Rating = 4.5m
                         },
@@ -171,8 +185,90 @@ namespace HotelBooking_API.Migrations
                             Id = 2,
                             Address = "Санкт-Петербург, ул. Пушкина, 5",
                             City = "Уфа",
+                            Description = "Отель Эконом",
+                            ImageUrl = "Ekonom.png",
                             Name = "Отель Эконом",
                             Rating = 3.8m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Москва, ул. Ленина, 10",
+                            City = "Москва",
+                            Description = "Отель для деловых поездок с конференц-залом",
+                            ImageUrl = "Business.png",
+                            Name = "Отель Бизнес",
+                            Rating = 4.2m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Address = "Санкт-Петербург, Невский проспект, 20",
+                            City = "Санкт-Петербург",
+                            Description = "Роскошный отель с видом на город",
+                            ImageUrl = "Grand.png",
+                            Name = "Гранд Отель",
+                            Rating = 4.8m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Address = "Казань, ул. Речная, 15",
+                            City = "Казань",
+                            Description = "Отель с видом на реку, идеален для романтических поездок",
+                            ImageUrl = "RiverView.png",
+                            Name = "Отель на набережной",
+                            Rating = 4.5m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Address = "Сочи, ул. Морская, 30",
+                            City = "Сочи",
+                            Description = "Отель с детскими площадками и развлекательными программами",
+                            ImageUrl = "Family.png",
+                            Name = "Отель для семьи",
+                            Rating = 4.1m
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Address = "Екатеринбург, ул. Ленина, 25",
+                            City = "Екатеринбург",
+                            Description = "Удобное расположение для туристов",
+                            ImageUrl = "CityCenter.png",
+                            Name = "Отель в центре города",
+                            Rating = 4.0m
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Address = "Красная Поляна, ул. Горная, 10",
+                            City = "Красная Поляна",
+                            Description = "Отель для любителей активного отдыха",
+                            ImageUrl = "Mountain.png",
+                            Name = "Отель у горы",
+                            Rating = 4.3m
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Address = "Анапа, ул. Пляжная, 5",
+                            City = "Анапа",
+                            Description = "Отель с прямым выходом на пляж",
+                            ImageUrl = "Beach.png",
+                            Name = "Отель на пляже",
+                            Rating = 4.6m
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Address = "Ростов-на-Дону, ул. Старая, 20",
+                            City = "Ростов-на-Дону",
+                            Description = "Отель в историческом здании с уникальной атмосферой",
+                            ImageUrl = "Historic.png",
+                            Name = "Отель в историческом центре",
+                            Rating = 4.4m
                         });
                 });
 
@@ -237,7 +333,8 @@ namespace HotelBooking_API.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int>("HotelId")
                         .HasColumnType("integer");
@@ -246,21 +343,24 @@ namespace HotelBooking_API.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<decimal>("PricePerNight")
+                        .HasMaxLength(50)
                         .HasColumnType("numeric");
+
+                    b.Property<string>("RoomName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("RoomType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
+
+                    b.HasIndex("RoomNumber");
 
                     b.ToTable("Room");
 
@@ -273,8 +373,8 @@ namespace HotelBooking_API.Migrations
                             HotelId = 1,
                             IsAvailable = true,
                             PricePerNight = 5000m,
-                            RoomNumber = "101",
-                            RoomType = "Стандарт"
+                            RoomName = "Стандарт",
+                            RoomNumber = "101"
                         },
                         new
                         {
@@ -284,8 +384,8 @@ namespace HotelBooking_API.Migrations
                             HotelId = 1,
                             IsAvailable = true,
                             PricePerNight = 10000m,
-                            RoomNumber = "102",
-                            RoomType = "Люкс"
+                            RoomName = "Люкс",
+                            RoomNumber = "102"
                         });
                 });
 
@@ -336,6 +436,29 @@ namespace HotelBooking_API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HotelBooking_API.Data.Models.RoomImages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("RoomImages");
+                });
+
             modelBuilder.Entity("HotelBooking_API.Data.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -382,7 +505,7 @@ namespace HotelBooking_API.Migrations
                             Email = "ivan@example.com",
                             FirstName = "Иван",
                             LastName = "Иванов",
-                            PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                            PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             Phone = "+7 123 456 7890"
                         },
                         new
@@ -391,7 +514,7 @@ namespace HotelBooking_API.Migrations
                             Email = "maria@example.com",
                             FirstName = "Мария",
                             LastName = "Петрова",
-                            PasswordHash = new byte[0],
+                            PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                             Phone = "+7 987 654 3210"
                         });
                 });
@@ -456,6 +579,17 @@ namespace HotelBooking_API.Migrations
                     b.Navigation("Room");
                 });
 
+            modelBuilder.Entity("HotelBooking_API.Data.Models.RoomImages", b =>
+                {
+                    b.HasOne("HotelBooking_API.Data.Models.Room", "Room")
+                        .WithMany("RoomImages")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("HotelBooking_API.Data.Models.Amenity", b =>
                 {
                     b.Navigation("RoomAmenities");
@@ -477,6 +611,8 @@ namespace HotelBooking_API.Migrations
                     b.Navigation("Bookings");
 
                     b.Navigation("RoomAmenities");
+
+                    b.Navigation("RoomImages");
                 });
 
             modelBuilder.Entity("HotelBooking_API.Data.Models.User", b =>

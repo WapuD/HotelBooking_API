@@ -24,6 +24,14 @@ namespace HotelBooking_API.Data.Models
         [Range(0, 5)] // Ограничение для рейтинга (от 0 до 5)
         public decimal Rating { get; set; }
 
+        [Required]
+        [MaxLength(255)]
+        public string Description { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string ImageUrl { get; set; }
+
         // Навигационное свойство для номеров
         public ICollection<Room> Rooms { get; set; }
     }

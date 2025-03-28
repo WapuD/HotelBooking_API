@@ -1,0 +1,106 @@
+﻿@page
+@model HotelBooking_WEB.Pages.BookingModel
+
+@{
+    ViewData["Title"] = "Бронирование";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="container py-5">
+    <h1 class="text-center mb-4" style="color: #1a73e8;">Бронирование номера</h1>
+
+    @if (Model.Room != null)
+    {
+        <div class="card shadow room-details-card">
+            <div class="row g-0">
+                <div class="col-md-6">
+                    <div class="room-image-container">
+                        @if (Model.Room.RoomImages != null && Model.Room.RoomImages.Any())
+                        {
+                            <img src="@Model.Room.RoomImages.First().ImageUrl" class="img-fluid rounded-start" alt="@Model.Room.RoomName">
+                        }
+                        else
+                        {
+                            <img src="/images/Default.png" class="img-fluid rounded-start" alt="Номер без фото">
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body">
+                        <h2 class="card-title">@Model.Room.RoomName</h2>
+                        <p class="card-text">@Model.Room.Description</p>
+                        <p class="card-text">
+                            <i class="fa fa-users me-2"></i>
+                            Вместимость: @Model.Room.Capacity человек
+                        </p>
+                        <p class="card-text">
+                            <i class="fa fa-money-bill-wave me-2"></i>
+                            Цена за ночь: @Model.Room.PricePerNight.ToString("C")
+                        </p>
+
+                        <form method="post">
+                            <div class="mb-3">
+                                <label for="checkInDate" class="form-label">Дата заезда:</label>
+                                <input type="date" class="form-control" id="checkInDate" asp-for="CheckInDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="checkOutDate" class="form-label">Дата выезда:</label>
+                                <input type="date" class="form-control" id="checkOutDate" asp-for="CheckOutDate" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary book-btn">
+                                <i class="fa fa-calendar-check me-2"></i>
+                                Забронировать
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Комментарии -->
+        <div class="mt-5">
+            <h3>Комментарии</h3>
+            <p>Комментариев пока нет.</p>
+            <!-- Добавьте форму для добавления комментариев здесь -->
+        </div>
+    }
+    else
+    {
+        <h2 class="text-center mb-4" style="color: #1a73e8;">Номер не найден.</h2>
+    }
+</div>
+
+<style>
+    .room-details-card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .room-image-container {
+        height: 400px;
+        overflow: hidden;
+    }
+
+        .room-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+    .room-details-card:hover .room-image-container img {
+        transform: scale(1.1);
+    }
+
+    .book-btn {
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+        .book-btn:hover {
+            background-color: #0056b3;
+        }
+</style>

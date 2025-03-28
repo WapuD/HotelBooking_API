@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HotelBooking_API.Data.Models;
-using HotelBooking_API.Data.Other;
 
 namespace HotelBooking_API.Data
 {
-    public class HotelBooking_APIContext : DbContext
+    public class HBContext : DbContext
     {
         // Конструктор с параметрами для настройки контекста
-        public HotelBooking_APIContext(DbContextOptions<HotelBooking_APIContext> options)
+        public HBContext(DbContextOptions<HBContext> options)
             : base(options)
         {
         }
@@ -20,13 +19,12 @@ namespace HotelBooking_API.Data
         public DbSet<Payment> Payment { get; set; }
         public DbSet<Room> Room { get; set; }
         public DbSet<RoomAmenity> RoomAmenity { get; set; }
+        public DbSet<RoomImages> RoomImages { get; set; }
 
         // Настройка моделей и отношений между сущностями
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Пример настройки отношений и индексов:
 
             // Настройка связи между User и Booking
             modelBuilder.Entity<Booking>()
@@ -49,12 +47,28 @@ namespace HotelBooking_API.Data
             modelBuilder.Entity<RoomAmenity>()
                 .HasOne(ra => ra.Room)
                 .WithMany(r => r.RoomAmenities)
-                .HasForeignKey(ra => ra.RoomId);
+                .HasForeignKey(ra => ra.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<RoomAmenity>()
                 .HasOne(ra => ra.Amenity)
                 .WithMany(a => a.RoomAmenities)
-                .HasForeignKey(ra => ra.AmenityId);
+                .HasForeignKey(ra => ra.AmenityId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Настройка связи между Room и RoomImages
+            modelBuilder.Entity<RoomImages>()
+                .HasOne(ri => ri.Room)
+                .WithMany(r => r.RoomImages)
+                .HasForeignKey(ri => ri.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Настройка связи между Booking и Payment
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.Booking)
+                .WithOne(b => b.Payment)
+                .HasForeignKey<Payment>(p => p.BookingId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Настройка индексов для улучшения производительности
             modelBuilder.Entity<User>()
@@ -62,16 +76,12 @@ namespace HotelBooking_API.Data
                 .IsUnique(); // Уникальный индекс для Email
 
             modelBuilder.Entity<Hotel>()
-                .HasIndex(h => h.Name)
-                .IsUnique(); // Уникальный индекс для названия отеля
+                .HasIndex(h => h.Name);
 
-            // Настройка каскадного удаления для Payment
-            modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Booking) // У Payment есть одно бронирование
-                .WithOne(b => b.Payment) // У Booking есть один Payment
-                .HasForeignKey<Payment>(p => p.BookingId) // Внешний ключ в Payment
-                .OnDelete(DeleteBehavior.Cascade); // Удаление платежа при удалении бронирования
+            modelBuilder.Entity<Room>()
+                .HasIndex(r => r.RoomNumber);
 
+            // Seed data
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
@@ -80,7 +90,7 @@ namespace HotelBooking_API.Data
                     LastName = "Иванов",
                     Email = "ivan@example.com",
                     Phone = "+7 123 456 7890",
-                    PasswordHash = new byte[byte.MaxValue],
+                    PasswordHash = new byte[16] // Needs to be correct length
                 },
                 new User
                 {
@@ -89,34 +99,120 @@ namespace HotelBooking_API.Data
                     LastName = "Петрова",
                     Email = "maria@example.com",
                     Phone = "+7 987 654 3210",
-                    PasswordHash = new byte[byte.MinValue],
+                    PasswordHash = new byte[16] // Needs to be correct length
                 }
             );
+
             modelBuilder.Entity<Hotel>().HasData(
                 new Hotel
                 {
                     Id = 1,
                     Name = "Отель Премиум",
+                    Description = "Отель Премиум",
                     Address = "Москва, ул. Ленина, 10",
-                    City = "Уфа",
+                    City = "Москва",
+                    ImageUrl = "Premium.png",
                     Rating = 4.5M
                 },
                 new Hotel
                 {
                     Id = 2,
                     Name = "Отель Эконом",
+                    Description = "Отель Эконом",
                     Address = "Санкт-Петербург, ул. Пушкина, 5",
-                    City = "Уфа",
+                    City = "Санкт-Петербург",
+                    ImageUrl = "Ekonom.png",
                     Rating = 3.8M
+                },
+                new Hotel
+                {
+                    Id = 3,
+                    Name = "Отель Бизнес",
+                    Description = "Отель для деловых поездок с конференц-залом",
+                    Address = "Москва, ул. Ленина, 10",
+                    City = "Москва",
+                    ImageUrl = "Business.png",
+                    Rating = 4.2M
+                },
+                new Hotel
+                {
+                    Id = 4,
+                    Name = "Гранд Отель",
+                    Description = "Роскошный отель с видом на город",
+                    Address = "Санкт-Петербург, Невский проспект, 20",
+                    City = "Санкт-Петербург",
+                    ImageUrl = "Grand.png",
+                    Rating = 4.8M
+                },
+                new Hotel
+                {
+                    Id = 5,
+                    Name = "Отель на набережной",
+                    Description = "Отель с видом на реку, идеален для романтических поездок",
+                    Address = "Казань, ул. Речная, 15",
+                    City = "Казань",
+                    ImageUrl = "RiverView.png",
+                    Rating = 4.5M
+                },
+                new Hotel
+                {
+                    Id = 6,
+                    Name = "Отель для семьи",
+                    Description = "Отель с детскими площадками и развлекательными программами",
+                    Address = "Сочи, ул. Морская, 30",
+                    City = "Сочи",
+                    ImageUrl = "Family.png",
+                    Rating = 4.1M
+                },
+                new Hotel
+                {
+                    Id = 7,
+                    Name = "Отель в центре города",
+                    Description = "Удобное расположение для туристов",
+                    Address = "Екатеринбург, ул. Ленина, 25",
+                    City = "Екатеринбург",
+                    ImageUrl = "CityCenter.png",
+                    Rating = 4.0M
+                },
+                new Hotel
+                {
+                    Id = 8,
+                    Name = "Отель у горы",
+                    Description = "Отель для любителей активного отдыха",
+                    Address = "Красная Поляна, ул. Горная, 10",
+                    City = "Красная Поляна",
+                    ImageUrl = "Mountain.png",
+                    Rating = 4.3M
+                },
+                new Hotel
+                {
+                    Id = 9,
+                    Name = "Отель на пляже",
+                    Description = "Отель с прямым выходом на пляж",
+                    Address = "Анапа, ул. Пляжная, 5",
+                    City = "Анапа",
+                    ImageUrl = "Beach.png",
+                    Rating = 4.6M
+                },
+                new Hotel
+                {
+                    Id = 10,
+                    Name = "Отель в историческом центре",
+                    Description = "Отель в историческом здании с уникальной атмосферой",
+                    Address = "Ростов-на-Дону, ул. Старая, 20",
+                    City = "Ростов-на-Дону",
+                    ImageUrl = "Historic.png",
+                    Rating = 4.4M
                 }
             );
+
             modelBuilder.Entity<Room>().HasData(
                 new Room
                 {
                     Id = 1,
                     HotelId = 1, // Связь с отелем "Отель Премиум"
                     RoomNumber = "101",
-                    RoomType = "Стандарт",
+                    RoomName = "Стандарт",
                     PricePerNight = 5000,
                     Capacity = 2,
                     Description = "Обычный номер, предоставляющий всё необходимое",
@@ -127,13 +223,14 @@ namespace HotelBooking_API.Data
                     Id = 2,
                     HotelId = 1, // Связь с отелем "Отель Премиум"
                     RoomNumber = "102",
-                    RoomType = "Люкс",
+                    RoomName = "Люкс",
                     PricePerNight = 10000,
                     Capacity = 2,
                     Description = "Для самых требовательных гостей",
                     IsAvailable = true
                 }
             );
+
             modelBuilder.Entity<Amenity>().HasData(
                 new Amenity
                 {
@@ -154,6 +251,7 @@ namespace HotelBooking_API.Data
                     Description = "Прекрасная парковка на 2 машины"
                 }
             );
+
             modelBuilder.Entity<RoomAmenity>().HasData(
                 new RoomAmenity
                 {
@@ -176,6 +274,7 @@ namespace HotelBooking_API.Data
                     AmenityId = 3 // Парковка
                 }
             );
+
             modelBuilder.Entity<Booking>().HasData(
                 new Booking
                 {
@@ -198,6 +297,7 @@ namespace HotelBooking_API.Data
                     Status = "Pending"
                 }
             );
+
             modelBuilder.Entity<Payment>().HasData(
                 new Payment
                 {

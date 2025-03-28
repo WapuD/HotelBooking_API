@@ -14,9 +14,9 @@ namespace HotelBooking_API.Controllers
     [ApiController]
     public class RoomsController : ControllerBase
     {
-        private readonly HotelBooking_APIContext _context;
+        private readonly HBContext _context;
 
-        public RoomsController(HotelBooking_APIContext context)
+        public RoomsController(HBContext context)
         {
             _context = context;
         }
@@ -30,7 +30,7 @@ namespace HotelBooking_API.Controllers
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(int id)
+        public async Task<ActionResult<Room>> GetRoomById(int id)
         {
             var room = await _context.Room.FindAsync(id);
 
@@ -39,7 +39,36 @@ namespace HotelBooking_API.Controllers
                 return NotFound();
             }
 
+            room.RoomImages = await _context.RoomImages
+                .Where(ri => ri.RoomId == room.Id)
+                .ToListAsync();
+
             return room;
+        }
+
+        // GET: api/Rooms/Hotel/5
+        [HttpGet("Hotel/{hotelId}")]
+        public async Task<ActionResult<IEnumerable<Room>>> GetRoomByHotelId(int hotelId)
+        {
+            var rooms = await _context.Room.Where(r => r.HotelId == hotelId)
+                                           .ToListAsync();
+            if (rooms == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var room in rooms)
+            {
+                if (room.RoomImages == null)
+                {
+                    room.RoomImages = await _context.RoomImages
+                        .Where(ri => ri.RoomId == room.Id)
+                        .Take(1)
+                        .ToListAsync();
+                }
+            }
+
+            return rooms;
         }
 
         // PUT: api/Rooms/5

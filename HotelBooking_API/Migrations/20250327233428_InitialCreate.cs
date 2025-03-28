@@ -37,7 +37,9 @@ namespace HotelBooking_API.Migrations
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     City = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Rating = table.Column<decimal>(type: "numeric", nullable: false)
+                    Rating = table.Column<decimal>(type: "numeric", nullable: false),
+                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    ImageUrl = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,11 +70,11 @@ namespace HotelBooking_API.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     HotelId = table.Column<int>(type: "integer", nullable: false),
-                    RoomNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    RoomType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false),
+                    RoomNumber = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    RoomName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    PricePerNight = table.Column<decimal>(type: "numeric", maxLength: 50, nullable: false),
                     Capacity = table.Column<int>(type: "integer", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     IsAvailable = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -143,6 +145,26 @@ namespace HotelBooking_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RoomImages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RoomId = table.Column<int>(type: "integer", nullable: false),
+                    ImageUrl = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoomImages_Room_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Room",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Payment",
                 columns: table => new
                 {
@@ -176,11 +198,19 @@ namespace HotelBooking_API.Migrations
 
             migrationBuilder.InsertData(
                 table: "Hotel",
-                columns: new[] { "Id", "Address", "City", "Name", "Rating" },
+                columns: new[] { "Id", "Address", "City", "Description", "ImageUrl", "Name", "Rating" },
                 values: new object[,]
                 {
-                    { 1, "Москва, ул. Ленина, 10", "Уфа", "Отель Премиум", 4.5m },
-                    { 2, "Санкт-Петербург, ул. Пушкина, 5", "Уфа", "Отель Эконом", 3.8m }
+                    { 1, "Москва, ул. Ленина, 10", "Уфа", "Отель Премиум", "Premium.png", "Отель Премиум", 4.5m },
+                    { 2, "Санкт-Петербург, ул. Пушкина, 5", "Уфа", "Отель Эконом", "Ekonom.png", "Отель Эконом", 3.8m },
+                    { 3, "Москва, ул. Ленина, 10", "Москва", "Отель для деловых поездок с конференц-залом", "Business.png", "Отель Бизнес", 4.2m },
+                    { 4, "Санкт-Петербург, Невский проспект, 20", "Санкт-Петербург", "Роскошный отель с видом на город", "Grand.png", "Гранд Отель", 4.8m },
+                    { 5, "Казань, ул. Речная, 15", "Казань", "Отель с видом на реку, идеален для романтических поездок", "RiverView.png", "Отель на набережной", 4.5m },
+                    { 6, "Сочи, ул. Морская, 30", "Сочи", "Отель с детскими площадками и развлекательными программами", "Family.png", "Отель для семьи", 4.1m },
+                    { 7, "Екатеринбург, ул. Ленина, 25", "Екатеринбург", "Удобное расположение для туристов", "CityCenter.png", "Отель в центре города", 4.0m },
+                    { 8, "Красная Поляна, ул. Горная, 10", "Красная Поляна", "Отель для любителей активного отдыха", "Mountain.png", "Отель у горы", 4.3m },
+                    { 9, "Анапа, ул. Пляжная, 5", "Анапа", "Отель с прямым выходом на пляж", "Beach.png", "Отель на пляже", 4.6m },
+                    { 10, "Ростов-на-Дону, ул. Старая, 20", "Ростов-на-Дону", "Отель в историческом здании с уникальной атмосферой", "Historic.png", "Отель в историческом центре", 4.4m }
                 });
 
             migrationBuilder.InsertData(
@@ -188,17 +218,17 @@ namespace HotelBooking_API.Migrations
                 columns: new[] { "Id", "Email", "FirstName", "LastName", "PasswordHash", "Phone" },
                 values: new object[,]
                 {
-                    { 1, "ivan@example.com", "Иван", "Иванов", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 123 456 7890" },
-                    { 2, "maria@example.com", "Мария", "Петрова", new byte[0], "+7 987 654 3210" }
+                    { 1, "ivan@example.com", "Иван", "Иванов", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 123 456 7890" },
+                    { 2, "maria@example.com", "Мария", "Петрова", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 987 654 3210" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Room",
-                columns: new[] { "Id", "Capacity", "Description", "HotelId", "IsAvailable", "PricePerNight", "RoomNumber", "RoomType" },
+                columns: new[] { "Id", "Capacity", "Description", "HotelId", "IsAvailable", "PricePerNight", "RoomName", "RoomNumber" },
                 values: new object[,]
                 {
-                    { 1, 2, "Обычный номер, предоставляющий всё необходимое", 1, true, 5000m, "101", "Стандарт" },
-                    { 2, 2, "Для самых требовательных гостей", 1, true, 10000m, "102", "Люкс" }
+                    { 1, 2, "Обычный номер, предоставляющий всё необходимое", 1, true, 5000m, "Стандарт", "101" },
+                    { 2, 2, "Для самых требовательных гостей", 1, true, 10000m, "Люкс", "102" }
                 });
 
             migrationBuilder.InsertData(
@@ -243,8 +273,7 @@ namespace HotelBooking_API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Hotel_Name",
                 table: "Hotel",
-                column: "Name",
-                unique: true);
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payment_BookingId",
@@ -258,9 +287,19 @@ namespace HotelBooking_API.Migrations
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Room_RoomNumber",
+                table: "Room",
+                column: "RoomNumber");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoomAmenity_AmenityId",
                 table: "RoomAmenity",
                 column: "AmenityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomImages_RoomId",
+                table: "RoomImages",
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
@@ -277,6 +316,9 @@ namespace HotelBooking_API.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoomAmenity");
+
+            migrationBuilder.DropTable(
+                name: "RoomImages");
 
             migrationBuilder.DropTable(
                 name: "Booking");

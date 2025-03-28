@@ -13,18 +13,22 @@ namespace HotelBooking_API.Data.Models
         public int HotelId { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string RoomNumber { get; set; }
 
         [Required]
+        [MaxLength(100)]
+        public string RoomName { get; set; }
+        
+        [Required]
         [MaxLength(50)]
-        public string RoomType { get; set; }
-
         public decimal PricePerNight { get; set; }
 
         [Range(1, 10)] // Ограничение для вместимости
         public int Capacity { get; set; }
 
+        [Required]
+        [MaxLength(500)]
         public string Description { get; set; }
 
         public bool IsAvailable { get; set; } = true;
@@ -33,6 +37,7 @@ namespace HotelBooking_API.Data.Models
         public Hotel Hotel { get; set; }
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<RoomAmenity> RoomAmenities { get; set; }
+        public ICollection<RoomImages> RoomImages { get; set; }
     }
 
 }
