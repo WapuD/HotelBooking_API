@@ -22,6 +22,7 @@ namespace HotelBooking_WEB.Pages
         public async Task OnGet()
         {
             Hotels = await _apiClient.GetHotelsAsync();
+            var z = 0;
         }
     }
 }

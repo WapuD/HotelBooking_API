@@ -18,6 +18,8 @@
         [Get("/Users/{email},{password}")]
         Task<bool> GetVerification(string email, string password);
 
+        [Post("/Users/CreateUser")]
+        Task<bool> CreateUser(CreateUserDto newUser);
 
 
         /*[Get("/Partners")]

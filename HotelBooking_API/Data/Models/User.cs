@@ -15,6 +15,10 @@ namespace HotelBooking_API.Data.Models
 
         [Required]
         [MaxLength(50)]
+        public string SecondName { get; set; }
+
+        [Required]
+        [MaxLength(50)]
         public string LastName { get; set; }
 
         [Required]
@@ -39,6 +43,9 @@ namespace HotelBooking_API.Data.Models
         public string FirstName { get; set; }
 
         [Required]
+        public string SecondName { get; set; }
+
+        [Required]
         public string LastName { get; set; }
 
         [Required]
@@ -57,6 +64,7 @@ namespace HotelBooking_API.Data.Models
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
+        public string SecondName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
@@ -65,6 +73,7 @@ namespace HotelBooking_API.Data.Models
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
+        public string SecondName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
     }

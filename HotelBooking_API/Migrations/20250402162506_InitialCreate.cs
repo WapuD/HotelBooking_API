@@ -53,6 +53,7 @@ namespace HotelBooking_API.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    SecondName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
@@ -201,8 +202,8 @@ namespace HotelBooking_API.Migrations
                 columns: new[] { "Id", "Address", "City", "Description", "ImageUrl", "Name", "Rating" },
                 values: new object[,]
                 {
-                    { 1, "Москва, ул. Ленина, 10", "Уфа", "Отель Премиум", "Premium.png", "Отель Премиум", 4.5m },
-                    { 2, "Санкт-Петербург, ул. Пушкина, 5", "Уфа", "Отель Эконом", "Ekonom.png", "Отель Эконом", 3.8m },
+                    { 1, "Москва, ул. Ленина, 10", "Москва", "Отель Премиум", "Premium.png", "Отель Премиум", 4.5m },
+                    { 2, "Санкт-Петербург, ул. Пушкина, 5", "Санкт-Петербург", "Отель Эконом", "Ekonom.png", "Отель Эконом", 3.8m },
                     { 3, "Москва, ул. Ленина, 10", "Москва", "Отель для деловых поездок с конференц-залом", "Business.png", "Отель Бизнес", 4.2m },
                     { 4, "Санкт-Петербург, Невский проспект, 20", "Санкт-Петербург", "Роскошный отель с видом на город", "Grand.png", "Гранд Отель", 4.8m },
                     { 5, "Казань, ул. Речная, 15", "Казань", "Отель с видом на реку, идеален для романтических поездок", "RiverView.png", "Отель на набережной", 4.5m },
@@ -215,11 +216,11 @@ namespace HotelBooking_API.Migrations
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "Email", "FirstName", "LastName", "PasswordHash", "Phone" },
+                columns: new[] { "Id", "Email", "FirstName", "LastName", "PasswordHash", "Phone", "SecondName" },
                 values: new object[,]
                 {
-                    { 1, "ivan@example.com", "Иван", "Иванов", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 123 456 7890" },
-                    { 2, "maria@example.com", "Мария", "Петрова", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 987 654 3210" }
+                    { 1, "ivan@example.com", "Иван", "Иванович", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 123 456 7890", "Иванов" },
+                    { 2, "maria@example.com", "Мария", "Николаевна", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 987 654 3210", "Петрова" }
                 });
 
             migrationBuilder.InsertData(
@@ -249,6 +250,17 @@ namespace HotelBooking_API.Migrations
                     { 2, 1 },
                     { 1, 2 },
                     { 3, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RoomImages",
+                columns: new[] { "Id", "ImageUrl", "RoomId" },
+                values: new object[,]
+                {
+                    { 1, "test1.png", 1 },
+                    { 2, "test2.png", 1 },
+                    { 3, "test3.png", 2 },
+                    { 4, "test4.png", 2 }
                 });
 
             migrationBuilder.InsertData(

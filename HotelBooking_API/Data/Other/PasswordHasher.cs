@@ -41,11 +41,11 @@ namespace HotelBooking_API.Data.Other
                 byte[] hash = pbkdf2.GetBytes(HashSize);
                 for (int i = 0; i < HashSize; i++)
                 {
-                    if (hash[i] != storedHash[i + SaltSize]) return false;
+                    if (hash[i] != storedHash[i + SaltSize]) 
+                        return false;
                 }
             }
             return true;
         }
-
     }
 }

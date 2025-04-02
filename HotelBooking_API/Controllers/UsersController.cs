@@ -29,9 +29,28 @@ namespace HotelBooking_API.Controllers
             return await _context.User.ToListAsync();
         }
 
+        // GET: api/CreateUser
+        [HttpPost("CreateUser")]
+        public async Task<ActionResult<bool>> CreateUser(CreateUserDto newUser)
+        {
+            var user = new User
+            {
+                Email = newUser.Email,
+                FirstName = newUser.FirstName,
+                SecondName = newUser.SecondName,
+                LastName = newUser.LastName,
+                Phone = newUser.Phone,
+                PasswordHash = PasswordHasher.HashPassword(newUser.Password)
+            };
+
+            _context.User.Add(user);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
 
         // GET: api/Users/{email},{password}
-        [HttpGet("{email},{password}")]
+        [HttpGet("GetVerification/{email},{password}")]
         public async Task<ActionResult<bool>> GetVerification(string email, string password)
         {
             var user = _context.User.Where(u => u.Email == email)

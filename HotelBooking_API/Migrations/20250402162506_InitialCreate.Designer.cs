@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelBooking_API.Migrations
 {
     [DbContext(typeof(HBContext))]
-    [Migration("20250327233428_InitialCreate")]
+    [Migration("20250402162506_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -174,7 +174,7 @@ namespace HotelBooking_API.Migrations
                         {
                             Id = 1,
                             Address = "Москва, ул. Ленина, 10",
-                            City = "Уфа",
+                            City = "Москва",
                             Description = "Отель Премиум",
                             ImageUrl = "Premium.png",
                             Name = "Отель Премиум",
@@ -184,7 +184,7 @@ namespace HotelBooking_API.Migrations
                         {
                             Id = 2,
                             Address = "Санкт-Петербург, ул. Пушкина, 5",
-                            City = "Уфа",
+                            City = "Санкт-Петербург",
                             Description = "Отель Эконом",
                             ImageUrl = "Ekonom.png",
                             Name = "Отель Эконом",
@@ -457,6 +457,32 @@ namespace HotelBooking_API.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("RoomImages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ImageUrl = "test1.png",
+                            RoomId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ImageUrl = "test2.png",
+                            RoomId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ImageUrl = "test3.png",
+                            RoomId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ImageUrl = "test4.png",
+                            RoomId = 2
+                        });
                 });
 
             modelBuilder.Entity("HotelBooking_API.Data.Models.User", b =>
@@ -491,6 +517,11 @@ namespace HotelBooking_API.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<string>("SecondName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -504,18 +535,20 @@ namespace HotelBooking_API.Migrations
                             Id = 1,
                             Email = "ivan@example.com",
                             FirstName = "Иван",
-                            LastName = "Иванов",
+                            LastName = "Иванович",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                            Phone = "+7 123 456 7890"
+                            Phone = "+7 123 456 7890",
+                            SecondName = "Иванов"
                         },
                         new
                         {
                             Id = 2,
                             Email = "maria@example.com",
                             FirstName = "Мария",
-                            LastName = "Петрова",
+                            LastName = "Николаевна",
                             PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                            Phone = "+7 987 654 3210"
+                            Phone = "+7 987 654 3210",
+                            SecondName = "Петрова"
                         });
                 });
 

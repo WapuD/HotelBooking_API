@@ -87,7 +87,8 @@ namespace HotelBooking_API.Data
                 {
                     Id = 1,
                     FirstName = "Иван",
-                    LastName = "Иванов",
+                    SecondName = "Иванов",
+                    LastName = "Иванович",
                     Email = "ivan@example.com",
                     Phone = "+7 123 456 7890",
                     PasswordHash = new byte[16] // Needs to be correct length
@@ -96,7 +97,8 @@ namespace HotelBooking_API.Data
                 {
                     Id = 2,
                     FirstName = "Мария",
-                    LastName = "Петрова",
+                    SecondName = "Петрова",
+                    LastName = "Николаевна",
                     Email = "maria@example.com",
                     Phone = "+7 987 654 3210",
                     PasswordHash = new byte[16] // Needs to be correct length
@@ -314,6 +316,33 @@ namespace HotelBooking_API.Data
                     Amount = 20000,
                     PaymentDate = DateTime.SpecifyKind(new DateTime(2023, 1, 10), DateTimeKind.Utc),
                     PaymentMethod = "PayPal"
+                }
+            );
+
+            modelBuilder.Entity<RoomImages>().HasData(
+                new RoomImages
+                {
+                    Id = 1,
+                    ImageUrl = "test1.png",
+                    RoomId = 1
+                },
+                new RoomImages
+                {
+                    Id = 2,
+                    ImageUrl = "test2.png",
+                    RoomId = 1
+                },
+                new RoomImages
+                {
+                    Id = 3,
+                    ImageUrl = "test3.png",
+                    RoomId = 2
+                },
+                new RoomImages
+                {
+                    Id = 4,
+                    ImageUrl = "test4.png",
+                    RoomId = 2
                 }
             );
         }
