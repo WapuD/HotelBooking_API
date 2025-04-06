@@ -49,8 +49,8 @@ namespace HotelBooking_API.Controllers
             return true;
         }
 
-        // GET: api/Users/{email},{password}
-        [HttpGet("GetVerification/{email},{password}")]
+        // GET: api/Users/Verification
+        [HttpPost("Verification")]
         public async Task<ActionResult<bool>> GetVerification(string email, string password)
         {
             var user = _context.User.Where(u => u.Email == email)

@@ -15,7 +15,7 @@
         [Get("/Rooms/{roomId}")]
         Task<Room> GetRoomById(int roomId);
 
-        [Get("/Users/{email},{password}")]
+        [Post("/Users/Verification")]
         Task<bool> GetVerification(string email, string password);
 
         [Post("/Users/CreateUser")]

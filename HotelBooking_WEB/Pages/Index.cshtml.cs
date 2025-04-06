@@ -32,6 +32,10 @@ namespace HotelBooking_WEB.Pages
             if (email != null && password != null)
             {
                 var verification = await _apiClient.GetVerification(email, password);
+                if (verification)
+                    RedirectToPage("/Hotels");
+                else
+                    Page();
             }
         }
     }

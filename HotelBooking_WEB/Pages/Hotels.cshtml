@@ -21,9 +21,6 @@
                         <div class="card-body">
                             <h3 class="card-title">@hotel.Name</h3>
                             <p class="card-text">@hotel.Description</p>
-                            <div class="price-tag bg-primary text-white p-2 rounded">
-                                Цена за ночь: 9999
-                            </div>
                             <a asp-page="/Rooms"
                                asp-route-hotelId="@hotel.Id" 
                                class="btn btn-primary mt-3 book-btn">
