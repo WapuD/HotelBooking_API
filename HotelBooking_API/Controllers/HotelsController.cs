@@ -74,14 +74,19 @@ namespace HotelBooking_API.Controllers
         }
 
         // POST: api/Hotels
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
+        public async Task<ActionResult<Hotel>> PostHotel([FromForm] Hotel hotel)
         {
+            if (hotel == null || string.IsNullOrEmpty(hotel.Name) || string.IsNullOrEmpty(hotel.Address) ||
+                string.IsNullOrEmpty(hotel.City) || string.IsNullOrEmpty(hotel.Description) || string.IsNullOrEmpty(hotel.ImageUrl))
+            {
+                return BadRequest(new { message = "Некорректные данные для создания отеля" });
+            }
+
             _context.Hotel.Add(hotel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
+            return CreatedAtAction(nameof(GetHotel), new { id = hotel.Id }, hotel);
         }
 
         // DELETE: api/Hotels/5

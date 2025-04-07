@@ -35,5 +35,9 @@
 
         [Put("/Bookings/update")]
         Task UpdateBookingStatus(int id, string newStatus);
+
+
+        [Post("/Hotels")]
+        Task CreateHotel([Body] Hotel hotel);
     }
 }
