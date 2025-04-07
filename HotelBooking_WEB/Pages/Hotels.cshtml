@@ -5,6 +5,7 @@
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div class="container py-5">
     <h1 class="text-center mb-4" style="color: #1a73e8;">Лучшие предложения</h1>
@@ -16,13 +17,26 @@
                 <div class="col-md-4">
                     <div class="hotel-card card h-100 shadow">
                         <div class="card-img-container">
-                            <img src="@hotel.ImageUrl" class="card-img-top" alt="@hotel.Name" onerror="this.onerror=null;this.src='DefaultHotel.png';">
+                            <img src="@hotel.ImageUrl" class="card-img-top" alt="@hotel.Name" onerror="this.onerror=null;this.src='DefaultHotel.png';" />
                         </div>
                         <div class="card-body">
                             <h3 class="card-title">@hotel.Name</h3>
+
+                            <div class="rating-container" data-rating="@hotel.Rating">
+                                <div class="star-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <span class="fa fa-star" data-value="@i"></span>
+                                    }
+                                </div>
+                                <div class="rating-value">
+                                    @hotel.Rating
+                                </div>
+                            </div>
+
                             <p class="card-text">@hotel.Description</p>
                             <a asp-page="/Rooms"
-                               asp-route-hotelId="@hotel.Id" 
+                               asp-route-hotelId="@hotel.Id"
                                class="btn btn-primary mt-3 book-btn">
                                 Забронировать
                             </a>
@@ -37,6 +51,7 @@
         <h2 class="text-center mb-4" style="color: #1a73e8;">Нет доступных отелей.</h2>
     }
 </div>
+
 <style>
     .card-img-container {
         height: 250px;
@@ -55,19 +70,85 @@
         border-radius: 15px;
         overflow: hidden;
     }
-    
-    .hotel-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    }
-    
+
+        .hotel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
     .price-tag {
         font-size: 1.1rem;
         display: inline-block;
     }
-    
+
     .book-btn {
         transition: background-color 0.3s ease;
         width: 100%;
+    }
+
+    .rating-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .star-rating {
+        font-size: 1.5em;
+        color: #ffc107;
+        display: inline-block;
+    }
+
+    .star-rating .fa-star {
+        margin: 2px;
+        color: white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    }
+
+    .rating-value {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: black; 
+        font-size: 1.2em; 
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .rating-container:hover .star-rating {
+        opacity: 0;
+    }
+
+    .rating-container:hover .rating-value {
+        opacity: 1;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ratingContainers = document.querySelectorAll('.rating-container');
+
+        ratingContainers.forEach(container => {
+            const ratingScale = parseFloat(container.dataset.rating);
+            const stars = container.querySelectorAll('.star-rating .fa-star');
+
+            for (let i = 0; i < stars.length; i++) {
+                if (i < Math.floor(ratingScale)) {
+                    stars[i].classList.add('checked');
+                } else if (i < Math.ceil(ratingScale)) {
+                    stars[i].classList.add('half-checked');
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    .star-rating .fa-star.checked {
+        color: yellow;
+    }
+
+    .star-rating .fa-star.half-checked {
+        color: yellow;
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     }
 </style>

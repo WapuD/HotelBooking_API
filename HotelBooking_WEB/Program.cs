@@ -12,6 +12,12 @@ builder.Services
     .AddRefitClient<IApiClient>()
     .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7059/api"));
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    });
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

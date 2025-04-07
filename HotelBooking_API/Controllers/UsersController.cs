@@ -50,15 +50,13 @@ namespace HotelBooking_API.Controllers
         }
 
         // GET: api/Users/Verification
-        [HttpPost("Verification")]
-        public async Task<ActionResult<bool>> GetVerification(string email, string password)
+        [HttpGet("Verification")]
+        public async Task<ActionResult<User>> GetVerification(string email, string password)
         {
-            var user = _context.User.Where(u => u.Email == email)
-                                          .FirstOrDefault();
-
+            var user = _context.User.Where(u => u.Email == email).FirstOrDefault();
             var verify = PasswordHasher.VerifyPassword(password, user.PasswordHash);
 
-            return verify;
+            return user;
         }
 
         // GET: api/Users/5

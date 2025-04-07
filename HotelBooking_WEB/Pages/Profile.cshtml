@@ -1,0 +1,86 @@
+﻿@page
+@model HotelBooking_WEB.Pages.ProfileModel
+@{
+    ViewData["Title"] = "Личный кабинет";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<div class="container py-5">
+    <h1 class="text-center mb-4" style="color: #1a73e8;">Личный кабинет</h1>
+
+    @if (Model.User != null)
+    {
+        <div class="card shadow profile-card">
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">Имя:</label>
+                        <input type="text" class="form-control" id="firstName" asp-for="User.FirstName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="secondName" class="form-label">Отчество:</label>
+                        <input type="text" class="form-control" id="secondName" asp-for="User.SecondName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Фамилия:</label>
+                        <input type="text" class="form-control" id="lastName" asp-for="User.LastName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" asp-for="User.Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Телефон:</label>
+                        <input type="tel" class="form-control" id="phone" asp-for="User.Phone" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary save-btn">
+                        <i class="fa fa-save me-2"></i>
+                        Сохранить
+                    </button>
+
+                    <a asp-page="/Bookings" class="btn btn-secondary my-bookings-btn">
+                        <i class="fa fa-calendar-check me-2"></i>
+                        Мои бронирования
+                    </a>
+
+                    <a asp-page="/Index" class="btn btn-secondary back-btn">
+                        <i class="fa fa-arrow-left me-2"></i>
+                        Назад
+                    </a>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h2 class="text-center mb-4" style="color: #1a73e8;">Пользователь не найден.</h2>
+    }
+</div>
+
+<style>
+    .profile-card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .save-btn {
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+        .save-btn:hover {
+            background-color: #0056b3;
+        }
+
+    .my-bookings-btn, .back-btn {
+        width: 100%;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+        .my-bookings-btn:hover, .back-btn:hover {
+            background-color: #0056b3;
+        }
+</style>

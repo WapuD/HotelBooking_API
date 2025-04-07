@@ -42,6 +42,25 @@ namespace HotelBooking_API.Controllers
             return booking;
         }
 
+
+        // GET: api/Bookings/user/{userId}
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<IEnumerable<Booking>>> GetUserBookings(int userId)
+        {
+            var bookings = await _context.Booking
+                .Include(b => b.User)
+                .Include(b => b.Room)
+                .Where(b => b.UserId == userId)
+                .ToListAsync();
+
+            if (!bookings.Any())
+            {
+                return NotFound();
+            }
+
+            return bookings;
+        }
+
         // PUT: api/Bookings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

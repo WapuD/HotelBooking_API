@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace HotelBooking_API.Data.Models
 {
@@ -35,6 +36,7 @@ namespace HotelBooking_API.Data.Models
         public byte[] PasswordHash { get; set; }
 
         // Навигационное свойство для бронирований
+        [JsonIgnore]
         public ICollection<Booking> Bookings { get; set; }
     }
     public class CreateUserDto

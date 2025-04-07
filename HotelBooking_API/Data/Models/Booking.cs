@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace HotelBooking_API.Data.Models
 {
@@ -33,4 +34,15 @@ namespace HotelBooking_API.Data.Models
         public Room Room { get; set; }
         public Payment Payment { get; set; } // Один Payment на одно бронирование
     }
+    public class BookingDTO
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public int RoomId { get; set; }
+        public DateTimeOffset CheckInDate { get; set; }
+        public DateTimeOffset CheckOutDate { get; set; }
+        public int TotalPrice { get; set; }
+        public string Status { get; set; }
+    }
+
 }

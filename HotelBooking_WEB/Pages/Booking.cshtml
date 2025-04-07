@@ -19,11 +19,11 @@
                     <div class="room-image-container">
                         @if (Model.Room.RoomImages != null && Model.Room.RoomImages.Any())
                         {
-                            <img src="@Model.Room.RoomImages.First().ImageUrl" class="img-fluid rounded-start" alt="@Model.Room.RoomName">
+                            <img id="roomImage" src="@Model.Room.RoomImages.First().ImageUrl" class="img-fluid rounded-start" alt="@Model.Room.RoomName" style="cursor: pointer;">
                         }
                         else
                         {
-                            <img src="/images/Default.png" class="img-fluid rounded-start" alt="Номер без фото">
+                            <img id="roomImage" src="/images/Default.png" class="img-fluid rounded-start" alt="Номер без фото" style="cursor: pointer;">
                         }
                     </div>
                 </div>
@@ -104,3 +104,18 @@
             background-color: #0056b3;
         }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const roomImage = document.getElementById('roomImage');
+        const images = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Room?.RoomImages?.Select(img => img.ImageUrl).ToList()));
+        let currentImageIndex = 0;
+
+        if (roomImage && images && images.length > 0) {
+            roomImage.addEventListener('click', function () {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                roomImage.src = images[currentImageIndex];
+            });
+        }
+    });
+</script>

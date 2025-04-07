@@ -27,16 +27,22 @@ namespace HotelBooking_WEB.Pages
 
         }
 
-        public async Task OnPost()
+        public async Task<IActionResult> OnPost()
         {
             if (email != null && password != null)
             {
-                var verification = await _apiClient.GetVerification(email, password);
-                if (verification)
-                    RedirectToPage("/Hotels");
+                var verificationUser = await _apiClient.GetVerification(email, password);
+                if (verificationUser != null)
+                {
+                    return RedirectToPage("/Hotels");
+                }
                 else
-                    Page();
+                {
+                    return Page();
+                }
             }
+
+            return Page();
         }
     }
 }

@@ -9,17 +9,26 @@
         [Get("/Hotels")]
         Task<IEnumerable<Hotel>> GetHotelsAsync();
 
+
         [Get("/Rooms/Hotel/{hotelId}")]
         Task<IEnumerable<Room>> GetRoomByHotelId(int hotelId);
 
         [Get("/Rooms/{roomId}")]
         Task<Room> GetRoomById(int roomId);
 
-        [Post("/Users/Verification")]
-        Task<bool> GetVerification(string email, string password);
+
+        [Get("/Users/Verification")]
+        Task<User> GetVerification(string email, string password);
+
+        [Get("/Users/{id}")]
+        Task<User> GetUser(int id);
 
         [Post("/Users/CreateUser")]
         Task<bool> CreateUser(CreateUserDto newUser);
+
+
+        [Get("/Bookings/user/{userId}")]
+        Task<IEnumerable<Booking>> GetUserBookings(int userId);
 
 
         /*[Get("/Partners")]

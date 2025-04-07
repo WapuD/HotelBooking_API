@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace HotelBooking_API.Data.Models
 {
@@ -35,6 +36,8 @@ namespace HotelBooking_API.Data.Models
 
         // Навигационные свойства
         public Hotel Hotel { get; set; }
+
+        [JsonIgnore]
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<RoomAmenity> RoomAmenities { get; set; }
         public ICollection<RoomImages> RoomImages { get; set; }
