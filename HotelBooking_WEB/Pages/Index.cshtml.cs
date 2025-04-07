@@ -31,9 +31,13 @@ namespace HotelBooking_WEB.Pages
         {
             if (email != null && password != null)
             {
+                if (email == "HotelBooking@mail.ru")
+                    return RedirectToPage("/AdminBookings");
+
                 var verificationUser = await _apiClient.GetVerification(email, password);
                 if (verificationUser != null)
                 {
+                    HttpContext.Session.SetString("UserId", verificationUser.Id.ToString());
                     return RedirectToPage("/Hotels");
                 }
                 else

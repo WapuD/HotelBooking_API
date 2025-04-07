@@ -23,9 +23,10 @@ namespace HotelBooking_API.Controllers
 
         // GET: api/Bookings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetBooking()
+        public async Task<ActionResult<IEnumerable<Booking>>> GetAllBookings()
         {
-            return await _context.Booking.ToListAsync();
+            var bookings = await _context.Booking.ToListAsync();
+            return bookings;
         }
 
         // GET: api/Bookings/5
@@ -59,6 +60,38 @@ namespace HotelBooking_API.Controllers
             }
 
             return bookings;
+        }
+
+        // PUT: api/Bookings/update
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateBookingStatus(int id, string newStatus)
+        {
+            var booking = await _context.Booking.FindAsync(id);
+            if (booking == null)
+            {
+                return NotFound(new { message = "Booking not found" });
+            }
+
+            booking.Status = newStatus;
+            _context.Entry(booking).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BookingExists(id))
+                {
+                    return NotFound(new { message = "Booking not found during update" });
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(new { message = "Booking status updated successfully" });
         }
 
         // PUT: api/Bookings/5

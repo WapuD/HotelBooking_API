@@ -20,9 +20,29 @@ namespace HotelBooking_WEB.Pages
 
         public async Task OnGet()
         {
-            // Получаем ID текущего пользователя
-            var userId = 1;// Получите ID текущего пользователя из сессии или другого источника
-            Bookings = await _apiClient.GetUserBookings(userId);
+            try
+            {
+                var userIdString = HttpContext.Session.GetString("UserId");
+
+                if (string.IsNullOrEmpty(userIdString))
+                {
+                    Bookings = null;
+                    return;
+                }
+
+                var userId = int.Parse(userIdString);
+                Bookings = await _apiClient.GetUserBookings(userId);
+            }
+            catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                Bookings = null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+                throw;
+            }
         }
+
     }
 }

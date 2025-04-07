@@ -21,7 +21,7 @@ namespace HotelBooking_WEB.Pages
 
         public async Task OnGet()
         {
-            var userId = 1;
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
             User = await _apiClient.GetUser(userId);
         }
 

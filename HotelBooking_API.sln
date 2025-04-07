@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.34804.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelBooking_API", "HotelBooking_API\HotelBooking_API.csproj", "{CB1DC21D-409E-4DE6-B361-35EC58117BD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBooking_WEB", "HotelBooking_WEB\HotelBooking_WEB.csproj", "{A59DC465-55CE-434A-8F2F-A6A31D91C0C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelBooking_WEB", "HotelBooking_WEB\HotelBooking_WEB.csproj", "{A59DC465-55CE-434A-8F2F-A6A31D91C0C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

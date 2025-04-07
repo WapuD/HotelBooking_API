@@ -3,6 +3,14 @@ using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDistributedMemoryCache(); // Используется для хранения данных сессии в памяти
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60); // Время жизни сессии
+    options.Cookie.HttpOnly = true; // Устанавливаем cookie только для HTTP
+    options.Cookie.IsEssential = true; // Cookie необходимы для работы приложения
+});
+
 builder.Services.AddRazorPages();
 builder.Services.AddMvc();
 builder.Services.AddMvcCore();
@@ -26,10 +34,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
+
 app.MapRazorPages();
 
 app.Run();

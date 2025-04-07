@@ -30,16 +30,10 @@
         [Get("/Bookings/user/{userId}")]
         Task<IEnumerable<Booking>> GetUserBookings(int userId);
 
+        [Get("/Bookings")]
+        Task<IEnumerable<Booking>> GetAllBookings();
 
-        /*[Get("/Partners")]
-        Task<IEnumerable<Partner>> GetPartnerAsync();
-        [Get("/Partners/{id}")]
-        Task<Partner> GetPartnerAsync(int id);
-        [Put("/Partners/{partner}")]
-        Task<IActionResult> PutPartnerAsync(Partner partner);
-        [Post("/Partners")]
-        Task<IActionResult> AddPartnerAsync(Partner partner);
-        [Get("/Partners/Discount/{id}")]
-        Task<int> GetPartnerDiscountAsync(int id);*/
+        [Put("/Bookings/update")]
+        Task UpdateBookingStatus(int id, string newStatus);
     }
 }
