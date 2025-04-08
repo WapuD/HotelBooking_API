@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelBooking_API.Migrations
 {
     [DbContext(typeof(HBContext))]
-    [Migration("20250402162506_InitialCreate")]
+    [Migration("20250407230234_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -343,7 +343,6 @@ namespace HotelBooking_API.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<decimal>("PricePerNight")
-                        .HasMaxLength(50)
                         .HasColumnType("numeric");
 
                     b.Property<string>("RoomName")

@@ -6,17 +6,17 @@ namespace HotelBooking_API.Data.Models
 {
     public class Booking
     {
-        [Key] // Первичный ключ
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Автоинкремент
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [ForeignKey("User")] // Внешний ключ для пользователя
+        [ForeignKey("User")]
         public int UserId { get; set; }
 
-        [ForeignKey("Room")] // Внешний ключ для номера
+        [ForeignKey("Room")]
         public int RoomId { get; set; }
 
-        [Required] // Обязательное поле
+        [Required]
         public DateTimeOffset CheckInDate { get; set; }
 
         [Required]
@@ -26,13 +26,12 @@ namespace HotelBooking_API.Data.Models
         public int TotalPrice { get; set; }
 
         [Required]
-        [MaxLength(20)] // Ограничение длины для статуса
-        public string Status { get; set; } = "Pending"; // Например, "Pending", "Confirmed", "Cancelled"
+        [MaxLength(20)]
+        public string Status { get; set; } = "Pending";
 
         // Навигационные свойства
-        public User User { get; set; }
-        public Room Room { get; set; }
-        public Payment Payment { get; set; } // Один Payment на одно бронирование
+        public User? User { get; set; }
+        public Room? Room { get; set; }
     }
     public class BookingDTO
     {

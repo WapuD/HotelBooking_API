@@ -128,13 +128,41 @@ namespace HotelBooking_API.Controllers
         // POST: api/Bookings
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Booking>> PostBooking(Booking booking)
+        public async Task<ActionResult<Booking>> PostBooking([FromBody] BookingDTO bookingDTO)
         {
-            _context.Booking.Add(booking);
+            if (bookingDTO == null ||
+                bookingDTO.RoomId <= 0 ||
+                bookingDTO.UserId <= 0 ||
+                bookingDTO.CheckInDate == default ||
+                bookingDTO.CheckOutDate == default ||
+                bookingDTO.TotalPrice <= 0)
+            {
+                return BadRequest("Некорректные данные бронирования");
+            }
+
+            var booking = new Booking
+            {
+                RoomId = bookingDTO.RoomId,
+                UserId = bookingDTO.UserId,
+                CheckInDate = bookingDTO.CheckInDate.ToUniversalTime(),
+                CheckOutDate = bookingDTO.CheckOutDate.ToUniversalTime(),
+                TotalPrice = bookingDTO.TotalPrice,
+                Status = bookingDTO.Status
+            };
+            booking.User = await _context.User.FindAsync(bookingDTO.UserId);
+            booking.Room = await _context.Room.FindAsync(bookingDTO.RoomId);
+
+            if (booking.User != null && booking.Room != null)
+                _context.Booking.Add(booking);
+            else
+                return BadRequest("Нет пользователя или комнаты бронирования");
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBooking", new { id = booking.Id }, booking);
+            return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
         }
+
+
 
         // DELETE: api/Bookings/5
         [HttpDelete("{id}")]

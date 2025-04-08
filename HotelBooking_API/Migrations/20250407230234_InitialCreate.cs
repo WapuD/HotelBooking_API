@@ -73,7 +73,7 @@ namespace HotelBooking_API.Migrations
                     HotelId = table.Column<int>(type: "integer", nullable: false),
                     RoomNumber = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     RoomName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    PricePerNight = table.Column<decimal>(type: "numeric", maxLength: 50, nullable: false),
+                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false),
                     Capacity = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     IsAvailable = table.Column<bool>(type: "boolean", nullable: false)

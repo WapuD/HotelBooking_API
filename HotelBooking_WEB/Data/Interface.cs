@@ -9,6 +9,9 @@
         [Get("/Hotels")]
         Task<IEnumerable<Hotel>> GetHotelsAsync();
 
+        [Post("/Hotels")]
+        Task CreateHotel([Body] Hotel hotel);
+
 
         [Get("/Rooms/Hotel/{hotelId}")]
         Task<IEnumerable<Room>> GetRoomByHotelId(int hotelId);
@@ -26,6 +29,9 @@
         [Post("/Users/CreateUser")]
         Task<bool> CreateUser(CreateUserDto newUser);
 
+        [Put("/Users/update")]
+        Task UpdateUser(UpdateUserDto updateUserDto);
+
 
         [Get("/Bookings/user/{userId}")]
         Task<IEnumerable<Booking>> GetUserBookings(int userId);
@@ -36,8 +42,7 @@
         [Put("/Bookings/update")]
         Task UpdateBookingStatus(int id, string newStatus);
 
-
-        [Post("/Hotels")]
-        Task CreateHotel([Body] Hotel hotel);
+        [Post("/Bookings")]
+        Task CreateBooking([Body] BookingDTO bookingDTO);
     }
 }

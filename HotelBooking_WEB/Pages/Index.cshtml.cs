@@ -2,8 +2,7 @@ using HotelBooking_API.Data.Models;
 using HotelBooking_WEB.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using static NuGet.Packaging.PackagingConstants;
+using Refit;
 
 namespace HotelBooking_WEB.Pages
 {
@@ -16,33 +15,37 @@ namespace HotelBooking_WEB.Pages
         public string email { get; set; }
         [BindProperty]
         public string password { get; set; }
+        public string ErrorMessage { get; set; }
+
         public IngexModel(ILogger<IngexModel> logger, IApiClient apiClient)
         {
             _logger = logger;
             _apiClient = apiClient;
         }
 
-        public async Task OnGet()
-        {
-
-        }
-
         public async Task<IActionResult> OnPost()
         {
             if (email != null && password != null)
             {
-                if (email == "HotelBooking@mail.ru")
+                if (email == "HotelBooking@mail.ru" && password == "qweqwe")
                     return RedirectToPage("/AdminBookings");
 
-                var verificationUser = await _apiClient.GetVerification(email, password);
-                if (verificationUser != null)
+                try
                 {
-                    HttpContext.Session.SetString("UserId", verificationUser.Id.ToString());
-                    return RedirectToPage("/Hotels");
+                    var verificationUser = await _apiClient.GetVerification(email, password);
+                    if (verificationUser != null)
+                    {
+                        HttpContext.Session.SetString("UserId", verificationUser.Id.ToString());
+                        return RedirectToPage("/Hotels");
+                    }
+                    else
+                    {
+                        ErrorMessage = "Пользователь с такими данными не найден.";
+                    }
                 }
-                else
+                catch (ApiException ex)
                 {
-                    return Page();
+                    ErrorMessage = "Неверные данные пользователя.";
                 }
             }
 

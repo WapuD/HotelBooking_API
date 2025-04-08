@@ -14,6 +14,7 @@
         <div class="card shadow profile-card">
             <div class="card-body">
                 <form method="post">
+                    <input type="hidden" asp-for="User.Id" />
                     <div class="mb-3">
                         <label for="firstName" class="form-label">Имя:</label>
                         <input type="text" class="form-control" id="firstName" asp-for="User.FirstName" required>
@@ -25,10 +26,6 @@
                     <div class="mb-3">
                         <label for="lastName" class="form-label">Фамилия:</label>
                         <input type="text" class="form-control" id="lastName" asp-for="User.LastName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="email" asp-for="User.Email" required>
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Телефон:</label>

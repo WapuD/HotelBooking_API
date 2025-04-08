@@ -22,7 +22,6 @@ namespace HotelBooking_API.Data.Models
         public string RoomName { get; set; }
         
         [Required]
-        [MaxLength(50)]
         public decimal PricePerNight { get; set; }
 
         [Range(1, 10)] // Ограничение для вместимости

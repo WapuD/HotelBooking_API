@@ -16,7 +16,6 @@ namespace HotelBooking_API.Data
         public DbSet<Amenity> Amenity { get; set; }
         public DbSet<Booking> Booking { get; set; }
         public DbSet<Hotel> Hotel { get; set; }
-        public DbSet<Payment> Payment { get; set; }
         public DbSet<Room> Room { get; set; }
         public DbSet<RoomAmenity> RoomAmenity { get; set; }
         public DbSet<RoomImages> RoomImages { get; set; }
@@ -61,13 +60,6 @@ namespace HotelBooking_API.Data
                 .HasOne(ri => ri.Room)
                 .WithMany(r => r.RoomImages)
                 .HasForeignKey(ri => ri.RoomId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Настройка связи между Booking и Payment
-            modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Booking)
-                .WithOne(b => b.Payment)
-                .HasForeignKey<Payment>(p => p.BookingId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Настройка индексов для улучшения производительности
@@ -297,25 +289,6 @@ namespace HotelBooking_API.Data
                     CheckOutDate = DateTime.SpecifyKind(new DateTime(2023, 1, 15), DateTimeKind.Utc),
                     TotalPrice = 20000,
                     Status = "Pending"
-                }
-            );
-
-            modelBuilder.Entity<Payment>().HasData(
-                new Payment
-                {
-                    Id = 1,
-                    BookingId = 1, // Бронирование 1
-                    Amount = 10000,
-                    PaymentDate = DateTime.SpecifyKind(new DateTime(2023, 1, 1), DateTimeKind.Utc),
-                    PaymentMethod = "CreditCard"
-                },
-                new Payment
-                {
-                    Id = 2,
-                    BookingId = 2, // Бронирование 2
-                    Amount = 20000,
-                    PaymentDate = DateTime.SpecifyKind(new DateTime(2023, 1, 10), DateTimeKind.Utc),
-                    PaymentMethod = "PayPal"
                 }
             );
 

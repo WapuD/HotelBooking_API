@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HotelBooking_API.Data;
 using HotelBooking_API.Data.Models;
 using HotelBooking_API.Data.Other;
+using Microsoft.AspNetCore.Identity;
 
 namespace HotelBooking_API.Controllers
 {
@@ -54,9 +55,22 @@ namespace HotelBooking_API.Controllers
         public async Task<ActionResult<User>> GetVerification(string email, string password)
         {
             var user = _context.User.Where(u => u.Email == email).FirstOrDefault();
+
+            if (user == null)
+            {
+                return Unauthorized(new { message = "Пользователь не найден" });
+            }
+
             var verify = PasswordHasher.VerifyPassword(password, user.PasswordHash);
 
-            return user;
+            if (verify == true)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return Unauthorized(new { message = "Неправильный пароль" });
+            }
         }
 
         // GET: api/Users/5
@@ -75,33 +89,34 @@ namespace HotelBooking_API.Controllers
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto updateUserDto)
         {
-            if (id != user.Id)
+            // Найдите пользователя в базе данных
+            var user = await _context.User.FindAsync(updateUserDto.Id);
+            if (user == null)
             {
-                return BadRequest();
+                return NotFound(new { message = "Пользователь не найден" });
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            // Обновите данные пользователя
+            user.FirstName = updateUserDto.FirstName;
+            user.SecondName = updateUserDto.SecondName;
+            user.LastName = updateUserDto.LastName;
+            user.Phone = updateUserDto.Phone;
 
+            // Сохраните изменения
             try
             {
+                _context.Entry(user).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ошибка при обновлении данных" });
             }
 
-            return NoContent();
+            return Ok(new { message = "Данные пользователя успешно обновлены" });
         }
 
         // POST: api/Users

@@ -340,7 +340,6 @@ namespace HotelBooking_API.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<decimal>("PricePerNight")
-                        .HasMaxLength(50)
                         .HasColumnType("numeric");
 
                     b.Property<string>("RoomName")

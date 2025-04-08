@@ -26,9 +26,9 @@
                             <form method="post">
                                 <input type="hidden" name="bookingId" value="@booking.Id" />
                                 <select name="newStatus">
-                                    <option value="Pending">Ожидание</option>
-                                    <option value="Confirmed">Подтверждено</option>
-                                    <option value="Cancelled">Отменено</option>
+                                    <option value="Ожидание">Ожидание</option>
+                                    <option value="Подтверждено">Подтверждено</option>
+                                    <option value="Отменено">Отменено</option>
                                 </select>
                                 <button type="submit" asp-page-handler="UpdateStatus" class="btn btn-primary update-status-btn">
                                     Обновить статус

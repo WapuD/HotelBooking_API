@@ -41,6 +41,10 @@
                         </p>
 
                         <form method="post">
+                            <input type="hidden" asp-for="RoomId" value="@Model.Room.Id" />
+                            <input type="hidden" asp-for="UserId" value="1" />  @* TODO: Get user id from session *@
+                            <input type="hidden" asp-for="TotalPrice" id="totalPrice" value="0" />
+
                             <div class="mb-3">
                                 <label for="checkInDate" class="form-label">Дата заезда:</label>
                                 <input type="date" class="form-control" id="checkInDate" asp-for="CheckInDate" required>
@@ -49,6 +53,8 @@
                                 <label for="checkOutDate" class="form-label">Дата выезда:</label>
                                 <input type="date" class="form-control" id="checkOutDate" asp-for="CheckOutDate" required>
                             </div>
+
+                            <p id="totalPriceInfo"></p>
 
                             <button type="submit" class="btn btn-primary book-btn">
                                 <i class="fa fa-calendar-check me-2"></i>
@@ -106,16 +112,84 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const roomImage = document.getElementById('roomImage');
-        const images = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Room?.RoomImages?.Select(img => img.ImageUrl).ToList()));
-        let currentImageIndex = 0;
+    document.getElementById('checkInDate').addEventListener('keydown', function (event) {
+        event.preventDefault();
+    });
+    document.getElementById('checkOutDate').addEventListener('keydown', function (event) {
+        event.preventDefault();
+    });
 
-        if (roomImage && images && images.length > 0) {
-            roomImage.addEventListener('click', function () {
-                currentImageIndex = (currentImageIndex + 1) % images.length;
-                roomImage.src = images[currentImageIndex];
-            });
+    const roomImage = document.getElementById('roomImage');
+    const roomImages = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Room?.RoomImages?.Select(img => img.ImageUrl).ToList()));
+    let currentImageIndex = 0;
+
+    if (roomImage && roomImages && roomImages.length > 0) {
+        roomImage.addEventListener('click', function () {
+            currentImageIndex = (currentImageIndex + 1) % roomImages.length;
+            roomImage.src = roomImages[currentImageIndex];
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkInDateInput = document.getElementById('checkInDate');
+        const checkOutDateInput = document.getElementById('checkOutDate');
+        const totalPriceInfo = document.getElementById('totalPriceInfo');
+        const totalPriceInput = document.getElementById('totalPrice');
+        const roomPricePerNight = parseFloat("@Html.Raw(Model.Room.PricePerNight.ToString())");
+
+        // Set initial date
+        let today = new Date();
+        let formattedDateIn = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        checkInDateInput.setAttribute('min', today.toISOString().split('T')[0]);
+        checkInDateInput.value = formattedDateIn;
+
+        let tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+        let formattedDateOut = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
+        checkOutDateInput.setAttribute('min', tomorrow.toISOString().split('T')[0]);
+        checkOutDateInput.value = formattedDateOut;
+
+        // Update total price and set minimum checkOutDate
+        checkInDateInput.addEventListener('change', function () {
+            const checkInDate = new Date(this.value);
+            if (checkOutDateInput) {
+                const minCheckOutDate = new Date(checkInDate);
+                minCheckOutDate.setDate(minCheckOutDate.getDate() + 1); // At least the next day
+                checkOutDateInput.setAttribute('min', minCheckOutDate.toISOString().split('T')[0]);
+
+                if (checkOutDateInput.value && new Date(checkOutDateInput.value) < minCheckOutDate) {
+                    checkOutDateInput.value = '';
+                }
+
+                updateTotalPriceInfo();
+            }
+        });
+
+        checkOutDateInput.addEventListener('change', function () {
+            const checkOutDate = new Date(this.value);
+            if (checkInDateInput) {
+                const maxCheckInDate = new Date(checkOutDate);
+                maxCheckInDate.setDate(maxCheckInDate.getDate() - 1);
+                checkInDateInput.setAttribute('max', maxCheckInDate.toISOString().split('T')[0]);
+
+                updateTotalPriceInfo();
+            }
+        });
+
+        function updateTotalPriceInfo() {
+            if (checkInDateInput.value && checkOutDateInput.value) {
+                const checkInDate = new Date(checkInDateInput.value);
+                const checkOutDate = new Date(checkOutDateInput.value);
+                const nightsCount = Math.round((checkOutDate - checkInDate) / (1000 * 3600 * 24));
+
+                const totalPrice = nightsCount * roomPricePerNight;
+                totalPriceInfo.innerText = `Общая стоимость проживания: ${totalPrice.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' })}`;
+                totalPriceInput.value = totalPrice;
+            } else {
+                totalPriceInfo.innerText = '';
+                totalPriceInput.value = 0;
+            }
         }
+
+        updateTotalPriceInfo();
     });
 </script>

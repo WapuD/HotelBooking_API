@@ -11,7 +11,7 @@ namespace HotelBooking_WEB.Pages
         private readonly IApiClient _apiClient;
 
         [BindProperty]
-        public User User { get; set; }
+        public UpdateUserDto User { get; set; }
 
         public ProfileModel(ILogger<ProfileModel> logger, IApiClient apiClient)
         {
@@ -22,17 +22,35 @@ namespace HotelBooking_WEB.Pages
         public async Task OnGet()
         {
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
-            User = await _apiClient.GetUser(userId);
+            var user = await _apiClient.GetUser(userId);
+            User = new UpdateUserDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                SecondName = user.SecondName,
+                LastName = user.LastName,
+                Phone = user.Phone
+            };
         }
 
         public async Task<IActionResult> OnPost()
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                //await _apiClient.UpdateUser(User);
-                return RedirectToPage("/Profile");
+                return Page();
             }
-            return Page();
+
+            try
+            {
+                await _apiClient.UpdateUser(User);
+                TempData["SuccessMessage"] = "Данные пользователя успешно обновлены.";
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Ошибка: {ex.Message}");
+                return Page();
+            }
         }
     }
 }
