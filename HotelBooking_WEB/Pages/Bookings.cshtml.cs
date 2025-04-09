@@ -31,7 +31,9 @@ namespace HotelBooking_WEB.Pages
                 }
 
                 var userId = int.Parse(userIdString);
-                Bookings = await _apiClient.GetUserBookings(userId);
+                var bookings = await _apiClient.GetUserBookings(userId);
+                Bookings = bookings.OrderBy(b => b.CheckInDate)
+                                   .ToList();
             }
             catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
