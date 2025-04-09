@@ -25,7 +25,8 @@ namespace HotelBooking_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotel()
         {
-            return await _context.Hotel.ToListAsync();
+            return await _context.Hotel.Include(h => h.Rooms)
+                                       .ToListAsync();
         }
 
         // GET: api/Hotels/5
@@ -75,12 +76,29 @@ namespace HotelBooking_API.Controllers
 
         // POST: api/Hotels
         [HttpPost]
-        public async Task<ActionResult<Hotel>> PostHotel([FromForm] Hotel hotel)
+        public async Task<bool> PostHotel(HotelDtoCreate hotel)
         {
-            _context.Hotel.Add(hotel);
-            await _context.SaveChangesAsync();
+            var newHotel = new Hotel
+            {
+                Address = hotel.Address,
+                ImageUrl = hotel.ImageUrl,
+                Name = hotel.Name,
+                Description = hotel.Description,
+                City = hotel.City,
+                Rating = hotel.Rating,
+                Rooms = null
+            };
 
-            return CreatedAtAction(nameof(GetHotel), new { id = hotel.Id }, hotel);
+            try
+            {
+                _context.Hotel.Add(newHotel);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            } 
         }
 
         // DELETE: api/Hotels/5

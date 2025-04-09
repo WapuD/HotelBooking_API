@@ -1,5 +1,6 @@
 using HotelBooking_API.Data.Models;
 using HotelBooking_WEB.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using static NuGet.Packaging.PackagingConstants;
@@ -21,8 +22,19 @@ namespace HotelBooking_WEB.Pages
 
         public async Task OnGet()
         {
-            Hotels = await _apiClient.GetHotelsAsync();
-            var z = 0;
+            var hotels = await _apiClient.GetHotelsAsync();
+            foreach (var hotel in hotels) { 
+                var rooms = await _apiClient.GetRoomByHotelId(hotel.Id);
+                ICollection<Room> roomList = rooms.ToList();
+                hotel.Rooms = roomList;
+            }
+            Hotels = hotels;
         }
+        public async Task<IActionResult> OnPostBookHotel(int hotelId)
+        {
+            HttpContext.Session.SetString("HotelId", hotelId.ToString());
+            return RedirectToPage("/Rooms");
+        }
+
     }
 }

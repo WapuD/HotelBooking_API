@@ -10,7 +10,7 @@
         Task<IEnumerable<Hotel>> GetHotelsAsync();
 
         [Post("/Hotels")]
-        Task CreateHotel([Body] Hotel hotel);
+        Task<bool> CreateHotel(HotelDtoCreate hotel);
 
 
         [Get("/Rooms/Hotel/{hotelId}")]
@@ -44,5 +44,11 @@
 
         [Post("/Bookings")]
         Task CreateBooking([Body] BookingDTO bookingDTO);
+
+        [Get("/Bookings/Room/{roomId}")]
+        Task<IEnumerable<Booking>> GetBookingsByRoomId(int roomId);
+
+        [Get("/Bookings/{id}")]
+        Task<Booking> GetBookingById(int id);
     }
 }

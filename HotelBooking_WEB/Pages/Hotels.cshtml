@@ -35,14 +35,33 @@
                             </div>
 
                             <p class="card-text">@hotel.Description</p>
-                            <a asp-page="/Rooms"
-                               asp-route-hotelId="@hotel.Id"
-                               class="btn btn-primary mt-3 book-btn">
-                                Забронировать
-                            </a>
+                            <p>Адрес: @hotel.Address</p>
+
+                            <!-- Добавление информации о количестве доступных номеров -->
+                            @if (hotel.Rooms.Any())
+                            {
+                                <p>Количество доступных номеров: @hotel.Rooms.Count(r => r.IsAvailable)</p>
+
+                                decimal minPrice = hotel.Rooms.Min(r => r.PricePerNight);
+                                decimal maxPrice = hotel.Rooms.Max(r => r.PricePerNight);
+
+                                <p>Диапазон цен за ночь: @minPrice - @maxPrice</p>
+                            }
+                            else
+                            {
+                                <p>В данный момент действующих номеров нет</p>
+                            }
+
+                            <form asp-page-handler="BookHotel" method="post">
+                                <input type="hidden" name="hotelId" value="@hotel.Id" />
+                                <button class="btn btn-primary mt-3 book-btn" type="submit">
+                                    Забронировать
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
+
             }
         </div>
     }
@@ -121,6 +140,15 @@
     .rating-container:hover .rating-value {
         opacity: 1;
     }
+
+    .star-rating .fa-star.checked {
+        color: yellow;
+    }
+
+    .star-rating .fa-star.half-checked {
+        color: yellow;
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
 </style>
 
 <script>
@@ -141,14 +169,3 @@
         });
     });
 </script>
-
-<style>
-    .star-rating .fa-star.checked {
-        color: yellow;
-    }
-
-    .star-rating .fa-star.half-checked {
-        color: yellow;
-        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-    }
-</style>

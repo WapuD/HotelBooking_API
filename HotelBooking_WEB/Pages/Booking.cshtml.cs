@@ -1,8 +1,10 @@
 using HotelBooking_API.Data.Models;
 using HotelBooking_WEB.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Refit;
+using System.Globalization;
 
 namespace HotelBooking_WEB.Pages
 {
@@ -29,6 +31,8 @@ namespace HotelBooking_WEB.Pages
         [BindProperty]
         public int UserId { get; set; }
 
+        public List<string> BookedDates { get; set; } = new List<string>();
+
         public BookingModel(ILogger<BookingModel> logger, IApiClient apiClient)
         {
             _logger = logger;
@@ -37,8 +41,14 @@ namespace HotelBooking_WEB.Pages
 
         public async Task OnGet(int roomId)
         {
+            HttpContext.Session.SetString("RoomId", roomId.ToString());
             Room = await _apiClient.GetRoomById(roomId);
             RoomId = roomId;
+
+            var bookings = await _apiClient.GetBookingsByRoomId(roomId);
+
+            BookedDates = bookings.SelectMany(b => Enumerable.Range(0, (b.CheckOutDate - b.CheckInDate).Days)
+                                                             .Select(i => b.CheckInDate.AddDays(i).ToString("yyyy-MM-dd"))).ToList();
         }
 
         public async Task<IActionResult> OnPost()
@@ -48,7 +58,7 @@ namespace HotelBooking_WEB.Pages
             if (RoomId <= 0 || UserId <= 0 || CheckInDate == default || CheckOutDate == default || TotalPrice <= 0)
             {
                 ModelState.AddModelError(string.Empty, "Некорректные данные для бронирования.");
-                return Page();
+                return RedirectToPage("/Rooms");
             }
 
             var bookingDTO = new BookingDTO

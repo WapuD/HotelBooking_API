@@ -43,6 +43,11 @@ namespace HotelBooking_WEB.Pages
                 throw;
             }
         }
+        public async Task<IActionResult> OnPost(int bookingId)
+        {
+            await _apiClient.UpdateBookingStatus(bookingId, "Отменено");
+            return RedirectToPage("/Bookings");
+        }
 
     }
 }

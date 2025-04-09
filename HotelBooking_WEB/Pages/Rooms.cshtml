@@ -5,9 +5,27 @@
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div class="container py-5">
     <h1 class="text-center mb-4" style="color: #1a73e8;">Доступные комнаты</h1>
+
+    <form method="get">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="checkInDate" class="form-label">Дата заезда:</label>
+                <input type="date" class="form-control" id="checkInDate" name="checkInDate" value="@Model.CheckInDate?.ToString("yyyy-MM-dd")" required>
+            </div>
+            <div class="col-md-6">
+                <label for="checkOutDate" class="form-label">Дата выезда:</label>
+                <input type="date" class="form-control" id="checkOutDate" name="checkOutDate" value="@Model.CheckOutDate?.ToString("yyyy-MM-dd")">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Применить фильтры</button>
+    </form>
+
     @if (Model.Rooms != null && Model.Rooms.Any())
     {
         <div class="row g-4">
@@ -16,47 +34,31 @@
                 <div class="col-md-4">
                     <div class="room-card card h-100 shadow">
                         <div class="card-img-container">
-                            @if (room.RoomImages != null && Model.Rooms.Where(r => r.Id == room.Id).First().RoomImages.Any())
+                            @if (room.RoomImages != null && room.RoomImages.Any())
                             {
-                                <img src="@Model.Rooms.Where(r => r.Id == room.Id).First().RoomImages.First().ImageUrl" class="img-fluid rounded-start" alt="@Model.Rooms.Where(r => r.Id == room.Id).First().RoomName">
+                                <img src="@room.RoomImages.First().ImageUrl" class="img-fluid rounded-start" alt="@room.RoomName">
                             }
                             else
                             {
-                                <img src="Default.png" class="img-fluid rounded-start" alt="Номер без фото">
+                                <img src="/images/Default.png" class="img-fluid rounded-start" alt="Номер без фото">
                             }
                         </div>
                         <div class="card-body">
                             <h3 class="card-title">@room.RoomName</h3>
                             <p class="card-text"><strong>Вместимость:</strong> @room.Capacity чел.</p>
                             <p class="card-text"><strong>Цена за ночь:</strong> @room.PricePerNight.ToString("C")</p>
-                            @if (room.IsAvailable)
-                            {
-                                <a asp-page="/Booking" 
-                                   asp-route-roomId="@room.Id"
-                                   class="btn btn-primary mt-3 book-btn">
-                                   Забронировать
-                                </a>
-                            }
-                            else
-                            {
-                                <button class="btn btn-secondary mt-3" disabled>Недоступно</button>
-                            }
+                            <a asp-page="/Booking" asp-route-roomId="@room.Id" class="btn btn-primary mt-3 book-btn">
+                                Забронировать
+                            </a>
                         </div>
                     </div>
                 </div>
             }
         </div>
-        <!-- Комментарии -->
-        <div class="mt-5">
-            <h3>Комментарии</h3>
-            <p>Комментариев пока нет.</p>
-            <!-- Добавьте форму для добавления комментариев здесь -->
-        </div>
     }
-
     else
     {
-        <h2 class="text-center mb-4" style="color: #1a73e8;">Нет доступных комнат.</h2>
+        <h2 class="text-center mb-4" style="color: #1a73e8;">Нет доступных комнат, соответствующих критериям.</h2>
     }
 </div>
 
@@ -97,3 +99,30 @@
             background-color: #0056b3;
         }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkInDateInput = document.getElementById('checkInDate');
+        const checkOutDateInput = document.getElementById('checkOutDate');
+
+        // Set initial date
+        if (!checkInDateInput.value) {
+            let today = new Date();
+            let formattedDateIn = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            checkInDateInput.setAttribute('min', today.toISOString().split('T')[0]);
+            checkInDateInput.value = formattedDateIn;
+
+            let tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+            let formattedDateOut = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
+            checkOutDateInput.setAttribute('min', tomorrow.toISOString().split('T')[0]);
+            checkOutDateInput.value = formattedDateOut;
+        }
+
+        checkInDateInput.addEventListener('keydown', function (event) {
+            event.preventDefault();
+        });
+        checkOutDateInput.addEventListener('keydown', function (event) {
+            event.preventDefault();
+        });
+    });
+</script>

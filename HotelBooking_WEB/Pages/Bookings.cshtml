@@ -38,6 +38,16 @@
                                 <i class="fa fa-circle-info me-2"></i>
                                 Статус: @booking.Status
                             </p>
+
+                            @if (booking.Status == "Ожидание")
+                            {
+                                <form method="post">
+                                    <input type="hidden" name="bookingId" value="@booking.Id" />
+                                    <button type="submit" asp-page-handler="CancelBooking" class="btn btn-danger mt-3">
+                                        Отменить бронирование
+                                    </button>
+                                </form>
+                            }
                         </div>
                     </div>
                 </div>

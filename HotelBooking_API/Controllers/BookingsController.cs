@@ -25,7 +25,11 @@ namespace HotelBooking_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetAllBookings()
         {
-            var bookings = await _context.Booking.ToListAsync();
+            List<Booking> bookings = await _context.Booking
+                .Include(b => b.User)
+                .Include(b => b.Room)
+                    .ThenInclude(r => r.Hotel)
+                .ToListAsync();
             return bookings;
         }
 
@@ -43,6 +47,14 @@ namespace HotelBooking_API.Controllers
             return booking;
         }
 
+        // GET: api/Bookings/Room/5
+        [HttpGet("Room/{roomId}")]
+        public async Task<ActionResult<IEnumerable<Booking>>> GetBookingsByRoomId(int roomId)
+        {
+            var bookings = await _context.Booking.Where(b => b.RoomId == roomId)
+                                                 .ToListAsync();
+            return Ok(bookings);
+        }
 
         // GET: api/Bookings/user/{userId}
         [HttpGet("user/{userId}")]

@@ -30,35 +30,48 @@ namespace HotelBooking_WEB.Pages
         {
             if (ImageFile != null && ImageFile.Length > 0)
             {
-                var fileName = "HotelPhoto"; // Используем имя файла, которое выбрал пользователь
+                var baseName = "HotelPhoto";
+                var extension = ".png";
+                var fileName = $"{baseName}{extension}";
                 var filePath = Path.Combine(_environment.WebRootPath, fileName);
 
                 // Проверка на существование файла с таким же именем
-                if (System.IO.File.Exists(filePath))
+                var counter = 1;
+                while (System.IO.File.Exists(filePath))
                 {
-                    // Если файл существует, добавляем номер к имени
-                    var baseName = Path.GetFileNameWithoutExtension(fileName);
-                    var extension = Path.GetExtension(fileName);
-                    var counter = 1;
-                    while (System.IO.File.Exists(filePath))
+                    fileName = $"{baseName}_{counter}{extension}";
+                    filePath = Path.Combine(_environment.WebRootPath, fileName);
+                    counter++;
+                }
+
+                try
+                {
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-                        fileName = $"{baseName}_{counter}{extension}.png";
-                        filePath = Path.Combine(_environment.WebRootPath, fileName);
-                        counter++;
+                        await ImageFile.CopyToAsync(fileStream);
                     }
-                }
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    Hotel.ImageUrl = fileName;
+                }
+                catch (IOException ex)
                 {
-                    await ImageFile.CopyToAsync(fileStream);
+                    Console.WriteLine($"Ошибка при сохранении файла: {ex.Message}");
+                    throw;
                 }
-
-                Hotel.ImageUrl = fileName; // Сохраняем имя файла
             }
 
             try
             {
-                await _apiClient.CreateHotel(Hotel);
+                var newHotel = new HotelDtoCreate
+                {
+                    Name = Hotel.Name,
+                    Address = Hotel.Address,
+                    City = Hotel.City,
+                    Description = Hotel.Description,
+                    ImageUrl = Hotel.ImageUrl,
+                    Rating = Hotel.Rating
+                };
+                var result = await _apiClient.CreateHotel(newHotel);
             }
             catch (Refit.ApiException ex)
             {
