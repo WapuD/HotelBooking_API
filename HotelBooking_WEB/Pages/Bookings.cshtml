@@ -48,6 +48,13 @@
                                     </button>
                                 </form>
                             }
+                            @if (booking.Status != "Ожидание")
+                            {
+
+                            <a asp-page="/RoomComments" class="btn btn-danger mt-3">
+                                Оставить отзыв
+                            </a>
+                            }
                         </div>
                     </div>
                 </div>

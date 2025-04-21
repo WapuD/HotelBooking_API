@@ -1,0 +1,86 @@
+﻿@page
+@model HotelBooking_WEB.Pages.CommentsModel
+@{
+    ViewData["Title"] = "Комментарии";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" />
+
+<div class="container py-5">
+    <h1 class="text-center mb-4" style="color: #1a73e8;">Комментарии</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Оставить комментарий</h5>
+            <form method="post" asp-page-handler="AddComment">
+                <input type="hidden" asp-for="NewComment.UserId" />
+                <input type="hidden" asp-for="EntityId" />
+                <input type="hidden" asp-for="EntityType" />
+
+                <div class="mb-3">
+                    <label for="Rating" class="form-label">Рейтинг (1-5)</label>
+                    <select id="Rating" class="form-select" asp-for="NewComment.Rating" required>
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <option value="@i" selected="@(Model.NewComment.Rating == i)">@i</option>
+                        }
+                    </select>
+                    <span asp-validation-for="NewComment.Rating" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Text" class="form-label">Комментарий</label>
+                    <textarea id="Text" class="form-control" asp-for="NewComment.Text" rows="5" maxlength="1000" required></textarea>
+                    <span asp-validation-for="NewComment.Text" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>Существующие комментарии</h2>
+
+    @if (Model.Comments != null && Model.Comments.Any())
+    {
+        @foreach (var comment in Model.Comments)
+        {
+            <div class="card shadow mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Рейтинг: 
+                        <span class="star-rating">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span class="fa fa-star @(i <= comment.Rating ? "checked" : "")"></span>
+                            }
+                        </span>
+                    </h5>
+                    <p>@comment.Text</p>
+                    <p class="text-muted">Пользователь: @comment.UserId</p>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Комментариев пока нет.</p>
+    }
+</div>
+
+<style>
+    .star-rating {
+        font-size: 1.2em;
+        color: #ffc107;
+        display: inline-block;
+    }
+    .star-rating .fa-star {
+        margin: 2px;
+        color: lightgray;
+    }
+    .star-rating .fa-star.checked {
+        color: gold;
+    }
+</style>
+
