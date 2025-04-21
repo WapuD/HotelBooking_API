@@ -41,6 +41,8 @@ namespace HotelBooking_WEB.Pages
 
         public async Task OnGet(int roomId)
         {
+            if (roomId == 0)
+                roomId = Convert.ToInt32(HttpContext.Session.GetString("RoomId"));
             HttpContext.Session.SetString("RoomId", roomId.ToString());
             Room = await _apiClient.GetRoomById(roomId);
             RoomId = roomId;
@@ -61,12 +63,47 @@ namespace HotelBooking_WEB.Pages
                 return RedirectToPage("/Rooms");
             }
 
+            // Приводим даты к UTC с обнулением времени (полночь)
+            var utcCheckIn = new DateTimeOffset(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 0, 0, 0, TimeSpan.Zero);
+            var utcCheckOut = new DateTimeOffset(CheckOutDate.Year, CheckOutDate.Month, CheckOutDate.Day, 0, 0, 0, TimeSpan.Zero);
+            var checkInStr = utcCheckIn.ToString("yyyy-MM-dd");
+            var checkOutStr = utcCheckOut.ToString("yyyy-MM-dd");
+
+            // Проверяем доступность комнат через API
+            int availableRoomCount;
+            try
+            {
+                availableRoomCount = await _apiClient.GetAvailableRoomCount(RoomId, checkInStr, checkOutStr);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Ошибка при проверке доступности: {ex.Message}");
+
+                await OnGet(RoomId);
+                return Page();
+            }
+
+            if (availableRoomCount <= 0)
+            {
+                // Нет свободных комнат — сбрасываем даты и показываем ошибку
+                ModelState.AddModelError(string.Empty, "На выбранные даты нет доступных комнат. Пожалуйста, выберите другие даты.");
+
+                // Сброс полей даты (если у вас есть свойства для привязки)
+                CheckInDate = default;
+                CheckOutDate = default;
+
+                HttpContext.Session.SetString("RoomId", RoomId.ToString());
+
+                await OnGet(RoomId);
+                return Page();
+            }
+
             var bookingDTO = new BookingDTO
             {
                 UserId = UserId,
                 RoomId = RoomId,
-                CheckInDate = new DateTimeOffset(CheckInDate).ToUniversalTime(),
-                CheckOutDate = new DateTimeOffset(CheckOutDate).ToUniversalTime(),
+                CheckInDate = utcCheckIn,
+                CheckOutDate = utcCheckOut,
                 TotalPrice = TotalPrice,
                 Status = "Ожидание"
             };
@@ -83,5 +120,6 @@ namespace HotelBooking_WEB.Pages
                 return Page();
             }
         }
+
     }
 }

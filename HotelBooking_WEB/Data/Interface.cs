@@ -19,6 +19,9 @@
         [Get("/Rooms/{roomId}")]
         Task<Room> GetRoomById(int roomId);
 
+        [Get("/Rooms/{roomId}/{checkIn}_{checkOut}")]
+        Task<int> GetAvailableRoomCount(int roomId, string checkIn, string checkOut);
+
 
         [Get("/Users/Verification")]
         Task<User> GetVerification(string email, string password);

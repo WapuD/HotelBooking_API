@@ -133,5 +133,51 @@ namespace HotelBooking_API.Controllers
         {
             return _context.Room.Any(e => e.Id == id);
         }
+
+        // GET: api/Rooms/2/2000-12-22_2000-12-24
+        [HttpGet("{roomId}/{checkIn}_{checkOut}")]
+        public int GetAvailableRoomCount(int roomId, DateTimeOffset checkIn, DateTimeOffset checkOut)
+        {
+            var room = _context.Room.FirstOrDefault(r => r.Id == roomId);
+            if (room == null) return 0;
+
+            var utcCheckIn = new DateTime(checkIn.Year, checkIn.Month, checkIn.Day, 5, 0, 0).ToUniversalTime();
+            var utcCheckOut = new DateTime(checkOut.Year, checkOut.Month, checkOut.Day, 5, 0, 0).ToUniversalTime();
+
+
+            var bookings = _context.Booking
+                .Where(b => b.RoomId == roomId)
+                .ToList();
+
+            // Словарь: дата -> количество занятых комнат в этот день
+            var occupancy = new Dictionary<DateTime, int>();
+
+            foreach (var booking in bookings)
+            {
+                var startDate = booking.CheckInDate.Date;
+                var endDate = booking.CheckOutDate.Date;
+
+                for (var date = startDate; date < endDate; date = date.AddDays(1))
+                {
+                    if (occupancy.ContainsKey(date))
+                        occupancy[date]++;
+                    else
+                        occupancy[date] = 1;
+                }
+            }
+
+            int maxOccupied = 0;
+            for (var date = utcCheckIn; date < utcCheckOut; date = date.AddDays(1))
+            {
+                if (occupancy.TryGetValue(date, out int count))
+                {
+                    if (count > maxOccupied)
+                        maxOccupied = count;
+                }
+            }
+
+            int available = room.Count - maxOccupied;
+            return available > 0 ? available : 0;
+        }
     }
 }

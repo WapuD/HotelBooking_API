@@ -40,7 +40,7 @@
                             <!-- Добавление информации о количестве доступных номеров -->
                             @if (hotel.Rooms.Any())
                             {
-                                <p>Количество доступных номеров: @hotel.Rooms.Count(r => r.IsAvailable)</p>
+                                <p>Количество доступных номеров: @hotel.Rooms.Count()</p>
 
                                 decimal minPrice = hotel.Rooms.Min(r => r.PricePerNight);
                                 decimal maxPrice = hotel.Rooms.Max(r => r.PricePerNight);

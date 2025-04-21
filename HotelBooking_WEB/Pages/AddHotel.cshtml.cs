@@ -69,7 +69,7 @@ namespace HotelBooking_WEB.Pages
                     City = Hotel.City,
                     Description = Hotel.Description,
                     ImageUrl = Hotel.ImageUrl,
-                    Rating = Hotel.Rating
+                    Rating = 0
                 };
                 var result = await _apiClient.CreateHotel(newHotel);
             }

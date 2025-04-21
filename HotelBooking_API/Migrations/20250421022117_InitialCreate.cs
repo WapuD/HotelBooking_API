@@ -76,7 +76,7 @@ namespace HotelBooking_API.Migrations
                     PricePerNight = table.Column<decimal>(type: "numeric", nullable: false),
                     Capacity = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    IsAvailable = table.Column<bool>(type: "boolean", nullable: false)
+                    Count = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,28 +165,6 @@ namespace HotelBooking_API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Payment",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BookingId = table.Column<int>(type: "integer", nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payment_Booking_BookingId",
-                        column: x => x.BookingId,
-                        principalTable: "Booking",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.InsertData(
                 table: "Amenity",
                 columns: new[] { "Id", "Description", "Name" },
@@ -225,11 +203,11 @@ namespace HotelBooking_API.Migrations
 
             migrationBuilder.InsertData(
                 table: "Room",
-                columns: new[] { "Id", "Capacity", "Description", "HotelId", "IsAvailable", "PricePerNight", "RoomName", "RoomNumber" },
+                columns: new[] { "Id", "Capacity", "Count", "Description", "HotelId", "PricePerNight", "RoomName", "RoomNumber" },
                 values: new object[,]
                 {
-                    { 1, 2, "Обычный номер, предоставляющий всё необходимое", 1, true, 5000m, "Стандарт", "101" },
-                    { 2, 2, "Для самых требовательных гостей", 1, true, 10000m, "Люкс", "102" }
+                    { 1, 2, 10, "Обычный номер, предоставляющий всё необходимое", 1, 5000m, "Стандарт", "101" },
+                    { 2, 2, 10, "Для самых требовательных гостей", 1, 10000m, "Люкс", "102" }
                 });
 
             migrationBuilder.InsertData(
@@ -263,15 +241,6 @@ namespace HotelBooking_API.Migrations
                     { 4, "test4.png", 2 }
                 });
 
-            migrationBuilder.InsertData(
-                table: "Payment",
-                columns: new[] { "Id", "Amount", "BookingId", "PaymentDate", "PaymentMethod" },
-                values: new object[,]
-                {
-                    { 1, 10000m, 1, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "CreditCard" },
-                    { 2, 20000m, 2, new DateTime(2023, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc), "PayPal" }
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Booking_RoomId",
                 table: "Booking",
@@ -286,12 +255,6 @@ namespace HotelBooking_API.Migrations
                 name: "IX_Hotel_Name",
                 table: "Hotel",
                 column: "Name");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payment_BookingId",
-                table: "Payment",
-                column: "BookingId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Room_HotelId",
@@ -324,7 +287,7 @@ namespace HotelBooking_API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Payment");
+                name: "Booking");
 
             migrationBuilder.DropTable(
                 name: "RoomAmenity");
@@ -333,16 +296,13 @@ namespace HotelBooking_API.Migrations
                 name: "RoomImages");
 
             migrationBuilder.DropTable(
-                name: "Booking");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Amenity");
 
             migrationBuilder.DropTable(
                 name: "Room");
-
-            migrationBuilder.DropTable(
-                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Hotel");

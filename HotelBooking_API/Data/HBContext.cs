@@ -210,7 +210,7 @@ namespace HotelBooking_API.Data
                     PricePerNight = 5000,
                     Capacity = 2,
                     Description = "Обычный номер, предоставляющий всё необходимое",
-                    IsAvailable = true
+                    Count = 10
                 },
                 new Room
                 {
@@ -221,7 +221,7 @@ namespace HotelBooking_API.Data
                     PricePerNight = 10000,
                     Capacity = 2,
                     Description = "Для самых требовательных гостей",
-                    IsAvailable = true
+                    Count = 10
                 }
             );
 

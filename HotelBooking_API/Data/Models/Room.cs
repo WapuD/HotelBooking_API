@@ -31,7 +31,7 @@ namespace HotelBooking_API.Data.Models
         [MaxLength(500)]
         public string Description { get; set; }
 
-        public bool IsAvailable { get; set; } = true;
+        public int Count { get; set; }
 
         // Навигационные свойства
         public Hotel Hotel { get; set; }

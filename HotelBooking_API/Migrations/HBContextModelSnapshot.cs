@@ -269,54 +269,6 @@ namespace HotelBooking_API.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HotelBooking_API.Data.Models.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingId")
-                        .IsUnique();
-
-                    b.ToTable("Payment");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Amount = 10000m,
-                            BookingId = 1,
-                            PaymentDate = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PaymentMethod = "CreditCard"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Amount = 20000m,
-                            BookingId = 2,
-                            PaymentDate = new DateTime(2023, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PaymentMethod = "PayPal"
-                        });
-                });
-
             modelBuilder.Entity("HotelBooking_API.Data.Models.Room", b =>
                 {
                     b.Property<int>("Id")
@@ -328,6 +280,9 @@ namespace HotelBooking_API.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -335,9 +290,6 @@ namespace HotelBooking_API.Migrations
 
                     b.Property<int>("HotelId")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("boolean");
 
                     b.Property<decimal>("PricePerNight")
                         .HasColumnType("numeric");
@@ -365,9 +317,9 @@ namespace HotelBooking_API.Migrations
                         {
                             Id = 1,
                             Capacity = 2,
+                            Count = 10,
                             Description = "Обычный номер, предоставляющий всё необходимое",
                             HotelId = 1,
-                            IsAvailable = true,
                             PricePerNight = 5000m,
                             RoomName = "Стандарт",
                             RoomNumber = "101"
@@ -376,9 +328,9 @@ namespace HotelBooking_API.Migrations
                         {
                             Id = 2,
                             Capacity = 2,
+                            Count = 10,
                             Description = "Для самых требовательных гостей",
                             HotelId = 1,
-                            IsAvailable = true,
                             PricePerNight = 10000m,
                             RoomName = "Люкс",
                             RoomNumber = "102"
@@ -567,17 +519,6 @@ namespace HotelBooking_API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HotelBooking_API.Data.Models.Payment", b =>
-                {
-                    b.HasOne("HotelBooking_API.Data.Models.Booking", "Booking")
-                        .WithOne("Payment")
-                        .HasForeignKey("HotelBooking_API.Data.Models.Payment", "BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-                });
-
             modelBuilder.Entity("HotelBooking_API.Data.Models.Room", b =>
                 {
                     b.HasOne("HotelBooking_API.Data.Models.Hotel", "Hotel")
@@ -622,12 +563,6 @@ namespace HotelBooking_API.Migrations
             modelBuilder.Entity("HotelBooking_API.Data.Models.Amenity", b =>
                 {
                     b.Navigation("RoomAmenities");
-                });
-
-            modelBuilder.Entity("HotelBooking_API.Data.Models.Booking", b =>
-                {
-                    b.Navigation("Payment")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("HotelBooking_API.Data.Models.Hotel", b =>

@@ -48,26 +48,17 @@ namespace HotelBooking_WEB.Pages
 
         private async Task<IEnumerable<Room>> FilterAvailableRooms(IEnumerable<Room> rooms, DateTime checkInDate, DateTime checkOutDate)
         {
-            var availableRooms = new List<Room>();
+            var utcCheckIn = new DateTime(checkInDate.Year, checkInDate.Month, checkInDate.Day, 5, 0, 0).ToUniversalTime();
+            var utcCheckOut = new DateTime(checkOutDate.Year, checkOutDate.Month, checkOutDate.Day, 5, 0, 0).ToUniversalTime();
+            var checkInStr = utcCheckIn.ToString("yyyy-MM-dd");
+            var checkOutStr = utcCheckOut.ToString("yyyy-MM-dd");
 
+            var availableRooms = new List<Room>();
             foreach (var room in rooms)
             {
-                var bookings = await _apiClient.GetBookingsByRoomId(room.Id);
-                bool isAvailable = true;
-
-                foreach (var booking in bookings)
-                {
-                    if ((checkInDate < booking.CheckOutDate) && (checkOutDate > booking.CheckInDate))
-                    {
-                        isAvailable = false;
-                        break;
-                    }
-                }
-
-                if (isAvailable)
-                {
+                var roomCount = await _apiClient.GetAvailableRoomCount(room.Id, checkInStr, checkOutStr);
+                if (roomCount != 0)
                     availableRooms.Add(room);
-                }
             }
 
             return availableRooms;

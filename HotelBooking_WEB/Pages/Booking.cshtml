@@ -47,7 +47,6 @@
                         <form method="post">
                             <input type="hidden" asp-for="RoomId" value="@Model.Room.Id" />
                             <input type="hidden" asp-for="UserId" value="1" />
-                            @* TODO: Get user id from session *@
                             <input type="hidden" asp-for="TotalPrice" id="totalPrice" value="0" />
 
                             <div class="mb-3">
@@ -72,11 +71,11 @@
         </div>
 
         <!-- Комментарии -->
-        <div class="mt-5">
+@*         <div class="mt-5">
             <h3>Комментарии</h3>
             <p>Комментариев пока нет.</p>
             <!-- Добавьте форму для добавления комментариев здесь -->
-        </div>
+        </div> *@
     }
     else
     {
@@ -144,7 +143,7 @@
             event.preventDefault();
         });
 
-        // Blocker Booked Dates
+@*         // Blocker Booked Dates
         checkInDateInput.addEventListener('change', function () {
             const selectedDate = this.value;
             if (bookedDates.includes(selectedDate)) {
@@ -167,7 +166,7 @@
             }
 
             updateTotalPriceInfo();
-        });
+        }); *@
 
         // Update total price and set minimum checkOutDate
         checkInDateInput.addEventListener('change', function () {
@@ -204,7 +203,7 @@
 
                 let totalPrice = nightsCount * roomPricePerNight;
 
-                // Check that a period isn't booked
+@*                 // Check that a period isn't booked
                 let currentDate = new Date(checkInDate);
                 while (currentDate < checkOutDate) {
                     let formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
@@ -213,7 +212,7 @@
                         break;
                     }
                     currentDate.setDate(currentDate.getDate() + 1);
-                }
+                } *@
 
                 totalPriceInfo.innerText = `Общая стоимость проживания: ${totalPrice.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' })}`;
                 totalPriceInput.value = totalPrice;
