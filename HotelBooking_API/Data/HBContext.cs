@@ -19,29 +19,43 @@ namespace HotelBooking_API.Data
         public DbSet<Room> Room { get; set; }
         public DbSet<RoomAmenity> RoomAmenity { get; set; }
         public DbSet<RoomImages> RoomImages { get; set; }
+        public DbSet<Company> Company { get; set; }
+        public DbSet<Comment> Comment { get; set; }
 
         // Настройка моделей и отношений между сущностями
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Настройка связи между User и Booking
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Hotel)
+                .WithMany(h => h.Comments)
+                .HasForeignKey(c => c.HotelId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Связь User и Booking
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.User)
                 .WithMany(u => u.Bookings)
                 .HasForeignKey(b => b.UserId)
-                .OnDelete(DeleteBehavior.Cascade); // Удаление бронирований при удалении пользователя
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Настройка связи между Hotel и Room
+            // Связь Hotel и Room
             modelBuilder.Entity<Room>()
                 .HasOne(r => r.Hotel)
                 .WithMany(h => h.Rooms)
                 .HasForeignKey(r => r.HotelId)
-                .OnDelete(DeleteBehavior.Cascade); // Удаление комнат при удалении отеля
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Настройка связи между Room и RoomAmenity
+            // Связь Room и RoomAmenity
             modelBuilder.Entity<RoomAmenity>()
-                .HasKey(ra => new { ra.RoomId, ra.AmenityId }); // Составной ключ
+                .HasKey(ra => new { ra.RoomId, ra.AmenityId });
 
             modelBuilder.Entity<RoomAmenity>()
                 .HasOne(ra => ra.Room)
@@ -55,25 +69,132 @@ namespace HotelBooking_API.Data
                 .HasForeignKey(ra => ra.AmenityId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Настройка связи между Room и RoomImages
+            // Связь Room и RoomImages
             modelBuilder.Entity<RoomImages>()
                 .HasOne(ri => ri.Room)
                 .WithMany(r => r.RoomImages)
                 .HasForeignKey(ri => ri.RoomId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Настройка индексов для улучшения производительности
+            // Связь Company и Hotel
+            modelBuilder.Entity<Hotel>()
+                .HasOne(h => h.Company)
+                .WithMany(c => c.Hotels)
+                .HasForeignKey(h => h.CompanyId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete
+
+            // Индексы
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
-                .IsUnique(); // Уникальный индекс для Email
+                .IsUnique();
 
             modelBuilder.Entity<Hotel>()
                 .HasIndex(h => h.Name);
 
             modelBuilder.Entity<Room>()
-                .HasIndex(r => r.RoomNumber);
+                .HasIndex(r => r.RoomName);
+
 
             // Seed data
+            modelBuilder.Entity<Company>().HasData(
+                new Company
+                {
+                    Id = 1,
+                    Name = "Hilton Worldwide",
+                    Description = "Международная сеть отелей класса люкс, основанная в 1919 году",
+                    ContactPerson = "Марк Тремблей",
+                    Email = "corporate@hilton.com",
+                    Phone = "+1 800 445 8667",
+                    Website = "https://www.hilton.com",
+                    LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Hilton_Logo_2019.svg/1200px-Hilton_Logo_2019.svg.png",
+                    TaxId = "US-123456789",
+                    LegalAddress = "7930 Jones Branch Dr, McLean, VA 22102, США"
+                },
+                new Company
+                {
+                    Id = 2,
+                    Name = "Marriott International",
+                    Description = "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами",
+                    ContactPerson = "Антонио Каридо",
+                    Email = "info@marriott.com",
+                    Phone = "+1 301 380 3000",
+                    Website = "https://www.marriott.com",
+                    LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Marriott_International_logo_2019.svg/1280px-Marriott_International_logo_2019.svg.png",
+                    TaxId = "US-987654321",
+                    LegalAddress = "10400 Fernwood Rd, Bethesda, MD 20817, США"
+                },
+                new Company
+                {
+                    Id = 3,
+                    Name = "Accor Group",
+                    Description = "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis",
+                    ContactPerson = "Себастьен Базен",
+                    Email = "contact@accor.com",
+                    Phone = "+33 1 45 38 86 00",
+                    Website = "https://group.accor.com",
+                    LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Accor_logo_2022.svg/1280px-Accor_logo_2022.svg.png",
+                    TaxId = "FR-789123456",
+                    LegalAddress = "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция"
+                },
+                new Company
+                {
+                    Id = 4,
+                    Name = "Азимут Отели Россия",
+                    Description = "Крупнейшая российская гостиничная сеть, основанная в 2010 году",
+                    ContactPerson = "Александр Клячин",
+                    Email = "info@azimuthotels.com",
+                    Phone = "+7 495 225 25 25",
+                    Website = "https://www.azimuthotels.com",
+                    LogoUrl = "https://www.azimuthotels.com/local/templates/azimuth_main/img/logo.svg",
+                    TaxId = "RU-1234567890",
+                    LegalAddress = "125040, Москва, Ленинградский проспект, 36"
+                },
+                new Company
+                {
+                    Id = 5,
+                    Name = "Cosmos Hotel Group",
+                    Description = "Российская гостиничная управляющая компания",
+                    ContactPerson = "Ирина Бабкина",
+                    Email = "booking@cosmos-hotel.com",
+                    Phone = "+7 495 785 45 45",
+                    Website = "https://cosmos-hotel.com",
+                    LogoUrl = "https://cosmos-hotel.com/local/templates/cosmos/img/logo.svg",
+                    TaxId = "RU-0987654321",
+                    LegalAddress = "150040, Ярославль, ул. Комсомольская, 2"
+                }
+            );
+
+
+            modelBuilder.Entity<Comment>().HasData(
+                new Comment
+                {
+                    Id = 1,
+                    UserId = 1,
+                    HotelId = 1,
+                    Rating = 5,
+                    Text = "Отличный отель! Всем рекомендую.",
+                    CreatedDate = new DateTime(2025, 4, 1, 0, 0, 0, DateTimeKind.Utc)
+                },
+                new Comment
+                {
+                    Id = 2,
+                    UserId = 2,
+                    HotelId = 1,
+                    Rating = 4,
+                    Text = "Хороший сервис, но дорогой мини-бар.",
+                    CreatedDate = new DateTime(2025, 4, 10, 0, 0, 0, DateTimeKind.Utc)
+                },
+                new Comment
+                {
+                    Id = 3,
+                    UserId = 1,
+                    HotelId = 2,
+                    Rating = 3,
+                    Text = "Усталый номер, требует ремонта.",
+                    CreatedDate = new DateTime(2025, 4, 20, 0, 0, 0, DateTimeKind.Utc)
+                }
+            );
+
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
@@ -102,6 +223,7 @@ namespace HotelBooking_API.Data
                 {
                     Id = 1,
                     Name = "Отель Премиум",
+                    CompanyId = 1,
                     Description = "Отель Премиум",
                     Address = "Москва, ул. Ленина, 10",
                     City = "Москва",
@@ -112,91 +234,12 @@ namespace HotelBooking_API.Data
                 {
                     Id = 2,
                     Name = "Отель Эконом",
+                    CompanyId = 2,
                     Description = "Отель Эконом",
-                    Address = "Санкт-Петербург, ул. Пушкина, 5",
-                    City = "Санкт-Петербург",
+                    Address = "Уфа, ул. Пушкина, 5",
+                    City = "Уфа",
                     ImageUrl = "Ekonom.png",
                     Rating = 3.8M
-                },
-                new Hotel
-                {
-                    Id = 3,
-                    Name = "Отель Бизнес",
-                    Description = "Отель для деловых поездок с конференц-залом",
-                    Address = "Москва, ул. Ленина, 10",
-                    City = "Москва",
-                    ImageUrl = "Business.png",
-                    Rating = 4.2M
-                },
-                new Hotel
-                {
-                    Id = 4,
-                    Name = "Гранд Отель",
-                    Description = "Роскошный отель с видом на город",
-                    Address = "Санкт-Петербург, Невский проспект, 20",
-                    City = "Санкт-Петербург",
-                    ImageUrl = "Grand.png",
-                    Rating = 4.8M
-                },
-                new Hotel
-                {
-                    Id = 5,
-                    Name = "Отель на набережной",
-                    Description = "Отель с видом на реку, идеален для романтических поездок",
-                    Address = "Казань, ул. Речная, 15",
-                    City = "Казань",
-                    ImageUrl = "RiverView.png",
-                    Rating = 4.5M
-                },
-                new Hotel
-                {
-                    Id = 6,
-                    Name = "Отель для семьи",
-                    Description = "Отель с детскими площадками и развлекательными программами",
-                    Address = "Сочи, ул. Морская, 30",
-                    City = "Сочи",
-                    ImageUrl = "Family.png",
-                    Rating = 4.1M
-                },
-                new Hotel
-                {
-                    Id = 7,
-                    Name = "Отель в центре города",
-                    Description = "Удобное расположение для туристов",
-                    Address = "Екатеринбург, ул. Ленина, 25",
-                    City = "Екатеринбург",
-                    ImageUrl = "CityCenter.png",
-                    Rating = 4.0M
-                },
-                new Hotel
-                {
-                    Id = 8,
-                    Name = "Отель у горы",
-                    Description = "Отель для любителей активного отдыха",
-                    Address = "Красная Поляна, ул. Горная, 10",
-                    City = "Красная Поляна",
-                    ImageUrl = "Mountain.png",
-                    Rating = 4.3M
-                },
-                new Hotel
-                {
-                    Id = 9,
-                    Name = "Отель на пляже",
-                    Description = "Отель с прямым выходом на пляж",
-                    Address = "Анапа, ул. Пляжная, 5",
-                    City = "Анапа",
-                    ImageUrl = "Beach.png",
-                    Rating = 4.6M
-                },
-                new Hotel
-                {
-                    Id = 10,
-                    Name = "Отель в историческом центре",
-                    Description = "Отель в историческом здании с уникальной атмосферой",
-                    Address = "Ростов-на-Дону, ул. Старая, 20",
-                    City = "Ростов-на-Дону",
-                    ImageUrl = "Historic.png",
-                    Rating = 4.4M
                 }
             );
 
@@ -204,24 +247,42 @@ namespace HotelBooking_API.Data
                 new Room
                 {
                     Id = 1,
-                    HotelId = 1, // Связь с отелем "Отель Премиум"
-                    RoomNumber = "101",
+                    HotelId = 1,
                     RoomName = "Стандарт",
                     PricePerNight = 5000,
                     Capacity = 2,
                     Description = "Обычный номер, предоставляющий всё необходимое",
-                    Count = 10
+                    Count = 3
                 },
                 new Room
                 {
                     Id = 2,
-                    HotelId = 1, // Связь с отелем "Отель Премиум"
-                    RoomNumber = "102",
+                    HotelId = 1,
                     RoomName = "Люкс",
                     PricePerNight = 10000,
-                    Capacity = 2,
+                    Capacity = 4,
                     Description = "Для самых требовательных гостей",
-                    Count = 10
+                    Count = 1
+                },
+                new Room
+                {
+                    Id = 3,
+                    HotelId = 2,
+                    RoomName = "Эконом",
+                    PricePerNight = 2000,
+                    Capacity = 1,
+                    Description = "Выбор для самых экономных граждан",
+                    Count = 4
+                },
+                new Room
+                {
+                    Id = 4,
+                    HotelId = 2,
+                    RoomName = "Классика",
+                    PricePerNight = 3000,
+                    Capacity = 2,
+                    Description = "Классический номер, оформленный в стиле сети отелей",
+                    Count = 2
                 }
             );
 

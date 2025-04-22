@@ -68,19 +68,19 @@ namespace HotelBooking_WEB.Pages
                 hotels = hotels.Where(h => h.City.Contains(SearchCity, StringComparison.OrdinalIgnoreCase));
 
             if (MinRating.HasValue)
-                hotels = hotels.Where(h => h.Rating * 10 >= MinRating.Value);
+                hotels = hotels.Where(h => h.Rating >= MinRating.Value);
 
             if (MinPrice.HasValue)
             {
                 hotels = hotels.Where(h =>
-                    h.Rooms.Any(r => r.PricePerNight >= MinPrice.Value) // Хотя бы одна комната подходит
+                    h.Rooms.Any(r => r.PricePerNight >= MinPrice.Value)
                 );
             }
 
             if (MaxPrice.HasValue)
             {
                 hotels = hotels.Where(h =>
-                    h.Rooms.Any(r => r.PricePerNight <= MaxPrice.Value) // Хотя бы одна комната подходит
+                    h.Rooms.Any(r => r.PricePerNight <= MaxPrice.Value) 
                 );
             }
 

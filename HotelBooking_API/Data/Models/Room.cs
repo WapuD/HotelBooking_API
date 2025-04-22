@@ -15,10 +15,6 @@ namespace HotelBooking_API.Data.Models
 
         [Required]
         [MaxLength(100)]
-        public string RoomNumber { get; set; }
-
-        [Required]
-        [MaxLength(100)]
         public string RoomName { get; set; }
         
         [Required]
