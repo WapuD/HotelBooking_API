@@ -42,6 +42,8 @@ namespace HotelBooking_WEB.Pages
 
         public async Task OnGet()
         {
+            await _apiClient.UpdateHotelRatings();
+
             if (!string.IsNullOrEmpty(HttpContext.Request.Query["MinRating"]))
             {
                 var ratingValue = HttpContext.Request.Query["MinRating"].ToString()

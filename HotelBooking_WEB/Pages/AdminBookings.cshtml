@@ -68,14 +68,19 @@
                             <p>Статус: @booking.Status</p>
                             <p>Цена: @booking.TotalPrice</p>
 
-                            <!-- Информация о пользователе -->
+                            <h5>Информация о пользователе</h5>
                             <p>Имя пользователя: @booking.User.FirstName @booking.User.SecondName @booking.User.LastName</p>
                             <p>Email: @booking.User.Email</p>
                             <p>Телефон: @booking.User.Phone</p>
 
-                            <!-- Информация о номере -->
-                            <p>Цена за ночь: @booking.Room.PricePerNight</p>
+                            <h5>Информация о номере</h5>
                             <p>Вместимость: @booking.Room.Capacity</p>
+                            <p>Вместимость: @booking.Room.RoomName</p>
+
+                            <h5>Информация о отеле</h5>
+                            <p>Вместимость: @booking.Room.Hotel.Name</p>
+                            <p>Вместимость: @booking.Room.Hotel.Address</p>
+                            <p>Вместимость: @booking.Room.Hotel.Company.Name</p>
 
                             <form method="post">
                                 <input type="hidden" name="bookingId" value="@booking.Id" />
@@ -113,14 +118,19 @@
                             <p>Статус: @booking.Status</p>
                             <p>Цена: @booking.TotalPrice</p>
 
-                            <!-- Информация о пользователе -->
+                            <h5>Информация о пользователе</h5>
                             <p>Имя пользователя: @booking.User.FirstName @booking.User.SecondName @booking.User.LastName</p>
                             <p>Email: @booking.User.Email</p>
                             <p>Телефон: @booking.User.Phone</p>
 
-                            <!-- Информация о номере -->
-                            <p>Цена за ночь: @booking.Room.PricePerNight</p>
+                            <h5>Информация о номере</h5>
                             <p>Вместимость: @booking.Room.Capacity</p>
+                            <p>Вместимость: @booking.Room.RoomName</p>
+
+                            <h5>Информация о отеле</h5>
+                            <p>Вместимость: @booking.Room.Hotel.Name</p>
+                            <p>Вместимость: @booking.Room.Hotel.Address</p>
+                            <p>Вместимость: @booking.Room.Hotel.Company.Name</p>
                         </div>
                     </div>
                 </div>

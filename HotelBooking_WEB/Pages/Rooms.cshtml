@@ -22,9 +22,22 @@
                 <label for="checkOutDate" class="form-label">Дата выезда:</label>
                 <input type="date" class="form-control" id="checkOutDate" name="checkOutDate" value="@Model.CheckOutDate?.ToString("yyyy-MM-dd")">
             </div>
+            <div class="col-md-4">
+                <label class="form-label">Мин. цена:</label>
+                <input type="number" class="form-control" name="MinPrice" value="@Model.MinPrice" min="0" step="500" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Макс. цена:</label>
+                <input type="number" class="form-control" name="MaxPrice" value="@Model.MaxPrice" min="0" step="500" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Вместимость:</label>
+                <input type="number" class="form-control" name="FilterCapacity" value="@Model.FilterCapacity" min="1" />
+            </div>
         </div>
         <button type="submit" class="btn btn-primary">Применить фильтры</button>
     </form>
+
 
     @if (Model.Rooms != null && Model.Rooms.Any())
     {

@@ -12,6 +12,10 @@
         [Post("/Hotels")]
         Task<bool> CreateHotel(HotelDtoCreate hotel);
 
+        [Post("/Hotels/UpdateRatings")]
+        Task UpdateHotelRatings();
+
+
 
         [Get("/Rooms/Hotel/{hotelId}")]
         Task<IEnumerable<Room>> GetRoomByHotelId(int hotelId);

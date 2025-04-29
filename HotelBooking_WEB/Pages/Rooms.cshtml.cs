@@ -23,6 +23,22 @@ namespace HotelBooking_WEB.Pages
         [BindProperty(SupportsGet = true)]
         public DateTime? CheckOutDate { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public decimal? MinPrice { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public decimal? MaxPrice { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int? FilterCapacity { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string RoomNameFilter { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string DescriptionFilter { get; set; }
+
+
         public RoomsModel(ILogger<RoomsModel> logger, IApiClient apiClient)
         {
             _logger = logger;
@@ -41,6 +57,24 @@ namespace HotelBooking_WEB.Pages
             if (CheckInDate.HasValue && CheckOutDate.HasValue)
             {
                 allRooms = await FilterAvailableRooms(allRooms, CheckInDate.Value, CheckOutDate.Value);
+            }
+
+            // Фильтрация по минимальной цене
+            if (MinPrice.HasValue)
+            {
+                allRooms = allRooms.Where(r => r.PricePerNight >= MinPrice.Value);
+            }
+
+            // Фильтрация по максимальной цене
+            if (MaxPrice.HasValue)
+            {
+                allRooms = allRooms.Where(r => r.PricePerNight <= MaxPrice.Value);
+            }
+
+            // Фильтрация по минимальной вместимости
+            if (FilterCapacity.HasValue)
+            {
+                allRooms = allRooms.Where(r => r.Capacity >= FilterCapacity.Value);
             }
 
             Rooms = allRooms.ToList();

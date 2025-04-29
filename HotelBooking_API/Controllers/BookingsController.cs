@@ -29,7 +29,12 @@ namespace HotelBooking_API.Controllers
                 .Include(b => b.User)
                 .Include(b => b.Room)
                     .ThenInclude(r => r.Hotel)
+                        .ThenInclude(h => h.Company)
                 .ToListAsync();
+            foreach (Booking booking in bookings) 
+            { 
+                booking.Room.Hotel.Company = await _context.Company.FindAsync(booking.Room.Hotel.CompanyId);
+            }
             return bookings;
         }
 

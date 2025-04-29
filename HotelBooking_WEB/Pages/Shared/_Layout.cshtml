@@ -18,10 +18,14 @@
                             <img src="logo.png" alt="Logo" class="logo">
                             <a class="nav-link text-dark textMain" asp-area="" asp-page="/Hotels">Главная</a>
                         </ul>
-                        <div class="profile">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Profile">Личный кабинет</a>
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Выйти</a>
-                        </div>
+                    <div class="profile d-flex flex-column align-items-end">
+                        <a class="nav-link text-dark d-flex align-items-center mb-1" asp-area="" asp-page="/Profile">
+                            <i class="fa fa-user-circle me-2" style="font-size: 24px;"></i>
+                            Личный кабинет
+                        </a>
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Выйти</a>
+                    </div>
+
                     </div>
                 </div>
             </nav>

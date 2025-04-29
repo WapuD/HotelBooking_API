@@ -121,5 +121,24 @@ namespace HotelBooking_API.Controllers
         {
             return _context.Hotel.Any(e => e.Id == id);
         }
+
+        [HttpPost("UpdateRatings")]
+        public async Task<IActionResult> UpdateRatings()
+        {
+            var hotels = await _context.Hotel.Include(h => h.Comments).ToListAsync();
+            foreach (var hotel in hotels)
+            {
+                if (hotel.Comments != null && hotel.Comments.Any())
+                {
+                    hotel.Rating = (decimal)hotel.Comments.Average(c => c.Rating);
+                }
+                else
+                {
+                    hotel.Rating = 0;
+                }
+            }
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

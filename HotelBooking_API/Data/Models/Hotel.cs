@@ -39,7 +39,6 @@ namespace HotelBooking_API.Data.Models
         [ForeignKey("User")]
         public int CompanyId { get; set; }
 
-        [JsonIgnore]
         public Company Company { get; set; }
 
         [JsonIgnore]
