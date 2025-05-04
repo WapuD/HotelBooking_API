@@ -57,5 +57,11 @@
 
         [Get("/Bookings/{id}")]
         Task<Booking> GetBookingById(int id);
+
+
+        [Get("/Companies")]
+        Task<IEnumerable<Company>> GetCompaniesAsync();
+        [Post("/Companies")]
+        Task<bool> CreateCompany([Body] CompanyCreateDto company);
     }
 }

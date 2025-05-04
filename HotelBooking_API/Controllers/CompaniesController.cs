@@ -76,13 +76,24 @@ namespace HotelBooking_API.Controllers
         // POST: api/Companies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Company>> PostCompany(Company company)
+        public async Task<ActionResult<bool>> PostCompany(Company company)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                             .Select(e => e.ErrorMessage)
+                                             .ToList();
+                return BadRequest(new { Errors = errors });
+            }
+
             _context.Company.Add(company);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCompany", new { id = company.Id }, company);
+            return Ok(true);
         }
+
+
+
 
         // DELETE: api/Companies/5
         [HttpDelete("{id}")]

@@ -2,14 +2,16 @@ using HotelBooking_API.Data.Models;
 using HotelBooking_WEB.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HotelBooking_WEB.Pages
 {
-    public class RegistrationModel : PageModel
+    public class AdminRegistrationModel : PageModel
     {
-        private readonly ILogger<RegistrationModel> _logger;
+        private readonly ILogger<AdminRegistrationModel> _logger;
         private readonly IApiClient _apiClient;
 
         [BindProperty]
@@ -30,14 +32,24 @@ namespace HotelBooking_WEB.Pages
         [BindProperty]
         public string password { get; set; }
 
-        public RegistrationModel(ILogger<RegistrationModel> logger, IApiClient apiClient)
+        [BindProperty]
+        public int? CompanyId { get; set; }
+
+        public List<Company> Companies { get; set; }
+        public List<SelectListItem> CompanySelectList { get; set; }
+
+        public AdminRegistrationModel(ILogger<AdminRegistrationModel> logger, IApiClient apiClient)
         {
             _logger = logger;
             _apiClient = apiClient;
         }
 
-        public void OnGet()
+        public async Task OnGet()
         {
+            Companies = (await _apiClient.GetCompaniesAsync()).ToList();
+            CompanySelectList = Companies
+                .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+                .ToList();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -52,15 +64,13 @@ namespace HotelBooking_WEB.Pages
                     Email = email,
                     Phone = phoneNumber,
                     Password = password,
-                    CompanyId = null
+                    CompanyId = CompanyId
                 };
-
                 bool itog = await _apiClient.CreateUser(newUser);
-
                 if (itog)
-                    return RedirectToPage("/Index");
+                    return RedirectToPage("/AdminBookings");
             }
-
+            Companies = (await _apiClient.GetCompaniesAsync()).ToList();
             return Page();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HotelBooking_API.Data.Models;
+using System.Text;
 
 namespace HotelBooking_API.Data
 {
@@ -102,7 +103,6 @@ namespace HotelBooking_API.Data
                     Id = 1,
                     Name = "Hilton Worldwide",
                     Description = "Международная сеть отелей класса люкс, основанная в 1919 году",
-                    ContactPerson = "Марк Тремблей",
                     Email = "corporate@hilton.com",
                     Phone = "+1 800 445 8667",
                     Website = "https://www.hilton.com",
@@ -115,7 +115,6 @@ namespace HotelBooking_API.Data
                     Id = 2,
                     Name = "Marriott International",
                     Description = "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами",
-                    ContactPerson = "Антонио Каридо",
                     Email = "info@marriott.com",
                     Phone = "+1 301 380 3000",
                     Website = "https://www.marriott.com",
@@ -128,7 +127,6 @@ namespace HotelBooking_API.Data
                     Id = 3,
                     Name = "Accor Group",
                     Description = "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis",
-                    ContactPerson = "Себастьен Базен",
                     Email = "contact@accor.com",
                     Phone = "+33 1 45 38 86 00",
                     Website = "https://group.accor.com",
@@ -141,7 +139,6 @@ namespace HotelBooking_API.Data
                     Id = 4,
                     Name = "Азимут Отели Россия",
                     Description = "Крупнейшая российская гостиничная сеть, основанная в 2010 году",
-                    ContactPerson = "Александр Клячин",
                     Email = "info@azimuthotels.com",
                     Phone = "+7 495 225 25 25",
                     Website = "https://www.azimuthotels.com",
@@ -154,7 +151,6 @@ namespace HotelBooking_API.Data
                     Id = 5,
                     Name = "Cosmos Hotel Group",
                     Description = "Российская гостиничная управляющая компания",
-                    ContactPerson = "Ирина Бабкина",
                     Email = "booking@cosmos-hotel.com",
                     Phone = "+7 495 785 45 45",
                     Website = "https://cosmos-hotel.com",
@@ -204,6 +200,7 @@ namespace HotelBooking_API.Data
                     LastName = "Иванович",
                     Email = "ivan@example.com",
                     Phone = "+7 123 456 7890",
+                    CompanyId = 1,
                     PasswordHash = new byte[16] // Needs to be correct length
                 },
                 new User
@@ -214,6 +211,7 @@ namespace HotelBooking_API.Data
                     LastName = "Николаевна",
                     Email = "maria@example.com",
                     Phone = "+7 987 654 3210",
+                    CompanyId = 2,
                     PasswordHash = new byte[16] // Needs to be correct length
                 }
             );

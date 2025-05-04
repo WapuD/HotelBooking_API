@@ -29,7 +29,8 @@ namespace HotelBooking_WEB.Pages
                 FirstName = user.FirstName,
                 SecondName = user.SecondName,
                 LastName = user.LastName,
-                Phone = user.Phone
+                Phone = user.Phone,
+                CompanyId = user.CompanyId
             };
         }
 

@@ -36,7 +36,6 @@ namespace HotelBooking_API.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    ContactPerson = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Website = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
@@ -47,24 +46,6 @@ namespace HotelBooking_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Company", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    SecondName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    PasswordHash = table.Column<byte[]>(type: "bytea", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -88,6 +69,54 @@ namespace HotelBooking_API.Migrations
                         name: "FK_Hotel_Company_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Company",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    SecondName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "bytea", nullable: false),
+                    CompanyId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_User_Company_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Company",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Room",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    HotelId = table.Column<int>(type: "integer", nullable: false),
+                    RoomName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false),
+                    Capacity = table.Column<int>(type: "integer", nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Count = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Room", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Room_Hotel_HotelId",
+                        column: x => x.HotelId,
+                        principalTable: "Hotel",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -117,30 +146,6 @@ namespace HotelBooking_API.Migrations
                         name: "FK_Comment_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Room",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    HotelId = table.Column<int>(type: "integer", nullable: false),
-                    RoomName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false),
-                    Capacity = table.Column<int>(type: "integer", nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    Count = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Room", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Room_Hotel_HotelId",
-                        column: x => x.HotelId,
-                        principalTable: "Hotel",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -233,23 +238,14 @@ namespace HotelBooking_API.Migrations
 
             migrationBuilder.InsertData(
                 table: "Company",
-                columns: new[] { "Id", "ContactPerson", "Description", "Email", "LegalAddress", "LogoUrl", "Name", "Phone", "TaxId", "Website" },
+                columns: new[] { "Id", "Description", "Email", "LegalAddress", "LogoUrl", "Name", "Phone", "TaxId", "Website" },
                 values: new object[,]
                 {
-                    { 1, "Марк Тремблей", "Международная сеть отелей класса люкс, основанная в 1919 году", "corporate@hilton.com", "7930 Jones Branch Dr, McLean, VA 22102, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Hilton_Logo_2019.svg/1200px-Hilton_Logo_2019.svg.png", "Hilton Worldwide", "+1 800 445 8667", "US-123456789", "https://www.hilton.com" },
-                    { 2, "Антонио Каридо", "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами", "info@marriott.com", "10400 Fernwood Rd, Bethesda, MD 20817, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Marriott_International_logo_2019.svg/1280px-Marriott_International_logo_2019.svg.png", "Marriott International", "+1 301 380 3000", "US-987654321", "https://www.marriott.com" },
-                    { 3, "Себастьен Базен", "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis", "contact@accor.com", "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Accor_logo_2022.svg/1280px-Accor_logo_2022.svg.png", "Accor Group", "+33 1 45 38 86 00", "FR-789123456", "https://group.accor.com" },
-                    { 4, "Александр Клячин", "Крупнейшая российская гостиничная сеть, основанная в 2010 году", "info@azimuthotels.com", "125040, Москва, Ленинградский проспект, 36", "https://www.azimuthotels.com/local/templates/azimuth_main/img/logo.svg", "Азимут Отели Россия", "+7 495 225 25 25", "RU-1234567890", "https://www.azimuthotels.com" },
-                    { 5, "Ирина Бабкина", "Российская гостиничная управляющая компания", "booking@cosmos-hotel.com", "150040, Ярославль, ул. Комсомольская, 2", "https://cosmos-hotel.com/local/templates/cosmos/img/logo.svg", "Cosmos Hotel Group", "+7 495 785 45 45", "RU-0987654321", "https://cosmos-hotel.com" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "Id", "Email", "FirstName", "LastName", "PasswordHash", "Phone", "SecondName" },
-                values: new object[,]
-                {
-                    { 1, "ivan@example.com", "Иван", "Иванович", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 123 456 7890", "Иванов" },
-                    { 2, "maria@example.com", "Мария", "Николаевна", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 987 654 3210", "Петрова" }
+                    { 1, "Международная сеть отелей класса люкс, основанная в 1919 году", "corporate@hilton.com", "7930 Jones Branch Dr, McLean, VA 22102, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Hilton_Logo_2019.svg/1200px-Hilton_Logo_2019.svg.png", "Hilton Worldwide", "+1 800 445 8667", "US-123456789", "https://www.hilton.com" },
+                    { 2, "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами", "info@marriott.com", "10400 Fernwood Rd, Bethesda, MD 20817, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Marriott_International_logo_2019.svg/1280px-Marriott_International_logo_2019.svg.png", "Marriott International", "+1 301 380 3000", "US-987654321", "https://www.marriott.com" },
+                    { 3, "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis", "contact@accor.com", "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Accor_logo_2022.svg/1280px-Accor_logo_2022.svg.png", "Accor Group", "+33 1 45 38 86 00", "FR-789123456", "https://group.accor.com" },
+                    { 4, "Крупнейшая российская гостиничная сеть, основанная в 2010 году", "info@azimuthotels.com", "125040, Москва, Ленинградский проспект, 36", "https://www.azimuthotels.com/local/templates/azimuth_main/img/logo.svg", "Азимут Отели Россия", "+7 495 225 25 25", "RU-1234567890", "https://www.azimuthotels.com" },
+                    { 5, "Российская гостиничная управляющая компания", "booking@cosmos-hotel.com", "150040, Ярославль, ул. Комсомольская, 2", "https://cosmos-hotel.com/local/templates/cosmos/img/logo.svg", "Cosmos Hotel Group", "+7 495 785 45 45", "RU-0987654321", "https://cosmos-hotel.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -259,6 +255,15 @@ namespace HotelBooking_API.Migrations
                 {
                     { 1, "Москва, ул. Ленина, 10", "Москва", 1, "Отель Премиум", "Premium.png", "Отель Премиум", 4.5m },
                     { 2, "Уфа, ул. Пушкина, 5", "Уфа", 2, "Отель Эконом", "Ekonom.png", "Отель Эконом", 3.8m }
+                });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "Id", "CompanyId", "Email", "FirstName", "LastName", "PasswordHash", "Phone", "SecondName" },
+                values: new object[,]
+                {
+                    { 1, 1, "ivan@example.com", "Иван", "Иванович", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 123 456 7890", "Иванов" },
+                    { 2, 2, "maria@example.com", "Мария", "Николаевна", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 987 654 3210", "Петрова" }
                 });
 
             migrationBuilder.InsertData(
@@ -278,8 +283,8 @@ namespace HotelBooking_API.Migrations
                 {
                     { 1, 2, 3, "Обычный номер, предоставляющий всё необходимое", 1, 5000m, "Стандарт" },
                     { 2, 4, 1, "Для самых требовательных гостей", 1, 10000m, "Люкс" },
-                    { 3, 1, 4, "Выбор для самых экономных граждан", 1, 2000m, "Эконом" },
-                    { 4, 2, 2, "Классический номер, оформленный в стиле сети отелей", 1, 3000m, "Классика" }
+                    { 3, 1, 4, "Выбор для самых экономных граждан", 2, 2000m, "Эконом" },
+                    { 4, 2, 2, "Классический номер, оформленный в стиле сети отелей", 2, 3000m, "Классика" }
                 });
 
             migrationBuilder.InsertData(
@@ -362,6 +367,11 @@ namespace HotelBooking_API.Migrations
                 name: "IX_RoomImages_RoomId",
                 table: "RoomImages",
                 column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_CompanyId",
+                table: "User",
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",

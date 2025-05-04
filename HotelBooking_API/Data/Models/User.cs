@@ -35,6 +35,9 @@ namespace HotelBooking_API.Data.Models
         [Required]
         public byte[] PasswordHash { get; set; }
 
+        public int? CompanyId { get; set; }
+        public Company Company { get; set; }
+
         // Навигационное свойство для бронирований
         [JsonIgnore]
         public ICollection<Booking> Bookings { get; set; }
@@ -61,6 +64,7 @@ namespace HotelBooking_API.Data.Models
         [Required]
         [MinLength(6)]
         public string Password { get; set; }
+        public int? CompanyId { get; set; }
     }
     public class UserResponseDto
     {
@@ -78,5 +82,6 @@ namespace HotelBooking_API.Data.Models
         public string SecondName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
+        public int? CompanyId { get; set; }
     }
 }

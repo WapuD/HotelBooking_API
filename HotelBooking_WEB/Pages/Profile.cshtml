@@ -15,6 +15,7 @@
             <div class="card-body">
                 <form method="post">
                     <input type="hidden" asp-for="User.Id" />
+                    <input type="hidden" asp-for="User.CompanyId" />
                     <div class="mb-3">
                         <label for="firstName" class="form-label">Имя:</label>
                         <input type="text" class="form-control" id="firstName" asp-for="User.FirstName" required>

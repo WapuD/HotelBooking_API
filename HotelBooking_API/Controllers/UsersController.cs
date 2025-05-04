@@ -41,7 +41,9 @@ namespace HotelBooking_API.Controllers
                 SecondName = newUser.SecondName,
                 LastName = newUser.LastName,
                 Phone = newUser.Phone,
-                PasswordHash = PasswordHasher.HashPassword(newUser.Password)
+                PasswordHash = PasswordHasher.HashPassword(newUser.Password),
+                CompanyId = newUser.CompanyId,
+                Company = _context.Company.Find(newUser.CompanyId)
             };
 
             _context.User.Add(user);
@@ -104,6 +106,7 @@ namespace HotelBooking_API.Controllers
             user.SecondName = updateUserDto.SecondName;
             user.LastName = updateUserDto.LastName;
             user.Phone = updateUserDto.Phone;
+            user.CompanyId = updateUserDto.CompanyId;
 
             // Сохраните изменения
             try

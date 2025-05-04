@@ -195,11 +195,6 @@ namespace HotelBooking_API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ContactPerson")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -248,7 +243,6 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 1,
-                            ContactPerson = "Марк Тремблей",
                             Description = "Международная сеть отелей класса люкс, основанная в 1919 году",
                             Email = "corporate@hilton.com",
                             LegalAddress = "7930 Jones Branch Dr, McLean, VA 22102, США",
@@ -261,7 +255,6 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 2,
-                            ContactPerson = "Антонио Каридо",
                             Description = "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами",
                             Email = "info@marriott.com",
                             LegalAddress = "10400 Fernwood Rd, Bethesda, MD 20817, США",
@@ -274,7 +267,6 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 3,
-                            ContactPerson = "Себастьен Базен",
                             Description = "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis",
                             Email = "contact@accor.com",
                             LegalAddress = "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция",
@@ -287,7 +279,6 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 4,
-                            ContactPerson = "Александр Клячин",
                             Description = "Крупнейшая российская гостиничная сеть, основанная в 2010 году",
                             Email = "info@azimuthotels.com",
                             LegalAddress = "125040, Москва, Ленинградский проспект, 36",
@@ -300,7 +291,6 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 5,
-                            ContactPerson = "Ирина Бабкина",
                             Description = "Российская гостиничная управляющая компания",
                             Email = "booking@cosmos-hotel.com",
                             LegalAddress = "150040, Ярославль, ул. Комсомольская, 2",
@@ -449,7 +439,7 @@ namespace HotelBooking_API.Migrations
                             Capacity = 1,
                             Count = 4,
                             Description = "Выбор для самых экономных граждан",
-                            HotelId = 1,
+                            HotelId = 2,
                             PricePerNight = 2000m,
                             RoomName = "Эконом"
                         },
@@ -459,7 +449,7 @@ namespace HotelBooking_API.Migrations
                             Capacity = 2,
                             Count = 2,
                             Description = "Классический номер, оформленный в стиле сети отелей",
-                            HotelId = 1,
+                            HotelId = 2,
                             PricePerNight = 3000m,
                             RoomName = "Классика"
                         });
@@ -569,6 +559,9 @@ namespace HotelBooking_API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -600,6 +593,8 @@ namespace HotelBooking_API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("Email")
                         .IsUnique();
 
@@ -609,6 +604,7 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 1,
+                            CompanyId = 1,
                             Email = "ivan@example.com",
                             FirstName = "Иван",
                             LastName = "Иванович",
@@ -619,6 +615,7 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 2,
+                            CompanyId = 2,
                             Email = "maria@example.com",
                             FirstName = "Мария",
                             LastName = "Николаевна",
@@ -716,6 +713,15 @@ namespace HotelBooking_API.Migrations
                         .IsRequired();
 
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("HotelBooking_API.Data.Models.User", b =>
+                {
+                    b.HasOne("HotelBooking_API.Data.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("HotelBooking_API.Data.Models.Amenity", b =>
