@@ -8,6 +8,8 @@
     {
         [Get("/Hotels")]
         Task<IEnumerable<Hotel>> GetHotelsAsync();
+        [Get("/Hotels/{hotelId}")]
+        Task<Hotel> GetHotelById(int hotelId);
 
         [Post("/Hotels")]
         Task<bool> CreateHotel(HotelDtoCreate hotel);

@@ -41,6 +41,9 @@ namespace HotelBooking_WEB.Pages
 
         public async Task OnGet(int roomId)
         {
+            CheckInDate = DateTime.Parse(HttpContext.Session.GetString("CheckInDate"));
+            CheckOutDate = DateTime.Parse(HttpContext.Session.GetString("CheckOutDate"));
+
             if (roomId == 0)
                 roomId = Convert.ToInt32(HttpContext.Session.GetString("RoomId"));
             HttpContext.Session.SetString("RoomId", roomId.ToString());
@@ -51,6 +54,10 @@ namespace HotelBooking_WEB.Pages
 
             BookedDates = bookings.SelectMany(b => Enumerable.Range(0, (b.CheckOutDate - b.CheckInDate).Days)
                                                              .Select(i => b.CheckInDate.AddDays(i).ToString("yyyy-MM-dd"))).ToList();
+
+            int nights = (CheckOutDate - CheckInDate).Days;
+            decimal pricePerNight = Room?.PricePerNight ?? 0;
+            TotalPrice = (int)(pricePerNight * nights);
         }
 
         public async Task<IActionResult> OnPost()

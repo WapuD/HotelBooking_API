@@ -45,18 +45,24 @@
                         </p>
 
                         <form method="post">
+                            <input type="hidden" asp-for="UserId" value="@Model.UserId" />
                             <input type="hidden" asp-for="RoomId" value="@Model.Room.Id" />
-                            <input type="hidden" asp-for="UserId" value="1" />
-                            <input type="hidden" asp-for="TotalPrice" id="totalPrice" value="0" />
+                            <input type="hidden" asp-for="CheckInDate" value="@Model.CheckInDate" />
+                            <input type="hidden" asp-for="CheckOutDate" value="@Model.CheckOutDate" />
+                            <input type="hidden" asp-for="TotalPrice" value="@Model.TotalPrice" />
 
-                            <div class="mb-3">
-                                <label for="checkInDate" class="form-label">Дата заезда:</label>
-                                <input type="date" class="form-control" id="checkInDate" asp-for="CheckInDate" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="checkOutDate" class="form-label">Дата выезда:</label>
-                                <input type="date" class="form-control" id="checkOutDate" asp-for="CheckOutDate" required>
-                            </div>
+                            <p class="card-text">
+                                <i class="fa fa-calendar-check me-2"></i>
+                                Дата заезда: @Model.CheckInDate.ToString("dd MMMM yyyy")
+                            </p>
+                            <p class="card-text">
+                                <i class="fa fa-calendar-times me-2"></i>
+                                Дата выезда: @Model.CheckOutDate.ToString("dd MMMM yyyy")
+                            </p>
+                            <p class="card-text">
+                                <i class="fa fa-dollar-sign me-2"></i>
+                                Стоимость: @Model.TotalPrice.ToString()
+                            </p>
 
                             <p id="totalPriceInfo"></p>
 
@@ -70,12 +76,6 @@
             </div>
         </div>
 
-        <!-- Комментарии -->
-@*         <div class="mt-5">
-            <h3>Комментарии</h3>
-            <p>Комментариев пока нет.</p>
-            <!-- Добавьте форму для добавления комментариев здесь -->
-        </div> *@
     }
     else
     {
@@ -117,73 +117,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const checkInDateInput = document.getElementById('checkInDate');
-        const checkOutDateInput = document.getElementById('checkOutDate');
-        const totalPriceInfo = document.getElementById('totalPriceInfo');
-        const totalPriceInput = document.getElementById('totalPrice');
-        const roomPricePerNight = parseFloat("@Html.Raw(Model.Room.PricePerNight.ToString())");
-
-        const bookedDates = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.BookedDates));
-
-        // Set initial date
-        let today = new Date();
-        let formattedDateIn = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-        checkInDateInput.setAttribute('min', today.toISOString().split('T')[0]);
-        checkInDateInput.value = formattedDateIn;
-
-        let tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-        let formattedDateOut = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
-        checkOutDateInput.setAttribute('min', tomorrow.toISOString().split('T')[0]);
-        checkOutDateInput.value = formattedDateOut;
-
-        checkInDateInput.addEventListener('keydown', function (event) {
-            event.preventDefault();
-        });
-        checkOutDateInput.addEventListener('keydown', function (event) {
-            event.preventDefault();
-        });
-
-@*         // Blocker Booked Dates
-        checkInDateInput.addEventListener('change', function () {
-            const selectedDate = this.value;
-            if (bookedDates.includes(selectedDate)) {
-                alert('Выбранная дата уже забронирована. Пожалуйста, выберите другую дату.');
-                this.value = ''; // Reset the date
-                totalPriceInfo.innerText = '';
-                totalPriceInput.value = 0;
-                return;
-            }
-
-        });
-        checkOutDateInput.addEventListener('change', function () {
-            const selectedDate = this.value;
-            if (bookedDates.includes(selectedDate)) {
-                alert('Выбранная дата уже забронирована. Пожалуйста, выберите другую дату.');
-                this.value = ''; // Reset the date
-                totalPriceInfo.innerText = '';
-                totalPriceInput.value = 0;
-                return;
-            }
-
-            updateTotalPriceInfo();
-        }); *@
-
-        // Update total price and set minimum checkOutDate
-        checkInDateInput.addEventListener('change', function () {
-            const checkInDate = new Date(this.value);
-            if (checkOutDateInput) {
-                const minCheckOutDate = new Date(checkInDate);
-                minCheckOutDate.setDate(minCheckOutDate.getDate() + 1); // At least the next day
-                checkOutDateInput.setAttribute('min', minCheckOutDate.toISOString().split('T')[0]);
-
-                if (checkOutDateInput.value && new Date(checkOutDateInput.value) < minCheckOutDate) {
-                    checkOutDateInput.value = '';
-                }
-
-                updateTotalPriceInfo();
-            }
-        });
-
         checkOutDateInput.addEventListener('change', function () {
             const checkOutDate = new Date(this.value);
             if (checkInDateInput) {
@@ -194,36 +127,6 @@
                 updateTotalPriceInfo();
             }
         });
-
-        function updateTotalPriceInfo() {
-            if (checkInDateInput.value && checkOutDateInput.value) {
-                const checkInDate = new Date(checkInDateInput.value);
-                const checkOutDate = new Date(checkOutDateInput.value);
-                const nightsCount = Math.round((checkOutDate - checkInDate) / (1000 * 3600 * 24));
-
-                let totalPrice = nightsCount * roomPricePerNight;
-
-@*                 // Check that a period isn't booked
-                let currentDate = new Date(checkInDate);
-                while (currentDate < checkOutDate) {
-                    let formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
-                    if (bookedDates.includes(formattedDate)) {
-                        totalPrice = 0; // Reset the price if unavailable days
-                        break;
-                    }
-                    currentDate.setDate(currentDate.getDate() + 1);
-                } *@
-
-                totalPriceInfo.innerText = `Общая стоимость проживания: ${totalPrice.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' })}`;
-                totalPriceInput.value = totalPrice;
-
-            } else {
-                totalPriceInfo.innerText = '';
-                totalPriceInput.value = 0;
-            }
-        }
-
-        updateTotalPriceInfo();
 
         const roomImage = document.getElementById('roomImage');
         const roomImages = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Room?.RoomImages?.Select(img => img.ImageUrl).ToList()));

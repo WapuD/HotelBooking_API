@@ -37,6 +37,7 @@ namespace HotelBooking_WEB.Pages
 
         [BindProperty(SupportsGet = true)]
         public string DescriptionFilter { get; set; }
+        public Hotel Hotel { get; set; }
 
 
         public RoomsModel(ILogger<RoomsModel> logger, IApiClient apiClient)
@@ -53,10 +54,14 @@ namespace HotelBooking_WEB.Pages
             CheckOutDate = checkOutDate;
 
             var allRooms = await _apiClient.GetRoomByHotelId(hotelId);
+            Hotel = await _apiClient.GetHotelById(hotelId);
 
             if (CheckInDate.HasValue && CheckOutDate.HasValue)
             {
                 allRooms = await FilterAvailableRooms(allRooms, CheckInDate.Value, CheckOutDate.Value);
+
+                HttpContext.Session.SetString("CheckInDate", CheckInDate.Value.ToString());
+                HttpContext.Session.SetString("CheckOutDate", CheckOutDate.Value.ToString());
             }
 
             // Фильтрация по минимальной цене

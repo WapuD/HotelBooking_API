@@ -10,8 +10,28 @@
       crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div class="container py-5">
-    <h1 class="text-center mb-4" style="color: #1a73e8;">Доступные комнаты</h1>
 
+    @* Блок с информацией об отеле *@
+    @if (Model.Hotel != null)
+    {
+        <div class="row mb-5 align-items-center">
+            <div class="col-md-5">
+                <img src="@Model.Hotel.ImageUrl" alt="@Model.Hotel.Name" class="img-fluid rounded shadow" style="max-height: 350px; object-fit: cover; width: 100%;" />
+            </div>
+            <div class="col-md-7">
+                <h1 class="mb-3" style="color: #1a73e8;">@Model.Hotel.Name</h1>
+                <p class="lead">@Model.Hotel.Description</p>
+                <div class="mt-4">
+                    <p><strong>Адрес:</strong> @Model.Hotel.Address, @Model.Hotel.City</p>
+                    <p><strong>Рейтинг:</strong> @Model.Hotel.Rating.ToString("0.0") <i class="fa fa-star text-warning"></i></p>
+                    @* Можно добавить другую полезную информацию, например контакты *@
+                    @* <p><strong>Телефон:</strong> +7 (495) 123-45-67</p> *@
+                </div>
+            </div>
+        </div>
+    }
+
+    @* Форма фильтров *@
     <form method="get">
         <div class="row mb-3">
             <div class="col-md-6">
@@ -38,8 +58,10 @@
         <button type="submit" class="btn btn-primary">Применить фильтры</button>
     </form>
 
+    @* Форма комнат *@
+    <h1 class="text-center mb-4" style="color: #1a73e8;">Доступные комнаты</h1>
 
-    @if (Model.Rooms != null && Model.Rooms.Any())
+    @if (Model.Rooms != null && Model.Rooms.Any() && Model.CheckInDate.HasValue && Model.CheckOutDate.HasValue)
     {
         <div class="row g-4">
             @foreach (var room in Model.Rooms)
@@ -71,7 +93,14 @@
     }
     else
     {
-        <h2 class="text-center mb-4" style="color: #1a73e8;">Нет доступных комнат, соответствующих критериям.</h2>
+        @if (!Model.CheckInDate.HasValue || !Model.CheckOutDate.HasValue)
+        {
+            <h2 class="text-center mb-4" style="color: #1a73e8;">Выберите даты заезда и выезда.</h2>
+        }
+        else
+        {
+            <h2 class="text-center mb-4" style="color: #1a73e8;">Нет доступных комнат, соответствующих критериям.</h2>
+        }
     }
 </div>
 
