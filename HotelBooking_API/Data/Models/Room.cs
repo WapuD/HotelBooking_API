@@ -30,12 +30,12 @@ namespace HotelBooking_API.Data.Models
         public int Count { get; set; }
 
         // Навигационные свойства
-        public Hotel Hotel { get; set; }
+        public Hotel? Hotel { get; set; }
 
         [JsonIgnore]
-        public ICollection<Booking> Bookings { get; set; }
-        public ICollection<RoomAmenity> RoomAmenities { get; set; }
-        public ICollection<RoomImages> RoomImages { get; set; }
+        public ICollection<Booking>? Bookings { get; set; }
+        public ICollection<RoomAmenity>? RoomAmenities { get; set; }
+        public ICollection<RoomImages>? RoomImages { get; set; }
     }
 
 }

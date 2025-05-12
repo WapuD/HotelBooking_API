@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HotelBooking_WEB.Pages
 {
@@ -16,6 +17,8 @@ namespace HotelBooking_WEB.Pages
 
         [BindProperty]
         public IEnumerable<Room> Rooms { get; set; }
+        [BindProperty]
+        public IEnumerable<Comment> Comments { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public DateTime? CheckInDate { get; set; }
@@ -53,6 +56,7 @@ namespace HotelBooking_WEB.Pages
             CheckInDate = checkInDate ?? DateTime.Today;
             CheckOutDate = checkOutDate;
 
+            Comments = await _apiClient.GetCommentsByHotelId(hotelId);
             var allRooms = await _apiClient.GetRoomByHotelId(hotelId);
             Hotel = await _apiClient.GetHotelById(hotelId);
 

@@ -42,6 +42,23 @@ namespace HotelBooking_API.Controllers
             return comment;
         }
 
+        // GET: api/Comments/Hotel/5
+        [HttpGet("Hotel/{hotelId}")]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetCommentsByHotelId(int hotelId)
+        {
+            var comments = await _context.Comment
+                .Where(c => c.HotelId == hotelId)
+                .OrderByDescending(c => c.CreatedDate)
+                .ToListAsync();
+            foreach (var comment in comments) 
+            {
+                if (comment.User == null)
+                    comment.User = await _context.User.FindAsync(comment.UserId);
+            }
+            return comments;
+        }
+
+
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

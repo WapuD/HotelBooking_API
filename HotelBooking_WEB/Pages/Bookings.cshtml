@@ -50,10 +50,28 @@
                             }
                             @if (booking.Status != "Ожидание")
                             {
-
-                                <a asp-page="/RoomComments" class="btn btn-info mt-3">
-                                    Оставить отзыв
-                                </a>
+                                <div class="row mb-5">
+                                    <div class="col-12">
+                                        <h4>Оставить отзыв</h4>
+                                        <form method="post">
+                                            <div class="mb-3">
+                                                <label class="form-label">Рейтинг</label>
+                                                <select class="form-select" name="Rating" required>
+                                                    <option value="">Выберите...</option>
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        <option value="@i">@i</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Текст отзыва</label>
+                                                <textarea class="form-control" name="Text" rows="3" maxlength="2000" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-info">Оставить отзыв</button>
+                                        </form>
+                                    </div>
+                                </div>
                             }
                         </div>
                     </div>

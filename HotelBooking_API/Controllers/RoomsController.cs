@@ -105,13 +105,25 @@ namespace HotelBooking_API.Controllers
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        public async Task<ActionResult<bool>> PostRoom(Room room)
         {
-            _context.Room.Add(room);
-            await _context.SaveChangesAsync();
+            try
+            {
+                if (room.Hotel == null)
+                {
+                    room.Hotel = await _context.Hotel.FindAsync(room.HotelId);
+                }
 
-            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+                _context.Room.Add(room);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
+
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]

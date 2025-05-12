@@ -24,11 +24,51 @@
                 <div class="mt-4">
                     <p><strong>Адрес:</strong> @Model.Hotel.Address, @Model.Hotel.City</p>
                     <p><strong>Рейтинг:</strong> @Model.Hotel.Rating.ToString("0.0") <i class="fa fa-star text-warning"></i></p>
-                    @* Можно добавить другую полезную информацию, например контакты *@
-                    @* <p><strong>Телефон:</strong> +7 (495) 123-45-67</p> *@
                 </div>
             </div>
         </div>
+        @* Блок отзывов *@
+        @if (Model.Comments != null && Model.Comments.Any())
+        {
+            <div id="commentsCarousel" class="carousel slide mb-5" data-bs-ride="carousel" style="max-width:600px;margin:auto;">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.Comments.Count(); i++)
+                    {
+                        var comment = Model.Comments.ElementAt(i);
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <div class="d-flex align-items-center justify-content-center" style="min-height:120px;">
+                                <div class="p-3 w-100 text-center">
+                                    <div>
+                                        @for (int s = 0; s < comment.Rating; s++)
+                                        {
+                                            <i class="fa fa-star text-warning"></i>
+                                        }
+                                        @for (int s = comment.Rating; s < 5; s++)
+                                        {
+                                            <i class="fa fa-star text-secondary"></i>
+                                        }
+                                    </div>
+                                    <p class="mb-1 mt-2">"@comment.Text"</p>
+                                    <small class="text-muted">@comment.User.SecondName @comment.User.FirstName @comment.CreatedDate.LocalDateTime.ToString("dd.MM.yyyy")</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#commentsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+
+                <button class="carousel-control-next" type="button" data-bs-target="#commentsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info mb-5" style="max-width:600px;margin:auto;">Пока нет отзывов об этом отеле.</div>
+        }
+
     }
 
     @* Форма фильтров *@
@@ -105,6 +145,19 @@
 </div>
 
 <style>
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='black' viewBox='0 0 8 8'%3e%3cpath d='M2.5 0L3.5 1 1 4 3.5 7 2.5 8 0 4z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 1.7rem 1.7rem;
+    }
+
+    .carousel-control-prev-icon {
+        transform: scaleX(-1);
+    }
+
     .card-img-container {
         height: 250px;
         overflow: hidden;

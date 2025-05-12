@@ -8,6 +8,7 @@
     {
         [Get("/Hotels")]
         Task<IEnumerable<Hotel>> GetHotelsAsync();
+
         [Get("/Hotels/{hotelId}")]
         Task<Hotel> GetHotelById(int hotelId);
 
@@ -18,6 +19,12 @@
         Task UpdateHotelRatings();
 
 
+        [Get("/Comments/Hotel/{hotelId}")]
+        Task<IEnumerable<Comment>> GetCommentsByHotelId(int hotelId);
+
+        [Post("/Comments")]
+        Task<Comment> PostComment([Body] Comment comment);
+
 
         [Get("/Rooms/Hotel/{hotelId}")]
         Task<IEnumerable<Room>> GetRoomByHotelId(int hotelId);
@@ -27,6 +34,12 @@
 
         [Get("/Rooms/{roomId}/{checkIn}_{checkOut}")]
         Task<int> GetAvailableRoomCount(int roomId, string checkIn, string checkOut);
+
+        [Post("/Rooms")]
+        Task<bool> CreateRoom([Body] Room room);
+
+        [Post("/RoomImages")]
+        Task<RoomImages> PostRoomImage([Body] RoomImages roomImage);
 
 
         [Get("/Users/Verification")]

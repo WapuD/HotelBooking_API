@@ -101,6 +101,18 @@ namespace HotelBooking_API.Data
                 new Company
                 {
                     Id = 1,
+                    Name = "Hotel Booking",
+                    Description = "Сервис для бронирования отелей",
+                    Email = "HotelBooking@mail.ru",
+                    Phone = "+79645873664",
+                    Website = "https://www.HotelBooking.ru",
+                    LogoUrl = "https://www.HotelBooking/Logo.svg.png",
+                    TaxId = "US-517351059",
+                    LegalAddress = "Тверская ул., 6с, Москва, 125009, Россия"
+                },
+                new Company
+                {
+                    Id = 2,
                     Name = "Hilton Worldwide",
                     Description = "Международная сеть отелей класса люкс, основанная в 1919 году",
                     Email = "corporate@hilton.com",
@@ -112,7 +124,7 @@ namespace HotelBooking_API.Data
                 },
                 new Company
                 {
-                    Id = 2,
+                    Id = 3,
                     Name = "Marriott International",
                     Description = "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами",
                     Email = "info@marriott.com",
@@ -124,7 +136,7 @@ namespace HotelBooking_API.Data
                 },
                 new Company
                 {
-                    Id = 3,
+                    Id = 4,
                     Name = "Accor Group",
                     Description = "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis",
                     Email = "contact@accor.com",
@@ -136,7 +148,7 @@ namespace HotelBooking_API.Data
                 },
                 new Company
                 {
-                    Id = 4,
+                    Id = 5,
                     Name = "Азимут Отели Россия",
                     Description = "Крупнейшая российская гостиничная сеть, основанная в 2010 году",
                     Email = "info@azimuthotels.com",
@@ -148,7 +160,7 @@ namespace HotelBooking_API.Data
                 },
                 new Company
                 {
-                    Id = 5,
+                    Id = 6,
                     Name = "Cosmos Hotel Group",
                     Description = "Российская гостиничная управляющая компания",
                     Email = "booking@cosmos-hotel.com",
@@ -195,24 +207,35 @@ namespace HotelBooking_API.Data
                 new User
                 {
                     Id = 1,
+                    FirstName = "qwe",
+                    SecondName = "qwe",
+                    LastName = "qwe",
+                    Email = "qwe@mail.ru",
+                    Phone = "+79172227890",
+                    CompanyId = null,
+                    PasswordHash = Encoding.UTF8.GetBytes("qweqwe")
+                },
+                new User
+                {
+                    Id = 2,
                     FirstName = "Иван",
                     SecondName = "Иванов",
                     LastName = "Иванович",
                     Email = "ivan@example.com",
                     Phone = "+7 123 456 7890",
                     CompanyId = 1,
-                    PasswordHash = new byte[16] // Needs to be correct length
+                    PasswordHash = Encoding.UTF8.GetBytes("asdasd")
                 },
                 new User
                 {
-                    Id = 2,
-                    FirstName = "Мария",
+                    Id = 3,
+                    FirstName = "Марияс",
                     SecondName = "Петрова",
                     LastName = "Николаевна",
-                    Email = "maria@example.com",
+                    Email = "marias@example.com",
                     Phone = "+7 987 654 3210",
                     CompanyId = 2,
-                    PasswordHash = new byte[16] // Needs to be correct length
+                    PasswordHash = Encoding.UTF8.GetBytes("marias")
                 }
             );
 
