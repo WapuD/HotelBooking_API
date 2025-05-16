@@ -53,7 +53,9 @@
                                 <div class="row mb-5">
                                     <div class="col-12">
                                         <h4>Оставить отзыв</h4>
-                                        <form method="post">
+                                        <form method="post" asp-page-handler="AddComment">
+                                            <input type="hidden" name="HotelId" value="@booking.Room.HotelId" />
+                                            <input type="hidden" name="BookingId" value="@booking.Id" />
                                             <div class="mb-3">
                                                 <label class="form-label">Рейтинг</label>
                                                 <select class="form-select" name="Rating" required>

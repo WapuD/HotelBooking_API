@@ -27,7 +27,7 @@ namespace HotelBooking_API.Data.Models
 
         [Required]
         [MaxLength(20)]
-        public string Status { get; set; } = "Pending";
+        public string Status { get; set; } = "Ожидание";
 
         // Навигационные свойства
         public User? User { get; set; }

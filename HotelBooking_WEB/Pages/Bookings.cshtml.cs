@@ -2,6 +2,7 @@
 using HotelBooking_WEB.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.IdentityModel.Tokens;
 
 namespace HotelBooking_WEB.Pages
 {
@@ -11,6 +12,8 @@ namespace HotelBooking_WEB.Pages
         private readonly IApiClient _apiClient;
 
         public IEnumerable<Booking> Bookings { get; set; }
+        public Dictionary<int, Comment> UserCommentsByHotel { get; set; } = new();
+
 
         public BookingsModel(ILogger<BookingsModel> logger, IApiClient apiClient)
         {
@@ -51,5 +54,39 @@ namespace HotelBooking_WEB.Pages
             return RedirectToPage("/Bookings");
         }
 
+        public async Task<IActionResult> OnPostAddCommentAsync(int hotelId, int bookingId, int rating, string text)
+        {
+            try
+            {
+                var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+                if (userId == null)
+                {
+                    return RedirectToPage("/Login");
+                }
+
+                var comment = new Comment
+                {
+                    HotelId = hotelId,
+                    Hotel = null,
+                    UserId = userId,
+                    User = null,
+                    Rating = rating,
+                    Text = text,
+                    CreatedDate = DateTimeOffset.UtcNow
+                };
+
+                await _apiClient.PostComment(comment);
+
+                return RedirectToPage("/Bookings");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при добавлении отзыва");
+                ModelState.AddModelError(string.Empty, "Ошибка при добавлении отзыва");
+                // Перезагрузить страницу с ошибкой
+                await OnGet();
+                return Page();
+            }
+        }
     }
 }

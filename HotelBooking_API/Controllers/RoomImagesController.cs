@@ -78,6 +78,8 @@ namespace HotelBooking_API.Controllers
         [HttpPost]
         public async Task<ActionResult<RoomImages>> PostRoomImages(RoomImages roomImages)
         {
+            roomImages.RoomId = _context.Room.OrderByDescending(r => r.Id).FirstOrDefault().Id;
+            roomImages.Room = await _context.Room.FindAsync(roomImages.RoomId);
             _context.RoomImages.Add(roomImages);
             await _context.SaveChangesAsync();
 

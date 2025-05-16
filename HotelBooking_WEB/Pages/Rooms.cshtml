@@ -48,7 +48,7 @@
                                             <i class="fa fa-star text-secondary"></i>
                                         }
                                     </div>
-                                    <p class="mb-1 mt-2">"@comment.Text"</p>
+                                    <p class="mb-1 mt-2 comment-text-truncate">"@comment.Text"</p>
                                     <small class="text-muted">@comment.User.SecondName @comment.User.FirstName @comment.CreatedDate.LocalDateTime.ToString("dd.MM.yyyy")</small>
                                 </div>
                             </div>
@@ -145,6 +145,19 @@
 </div>
 
 <style>
+    .comment-text-truncate {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .carousel-item {
+        height: 120 px;
+    }
+
 
     .carousel-control-prev-icon,
     .carousel-control-next-icon {

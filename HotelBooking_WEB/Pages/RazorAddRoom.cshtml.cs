@@ -31,7 +31,7 @@ namespace HotelBooking_WEB.Pages
 
         public async Task<IActionResult> OnPost()
         {
-                        if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 Hotels = await _apiClient.GetHotelsAsync();
                 return Page();
@@ -53,30 +53,28 @@ namespace HotelBooking_WEB.Pages
 
                 if (ImageFile != null && ImageFile.Length > 0)
                 {
-                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "RoomImg");
-                    if (!Directory.Exists(uploadsFolder))
-                        Directory.CreateDirectory(uploadsFolder);
+                    var imagesFolder = Path.Combine(_environment.WebRootPath, "RoomImg");
 
-                    // Формируем базовое имя файла из названия комнаты, заменяя пробелы и запрещённые символы
-                    string safeRoomName = string.Concat(Room.RoomName.Where(c => !Path.GetInvalidFileNameChars().Contains(c)))
-                                            .Replace(" ", "_");
-
-                    string extension = Path.GetExtension(ImageFile.FileName);
-                    if (string.IsNullOrEmpty(extension))
-                        extension = ".png"; // по умолчанию
-
-                    string fileName;
-                    string filePath;
-                    int counter = 1;
-
-                    do
+                    // Проверяем, существует ли папка, если нет - создаём
+                    if (!Directory.Exists(imagesFolder))
                     {
-                        fileName = $"{safeRoomName}_{counter}{extension}";
-                        filePath = Path.Combine(uploadsFolder, fileName);
-                        counter++;
-                    } while (System.IO.File.Exists(filePath));
+                        Directory.CreateDirectory(imagesFolder);
+                    }
 
-                    // Сохраняем файл
+                    //var baseName = "HotelPhoto"; // Ошибка
+                    var baseName = "RoomPhoto";
+                    var extension = Path.GetExtension(ImageFile.FileName);
+                    var fileName = $"{baseName}{extension}";
+                    var filePath = Path.Combine(imagesFolder, fileName);
+
+                    var counter = 1;
+                    while (System.IO.File.Exists(filePath))
+                    {
+                        fileName = $"{baseName}_{counter}{extension}";
+                        filePath = Path.Combine(imagesFolder, fileName);
+                        counter++;
+                    }
+
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await ImageFile.CopyToAsync(fileStream);
@@ -101,6 +99,5 @@ namespace HotelBooking_WEB.Pages
 
             return RedirectToPage("/Rooms");
         }
-
     }
 }

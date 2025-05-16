@@ -12,6 +12,16 @@
 
     <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
+            <label for="CompanyId" class="form-label">Компания:</label>
+            <select class="form-select" id="CompanyId" asp-for="Hotel.CompanyId" required>
+                <option value="">Выберите компанию</option>
+                @foreach (var company in Model.Companies)
+                {
+                    <option value="@company.Id">@company.Name</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
             <label for="Name" class="form-label">Название отеля:</label>
             <input type="text" class="form-control" id="Name" asp-for="Hotel.Name" required />
         </div>

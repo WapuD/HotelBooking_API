@@ -18,9 +18,8 @@ namespace HotelBooking_API.Data.Models
         [MaxLength(50)]
         public string SecondName { get; set; }
 
-        [Required]
         [MaxLength(50)]
-        public string LastName { get; set; }
+        public string? LastName { get; set; } = null;
 
         [Required]
         [EmailAddress] // Проверка формата email
@@ -28,8 +27,9 @@ namespace HotelBooking_API.Data.Models
         public string Email { get; set; }
 
         [Required]
-        [Phone] // Проверка формата телефона
+        [Phone]
         [MaxLength(20)]
+        [RegularExpression(@"^\+?[0-9]{7,15}$", ErrorMessage = "Введите корректный номер телефона.")]
         public string Phone { get; set; }
 
         [Required]
@@ -50,28 +50,29 @@ namespace HotelBooking_API.Data.Models
         [Required]
         public string SecondName { get; set; }
 
-        [Required]
-        public string LastName { get; set; }
+        public string? LastName { get; set; } = null;
 
         [Required]
         [EmailAddress]
         public string Email { get; set; }
 
         [Required]
-        [Phone]
+        [RegularExpression(@"^\+?[0-9]{7,15}$", ErrorMessage = "Введите корректный номер телефона.")]
         public string Phone { get; set; }
 
         [Required]
         [MinLength(6)]
         public string Password { get; set; }
-        public int? CompanyId { get; set; }
+
+        public int? CompanyId { get; set; } = null;
     }
+
     public class UserResponseDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
     }
@@ -80,7 +81,7 @@ namespace HotelBooking_API.Data.Models
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
         public string Phone { get; set; }
         public int? CompanyId { get; set; }
     }

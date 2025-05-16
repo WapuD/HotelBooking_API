@@ -26,6 +26,9 @@
         Task<Comment> PostComment([Body] Comment comment);
 
 
+
+
+
         [Get("/Rooms/Hotel/{hotelId}")]
         Task<IEnumerable<Room>> GetRoomByHotelId(int hotelId);
 

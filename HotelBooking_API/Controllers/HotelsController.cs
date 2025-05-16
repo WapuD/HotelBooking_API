@@ -81,7 +81,9 @@ namespace HotelBooking_API.Controllers
                 Description = hotel.Description,
                 City = hotel.City,
                 Rating = hotel.Rating,
-                Rooms = null
+                Rooms = null,
+                Company = await _context.Company.FindAsync(hotel.CompanyId),
+                CompanyId = hotel.CompanyId
             };
 
             try

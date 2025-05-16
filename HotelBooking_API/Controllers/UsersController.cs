@@ -34,6 +34,13 @@ namespace HotelBooking_API.Controllers
         [HttpPost("CreateUser")]
         public async Task<ActionResult<bool>> CreateUser(CreateUserDto newUser)
         {
+            // Проверяем, существует ли пользователь с таким email
+            bool userExists = await _context.User.AnyAsync(u => u.Email == newUser.Email);
+            if (userExists)
+            {
+                return BadRequest("Пользователь с таким email уже существует.");
+            }
+
             var user = new User
             {
                 Email = newUser.Email,
@@ -51,6 +58,7 @@ namespace HotelBooking_API.Controllers
 
             return true;
         }
+
 
         // GET: api/Users/Verification
         [HttpGet("Verification")]

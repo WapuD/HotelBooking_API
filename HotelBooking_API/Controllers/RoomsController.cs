@@ -109,10 +109,7 @@ namespace HotelBooking_API.Controllers
         {
             try
             {
-                if (room.Hotel == null)
-                {
-                    room.Hotel = await _context.Hotel.FindAsync(room.HotelId);
-                }
+                room.Hotel = await _context.Hotel.FindAsync(room.HotelId);
 
                 _context.Room.Add(room);
                 await _context.SaveChangesAsync();

@@ -30,19 +30,19 @@ namespace HotelBooking_API.Data.Models
         public string Description { get; set; }
 
         [MaxLength(100)]
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
 
         // Навигационное свойство для номеров
         [JsonIgnore]
-        public ICollection<Room> Rooms { get; set; }
+        public ICollection<Room>? Rooms { get; set; }
 
         [ForeignKey("User")]
         public int CompanyId { get; set; }
 
-        public Company Company { get; set; }
+        public Company? Company { get; set; }
 
         [JsonIgnore]
-        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Comment>? Comments { get; set; }
     }
     public class HotelDtoCreate
     {

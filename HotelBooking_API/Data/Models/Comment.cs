@@ -24,12 +24,21 @@ namespace HotelBooking_API.Data.Models
         [ForeignKey("User")]
         public int UserId { get; set; }
 
-        public User User { get; set; }
+        public User? User { get; set; }
 
         [ForeignKey("Hotel")]
         public int HotelId { get; set; }
 
         [JsonIgnore]
-        public Hotel Hotel { get; set; }
+        public Hotel? Hotel { get; set; }
     }
+    public class CommentDto
+    {
+        public int Id { get; set; }
+        public int Rating { get; set; }
+        public string Text { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public string UserName { get; set; }  // Имя пользователя
+    }
+
 }

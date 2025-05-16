@@ -19,7 +19,7 @@ namespace HotelBooking_API.Data.Models
 
         // Навигационные свойства
         [JsonIgnore]
-        public Room Room { get; set; }
+        public Room? Room { get; set; }
     }
 
 }

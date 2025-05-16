@@ -3,6 +3,8 @@ using HotelBooking_WEB.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Refit;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace HotelBooking_WEB.Pages
@@ -55,14 +57,30 @@ namespace HotelBooking_WEB.Pages
                     CompanyId = null
                 };
 
-                bool itog = await _apiClient.CreateUser(newUser);
+                try
+                {
+                    bool itog = await _apiClient.CreateUser(newUser);
 
-                if (itog)
-                    return RedirectToPage("/Index");
+                    if (itog)
+                        return RedirectToPage("/Index");
+                }
+                catch (ApiException ex) // Используйте нужный тип исключения для вашего клиента
+                {
+                    // Например, если вернулся BadRequest
+                    if (ex.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        ModelState.AddModelError(string.Empty, "Пользователь с таким email уже существует.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Ошибка при создании пользователя.");
+                    }
+                }
             }
 
             return Page();
         }
+
     }
 }
 

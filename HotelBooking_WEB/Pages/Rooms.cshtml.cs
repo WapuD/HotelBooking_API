@@ -51,7 +51,16 @@ namespace HotelBooking_WEB.Pages
 
         public async Task OnGet(DateTime? checkInDate = null, DateTime? checkOutDate = null)
         {
-            var hotelId = int.Parse(HttpContext.Session.GetString("HotelId"));
+            var hotelIdStr = HttpContext.Session.GetString("HotelId");
+            if (string.IsNullOrEmpty(hotelIdStr))
+            {
+                // HotelId отсутствует в сессии, например, перенаправить на страницу выбора отеля
+                RedirectToPage("/Hotels"); // Или другая страница выбора отеля
+                return;
+            }
+
+            var hotelId = int.Parse(hotelIdStr);
+            //HttpContext.Session.SetString("HotelId", hotelId.ToString()); //это лишнее
 
             CheckInDate = checkInDate ?? DateTime.Today;
             CheckOutDate = checkOutDate;
@@ -88,6 +97,7 @@ namespace HotelBooking_WEB.Pages
 
             Rooms = allRooms.ToList();
         }
+
 
         private async Task<IEnumerable<Room>> FilterAvailableRooms(IEnumerable<Room> rooms, DateTime checkInDate, DateTime checkOutDate)
         {

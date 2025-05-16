@@ -58,7 +58,6 @@ namespace HotelBooking_API.Controllers
             return comments;
         }
 
-
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -95,6 +94,9 @@ namespace HotelBooking_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
+            comment.User = await _context.User.FindAsync(comment.UserId);
+            comment.Hotel = await _context.Hotel.FindAsync(comment.HotelId);
+
             _context.Comment.Add(comment);
             await _context.SaveChangesAsync();
 
