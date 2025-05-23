@@ -71,11 +71,20 @@ namespace HotelBooking_WEB.Pages
 
             if (CheckInDate.HasValue && CheckOutDate.HasValue)
             {
+                if (CheckOutDate < CheckInDate)
+                {
+                    ModelState.AddModelError(string.Empty, "Дата выезда не может быть раньше даты заезда.");
+                    // Можно вернуть пустой список комнат или обработать ошибку по-другому
+                    allRooms = Enumerable.Empty<Room>();
+                    return;
+                }
+
                 allRooms = await FilterAvailableRooms(allRooms, CheckInDate.Value, CheckOutDate.Value);
 
                 HttpContext.Session.SetString("CheckInDate", CheckInDate.Value.ToString());
                 HttpContext.Session.SetString("CheckOutDate", CheckOutDate.Value.ToString());
             }
+
 
             // Фильтрация по минимальной цене
             if (MinPrice.HasValue)

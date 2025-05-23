@@ -210,27 +210,25 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const checkInDateInput = document.getElementById('checkInDate');
-        const checkOutDateInput = document.getElementById('checkOutDate');
+        const checkIn = document.getElementById('checkInDate');
+        const checkOut = document.getElementById('checkOutDate');
 
-        // Set initial date
-        if (!checkInDateInput.value) {
-            let today = new Date();
-            let formattedDateIn = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            checkInDateInput.setAttribute('min', today.toISOString().split('T')[0]);
-            checkInDateInput.value = formattedDateIn;
-
-            let tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-            let formattedDateOut = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
-            checkOutDateInput.setAttribute('min', tomorrow.toISOString().split('T')[0]);
-            checkOutDateInput.value = formattedDateOut;
+        function updateCheckOutMin() {
+            if (checkIn.value) {
+                checkOut.min = checkIn.value;
+                // Если дата выезда уже выбрана и меньше даты заезда — корректируем
+                if (checkOut.value && checkOut.value < checkIn.value) {
+                    checkOut.value = checkIn.value;
+                }
+            } else {
+                checkOut.min = '';
+            }
         }
 
-        checkInDateInput.addEventListener('keydown', function (event) {
-            event.preventDefault();
-        });
-        checkOutDateInput.addEventListener('keydown', function (event) {
-            event.preventDefault();
-        });
+        checkIn.addEventListener('change', updateCheckOutMin);
+
+        // При первой загрузке тоже выставить min
+        updateCheckOutMin();
     });
 </script>
+

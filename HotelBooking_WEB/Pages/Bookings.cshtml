@@ -5,81 +5,80 @@
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<div class="container py-5">
+<div class="container py-4">
     <h1 class="text-center mb-4" style="color: #1a73e8;">Мои бронирования</h1>
 
     @if (Model.Bookings != null && Model.Bookings.Any())
     {
-        <div class="row g-4">
+        <ul class="list-group list-group-flush">
             @foreach (var booking in Model.Bookings)
             {
-                <div class="col-md-6">
-                    <div class="booking-card card h-100 shadow">
-                        <div class="card-body">
-                            <h3 class="card-title">Бронирование #@booking.Id</h3>
-                            <p class="card-text">
-                                <i class="fa fa-users me-2"></i>
-                                Номер: @booking.Room.RoomName (@booking.Room.Capacity человек)
-                            </p>
-                            <p class="card-text">
-                                <i class="fa fa-calendar me-2"></i>
-                                Дата заезда: @booking.CheckInDate.ToString("dd MMMM yyyy")
-                            </p>
-                            <p class="card-text">
-                                <i class="fa fa-calendar me-2"></i>
-                                Дата выезда: @booking.CheckOutDate.ToString("dd MMMM yyyy")
-                            </p>
-                            <p class="card-text">
-                                <i class="fa fa-money-bill-wave me-2"></i>
-                                Общая стоимость: @booking.TotalPrice.ToString("C")
-                            </p>
-                            <p class="card-text">
-                                <i class="fa fa-circle-info me-2"></i>
-                                Статус: @booking.Status
-                            </p>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="fa fa-bed me-2"></i>
+                        @booking.Room.RoomName
+                        <span class="text-muted ms-2">#@booking.Id</span>
+                    </span>
+                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#bookingModal@booking.Id">
+                        Подробнее
+                    </button>
+                </li>
 
-                            @if (booking.Status == "Ожидание")
-                            {
-                                <form method="post">
-                                    <input type="hidden" name="bookingId" value="@booking.Id" />
-                                    <button type="submit" asp-page-handler="CancelBooking" class="btn btn-danger mt-3">
-                                        Отменить бронирование
-                                    </button>
-                                </form>
-                            }
-                            @if (booking.Status != "Ожидание")
-                            {
-                                <div class="row mb-5">
-                                    <div class="col-12">
-                                        <h4>Оставить отзыв</h4>
-                                        <form method="post" asp-page-handler="AddComment">
-                                            <input type="hidden" name="HotelId" value="@booking.Room.HotelId" />
-                                            <input type="hidden" name="BookingId" value="@booking.Id" />
-                                            <div class="mb-3">
-                                                <label class="form-label">Рейтинг</label>
-                                                <select class="form-select" name="Rating" required>
-                                                    <option value="">Выберите...</option>
-                                                    @for (int i = 1; i <= 5; i++)
-                                                    {
-                                                        <option value="@i">@i</option>
-                                                    }
-                                                </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Текст отзыва</label>
-                                                <textarea class="form-control" name="Text" rows="3" maxlength="2000" required></textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-info">Оставить отзыв</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            }
+                <!-- Модальное окно для этого бронирования -->
+                <div class="modal fade" id="bookingModal@booking.Id" tabindex="-1" aria-labelledby="bookingModalLabel@booking.Id" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="bookingModalLabel@booking.Id">Бронирование #@booking.Id</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Номер:</strong> @booking.Room.RoomName (@booking.Room.Capacity человек)</p>
+                                <p><strong>Дата заезда:</strong> @booking.CheckInDate.ToString("dd MMMM yyyy")</p>
+                                <p><strong>Дата выезда:</strong> @booking.CheckOutDate.ToString("dd MMMM yyyy")</p>
+                                <p><strong>Общая стоимость:</strong> @booking.TotalPrice.ToString("C")</p>
+                                <p><strong>Статус:</strong> @booking.Status</p>
+                                @if (booking.Status == "Ожидание")
+                                {
+                                    <form method="post">
+                                        <input type="hidden" name="bookingId" value="@booking.Id" />
+                                        <button type="submit" asp-page-handler="CancelBooking" class="btn btn-danger mt-3 w-100">
+                                            Отменить бронирование
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <hr />
+                                    <h6>Оставить отзыв</h6>
+                                    <form method="post" asp-page-handler="AddComment">
+                                        <input type="hidden" name="HotelId" value="@booking.Room.HotelId" />
+                                        <input type="hidden" name="BookingId" value="@booking.Id" />
+                                        <div class="mb-3">
+                                            <label class="form-label">Рейтинг</label>
+                                            <select class="form-select" name="Rating" required>
+                                                <option value="">Выберите...</option>
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    <option value="@i">@i</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Текст отзыва</label>
+                                            <textarea class="form-control" name="Text" rows="3" maxlength="2000" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-info w-100">Оставить отзыв</button>
+                                    </form>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
             }
-        </div>
+        </ul>
     }
     else
     {
@@ -92,12 +91,9 @@
     </a>
 </div>
 
-<style>
-    .booking-card {
-        border-radius: 15px;
-        overflow: hidden;
-    }
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<style>
     .back-btn {
         width: 100%;
         transition: background-color 0.3s ease;

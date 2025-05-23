@@ -3,32 +3,52 @@
     using Refit;
     using HotelBooking_API.Data.Models;
     using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IApiClient
     {
+        // --- Отели ---
         [Get("/Hotels")]
         Task<IEnumerable<Hotel>> GetHotelsAsync();
 
         [Get("/Hotels/{hotelId}")]
         Task<Hotel> GetHotelById(int hotelId);
 
+        [Get("/Hotels/Company/{companyId}")]
+        Task<IEnumerable<Hotel>> GetHotelsByCompanyId(int companyId);
+
         [Post("/Hotels")]
-        Task<bool> CreateHotel(HotelDtoCreate hotel);
+        Task<bool> CreateHotel([Body] HotelDtoCreate hotel);
+
+        [Put("/Hotels/Update/{id}")]
+        Task<bool> UpdateHotel(int id, [Body] HotelDtoCreate hotel);
+
+        [Delete("/Hotels/{id}")]
+        Task DeleteHotel(int id);
 
         [Post("/Hotels/UpdateRatings")]
         Task UpdateHotelRatings();
 
 
-        [Get("/Comments/Hotel/{hotelId}")]
-        Task<IEnumerable<Comment>> GetCommentsByHotelId(int hotelId);
+        // --- Компании ---
+        [Get("/Companies")]
+        Task<IEnumerable<Company>> GetCompaniesAsync();
 
-        [Post("/Comments")]
-        Task<Comment> PostComment([Body] Comment comment);
+        [Get("/Companies/{id}")]
+        Task<Company> GetCompany(int id);
+
+        [Post("/Companies")]
+        Task<bool> CreateCompany([Body] CompanyCreateDto company);
+
+        [Put("/Companies/{id}")]
+        Task<bool> UpdateCompany(int id, [Body] CompanyCreateDto company);
+
+        [Delete("/Companies/{id}")]
+        Task DeleteCompany(int id);
 
 
-
-
-
+        // --- Номера ---
         [Get("/Rooms/Hotel/{hotelId}")]
         Task<IEnumerable<Room>> GetRoomByHotelId(int hotelId);
 
@@ -45,6 +65,15 @@
         Task<RoomImages> PostRoomImage([Body] RoomImages roomImage);
 
 
+        // --- Комментарии ---
+        [Get("/Comments/Hotel/{hotelId}")]
+        Task<IEnumerable<Comment>> GetCommentsByHotelId(int hotelId);
+
+        [Post("/Comments")]
+        Task<Comment> PostComment([Body] Comment comment);
+
+
+        // --- Пользователи ---
         [Get("/Users/Verification")]
         Task<User> GetVerification(string email, string password);
 
@@ -57,7 +86,7 @@
         [Put("/Users/update")]
         Task UpdateUser(UpdateUserDto updateUserDto);
 
-
+        // --- Бронирования ---
         [Get("/Bookings/user/{userId}")]
         Task<IEnumerable<Booking>> GetUserBookings(int userId);
 
@@ -75,11 +104,5 @@
 
         [Get("/Bookings/{id}")]
         Task<Booking> GetBookingById(int id);
-
-
-        [Get("/Companies")]
-        Task<IEnumerable<Company>> GetCompaniesAsync();
-        [Post("/Companies")]
-        Task<bool> CreateCompany([Body] CompanyCreateDto company);
     }
 }

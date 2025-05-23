@@ -1,0 +1,38 @@
+﻿@page
+@model HotelBooking_WEB.Pages.AdminCompaniesModel
+@{
+    ViewData["Title"] = "Компании";
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Компании</h1>
+
+<a asp-page="/AdminAddCompany" class="btn btn-primary mb-3">Добавить компанию</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Email</th>
+            <th>Телефон</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var company in Model.Companies)
+        {
+            <tr>
+                <td>@company.Name</td>
+                <td>@company.Email</td>
+                <td>@company.Phone</td>
+                <td>
+                    <a asp-page="/AdminEditCompany" asp-route-id="@company.Id" class="btn btn-sm btn-warning">Редактировать</a>
+                    <a asp-page="/AdminHotels" asp-route-companyId="@company.Id" class="btn btn-sm btn-secondary">Отели</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@company.Id" class="d-inline" onsubmit="return confirm('Удалить компанию?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

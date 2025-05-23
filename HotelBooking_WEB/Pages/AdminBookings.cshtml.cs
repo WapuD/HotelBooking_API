@@ -30,6 +30,19 @@ namespace HotelBooking_WEB.Pages
         public int CancelledBookingsCount { get; set; }
         public double OccupancyRate { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string UserFilter { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string StatusFilter { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SortOrder { get; set; }
+
+        public Dictionary<string, List<Booking>> BookingsGroupedByHotel =>
+    BookingsRedact?.GroupBy(b => b.Room.Hotel.Name)
+                   .ToDictionary(g => g.Key, g => g.ToList())
+    ?? new Dictionary<string, List<Booking>>();
+
+
         public AdminBookingsModel(ILogger<BookingsModel> logger, IApiClient apiClient)
         {
             _logger = logger;
@@ -43,35 +56,59 @@ namespace HotelBooking_WEB.Pages
                 var response = await _apiClient.GetAllBookings();
                 Bookings = response;
 
-                // Фильтрация бронирований
-                BookingsRedact = Bookings.Where(b => b.Status == "Ожидание")
-                                         .OrderBy(b => b.CheckInDate)
-                                         .ToList();
-                BookingsList = Bookings.Where(b => b.Status == "Подтверждено" || b.Status == "Отменено")
-                                       .OrderBy(b => b.CheckInDate)
-                                       .ToList();
+                // --- Фильтрация по пользователю ---
+                if (!string.IsNullOrWhiteSpace(UserFilter))
+                {
+                    Bookings = Bookings.Where(b =>
+                        (b.User.FirstName + " " + b.User.SecondName + " " + (b.User.LastName ?? "")).Contains(UserFilter, StringComparison.OrdinalIgnoreCase)
+                        || b.User.Email.Contains(UserFilter, StringComparison.OrdinalIgnoreCase)
+                    ).ToList();
+                }
 
-                // Вычисление статистических данных
+                // --- Фильтрация по статусу ---
+                if (!string.IsNullOrWhiteSpace(StatusFilter))
+                {
+                    Bookings = Bookings.Where(b => b.Status == StatusFilter).ToList();
+                }
+
+                // --- Сортировка ---
+                Bookings = SortOrder switch
+                {
+                    "date_desc" => Bookings.OrderByDescending(b => b.CheckInDate).ToList(),
+                    "price_asc" => Bookings.OrderBy(b => b.TotalPrice).ToList(),
+                    "price_desc" => Bookings.OrderByDescending(b => b.TotalPrice).ToList(),
+                    _ => Bookings.OrderBy(b => b.CheckInDate).ToList(), // date_asc по умолчанию
+                };
+
+                // Разделение на активные и завершённые
+                BookingsRedact = Bookings.Where(b => b.Status == "Ожидание").ToList();
+                BookingsList = Bookings.Where(b => b.Status == "Подтверждено" || b.Status == "Отменено").ToList();
+
+                // Статистика
                 TotalBookings = Bookings.Count();
                 ActiveBookings = BookingsRedact.Count();
-                AveragePrice = Bookings.Average(b => b.TotalPrice);
-                MaxPrice = Bookings.Max(b => b.TotalPrice);
-                MinPrice = Bookings.Min(b => b.TotalPrice);
+                AveragePrice = Bookings.Any() ? Bookings.Average(b => b.TotalPrice) : 0;
+                MaxPrice = Bookings.Any() ? Bookings.Max(b => b.TotalPrice) : 0;
+                MinPrice = Bookings.Any() ? Bookings.Min(b => b.TotalPrice) : 0;
 
                 StatusDistribution = Bookings.GroupBy(b => b.Status)
                                             .ToDictionary(g => g.Key, g => g.Count());
 
-                AverageStayDuration = Bookings.Average(b => (b.CheckOutDate - b.CheckInDate).TotalDays);
+                AverageStayDuration = Bookings.Any() ? Bookings.Average(b => (b.CheckOutDate - b.CheckInDate).TotalDays) : 0;
 
                 CancelledBookingsCount = Bookings.Count(b => b.Status == "Отменено");
 
-                // Пример вычисления процента загрузки отеля (может потребовать дополнительной информации)
-                OccupancyRate = (double)ActiveBookings / TotalBookings * 100;
+                OccupancyRate = TotalBookings > 0 ? (double)ActiveBookings / TotalBookings * 100 : 0;
             }
-
             catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
                 Bookings = new List<Booking>();
+                BookingsRedact = new List<Booking>();
+                BookingsList = new List<Booking>();
+                TotalBookings = ActiveBookings = CancelledBookingsCount = 0;
+                AveragePrice = MaxPrice = MinPrice = 0;
+                AverageStayDuration = OccupancyRate = 0;
+                StatusDistribution = new Dictionary<string, int>();
             }
             catch (Exception ex)
             {

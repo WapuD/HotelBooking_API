@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelBooking_API.Data;
@@ -38,8 +36,19 @@ namespace HotelBooking_API.Controllers
             return hotel;
         }
 
+        // GET: api/Hotels/Company/5
+        [HttpGet("Company/{companyId}")]
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotelsByCompanyId(int companyId)
+        {
+            var hotels = await _context.Hotel
+                .Where(h => h.CompanyId == companyId)
+                .Include(h => h.Rooms)
+                .ToListAsync();
+
+            return hotels;
+        }
+
         // PUT: api/Hotels/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHotel(int id, Hotel hotel)
         {
@@ -68,6 +77,54 @@ namespace HotelBooking_API.Controllers
 
             return NoContent();
         }
+        [HttpPut("Update/{id}")]
+        public async Task<IActionResult> UpdateHotel(int id, HotelDtoCreate hotelDto)
+        {
+            if (hotelDto.Rating < 0 || hotelDto.Rating > 5)
+                return BadRequest("Рейтинг должен быть от 0 до 5");
+
+            if (string.IsNullOrWhiteSpace(hotelDto.Name))
+                return BadRequest("Название отеля обязательно");
+
+            var companyExists = await _context.Company.AnyAsync(c => c.Id == hotelDto.CompanyId);
+            if (!companyExists)
+                return BadRequest("Компания с таким Id не найдена");
+
+            var hotel = await _context.Hotel.FindAsync(id);
+            if (hotel == null)
+                return NotFound();
+
+            hotel.Name = hotelDto.Name;
+            hotel.Address = hotelDto.Address;
+            hotel.City = hotelDto.City;
+            hotel.Description = hotelDto.Description;
+            hotel.ImageUrl = hotelDto.ImageUrl;
+            hotel.Rating = hotelDto.Rating;
+            hotel.CompanyId = hotelDto.CompanyId;
+
+            _context.Entry(hotel).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (!HotelExists(id))
+                    return NotFound();
+
+                Console.Error.WriteLine(ex);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
+
+            return Ok(true);
+        }
+
 
         // POST: api/Hotels
         [HttpPost]
@@ -95,7 +152,7 @@ namespace HotelBooking_API.Controllers
             catch
             {
                 return false;
-            } 
+            }
         }
 
         // DELETE: api/Hotels/5
@@ -113,6 +170,7 @@ namespace HotelBooking_API.Controllers
 
             return NoContent();
         }
+
 
         private bool HotelExists(int id)
         {

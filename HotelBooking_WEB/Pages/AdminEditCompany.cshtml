@@ -1,0 +1,59 @@
+﻿@page "{id:int}"
+@model HotelBooking_WEB.Pages.AdminEditCompanyModel
+@{
+    ViewData["Title"] = "Редактировать компанию";
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Редактировать компанию</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="Company.Id" />
+    <div class="form-group">
+        <label asp-for="Company.Name"></label>
+        <input asp-for="Company.Name" class="form-control" />
+        <span asp-validation-for="Company.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Company.Description"></label>
+        <textarea asp-for="Company.Description" class="form-control"></textarea>
+        <span asp-validation-for="Company.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Company.Email"></label>
+        <input asp-for="Company.Email" class="form-control" />
+        <span asp-validation-for="Company.Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Company.Phone"></label>
+        <input asp-for="Company.Phone" class="form-control" />
+        <span asp-validation-for="Company.Phone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Company.Website"></label>
+        <input asp-for="Company.Website" class="form-control" />
+        <span asp-validation-for="Company.Website" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Company.LogoUrl"></label>
+        <input asp-for="Company.LogoUrl" class="form-control" />
+        <span asp-validation-for="Company.LogoUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Company.TaxId"></label>
+        <input asp-for="Company.TaxId" class="form-control" />
+        <span asp-validation-for="Company.TaxId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Company.LegalAddress"></label>
+        <input asp-for="Company.LegalAddress" class="form-control" />
+        <span asp-validation-for="Company.LegalAddress" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a asp-page="/AdminCompanies" class="btn btn-secondary">Отмена</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

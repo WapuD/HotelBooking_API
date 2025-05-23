@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HotelBooking_API.Data;
@@ -42,17 +40,34 @@ namespace HotelBooking_API.Controllers
             return company;
         }
 
-        // PUT: api/Companies/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCompany(int id, Company company)
+        // GET: api/Companies/5/Hotels
+        [HttpGet("{id}/Hotels")]
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotelsByCompany(int id)
         {
-            if (id != company.Id)
-            {
-                return BadRequest();
-            }
+            var companyExists = await _context.Company.AnyAsync(c => c.Id == id);
+            if (!companyExists)
+                return NotFound();
 
-            _context.Entry(company).State = EntityState.Modified;
+            var hotels = await _context.Hotel.Where(h => h.CompanyId == id).ToListAsync();
+            return hotels;
+        }
+
+        // PUT: api/Companies/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCompany(int id, CompanyCreateDto dto)
+        {
+            var company = await _context.Company.FindAsync(id);
+            if (company == null)
+                return NotFound();
+
+            company.Name = dto.Name;
+            company.Description = dto.Description;
+            company.Email = dto.Email;
+            company.Phone = dto.Phone;
+            company.Website = dto.Website;
+            company.LogoUrl = dto.LogoUrl;
+            company.TaxId = dto.TaxId;
+            company.LegalAddress = dto.LegalAddress;
 
             try
             {
@@ -61,20 +76,18 @@ namespace HotelBooking_API.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!CompanyExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
-            return NoContent();
+            return Ok(true);
         }
 
+
+
+
         // POST: api/Companies
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<bool>> PostCompany(Company company)
         {
@@ -91,9 +104,6 @@ namespace HotelBooking_API.Controllers
 
             return Ok(true);
         }
-
-
-
 
         // DELETE: api/Companies/5
         [HttpDelete("{id}")]
