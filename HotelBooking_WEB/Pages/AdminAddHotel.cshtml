@@ -11,7 +11,7 @@
     <h1 class="text-center mb-4" style="color: #1a73e8;">Добавить отель</h1>
 
     <form method="post" enctype="multipart/form-data">
-        <div class="mb-3">
+@*         <div class="mb-3">
             <label for="CompanyId" class="form-label">Компания:</label>
             <select class="form-select" id="CompanyId" asp-for="Hotel.CompanyId" required>
                 <option value="">Выберите компанию</option>
@@ -20,7 +20,7 @@
                     <option value="@company.Id">@company.Name</option>
                 }
             </select>
-        </div>
+        </div> *@
         <div class="mb-3">
             <label for="Name" class="form-label">Название отеля:</label>
             <input type="text" class="form-control" id="Name" asp-for="Hotel.Name" required />

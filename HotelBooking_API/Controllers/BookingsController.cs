@@ -23,18 +23,34 @@ namespace HotelBooking_API.Controllers
 
         // GET: api/Bookings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetAllBookings()
+        public async Task<ActionResult<IEnumerable<Booking>>> GetAllBookings(int companyId)
         {
+            var today = DateTime.Today;
+
             List<Booking> bookings = await _context.Booking
                 .Include(b => b.User)
                 .Include(b => b.Room)
                     .ThenInclude(r => r.Hotel)
                         .ThenInclude(h => h.Company)
+                        .Where(b => b.Room.Hotel.CompanyId == companyId)
                 .ToListAsync();
-            foreach (Booking booking in bookings) 
-            { 
+
+            bool anyChanges = false;
+
+            foreach (Booking booking in bookings)
+            {
+                // Предположим, что у вас есть поле booking.CheckInDate
+                if (booking.CheckInDate < today && booking.Status != "Cancelled")
+                {
+                    booking.Status = "Отменено"; // Или другое значение статуса
+                    anyChanges = true;
+                }
                 booking.Room.Hotel.Company = await _context.Company.FindAsync(booking.Room.Hotel.CompanyId);
             }
+
+            if (anyChanges)
+                await _context.SaveChangesAsync();
+
             return bookings;
         }
 

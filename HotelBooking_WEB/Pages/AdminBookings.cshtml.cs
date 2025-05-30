@@ -53,7 +53,9 @@ namespace HotelBooking_WEB.Pages
         {
             try
             {
-                var response = await _apiClient.GetAllBookings();
+                var companyId = Convert.ToInt32(HttpContext.Session.GetString("CompanyId"));
+
+                var response = await _apiClient.GetAllBookings(companyId);
                 Bookings = response;
 
                 // --- Фильтрация по пользователю ---

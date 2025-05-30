@@ -72,74 +72,69 @@
         </div>
     </form>
 
-
     @if (Model.BookingsRedact != null && Model.BookingsRedact.Any())
     {
-        @foreach (var group in Model.BookingsRedact.GroupBy(b => b.Room.Hotel.Name))
-        {
-            <h3 class="mt-4">@group.Key</h3>  <!-- Название отеля -->
+        <ul class="list-group mb-4">
+            @foreach (var booking in Model.BookingsRedact)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="fa fa-bed me-2"></i>
+                        @booking.Room.RoomName
+                        <span class="text-muted ms-2">#@booking.Id</span>
+                        <span class="badge bg-warning text-dark ms-3">@booking.Status</span>
+                    </span>
+                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#adminBookingModal(@booking.Id)">
+                        Подробнее
+                    </button>
+                </li>
 
-            <ul class="list-group mb-4">
-                @foreach (var booking in group)
-                {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <i class="fa fa-bed me-2"></i>
-                            @booking.Room.RoomName
-                            <span class="text-muted ms-2">#@booking.Id</span>
-                            <span class="badge bg-warning text-dark ms-3">@booking.Status</span>
-                        </span>
-                        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#adminBookingModal@booking.Id">
-                            Подробнее
-                        </button>
-                    </li>
 
-                    <!-- Модальное окно для управления бронированием -->
-                    <div class="modal fade" id="adminBookingModal@booking.Id" tabindex="-1" aria-labelledby="adminBookingModalLabel@booking.Id" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="adminBookingModalLabel@booking.Id">Бронирование #@booking.Id</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p><strong>Номер:</strong> @booking.Room.RoomName (@booking.Room.Capacity человек)</p>
-                                    <p><strong>Дата заезда:</strong> @booking.CheckInDate.ToString("dd MMM yyyy")</p>
-                                    <p><strong>Дата выезда:</strong> @booking.CheckOutDate.ToString("dd MMM yyyy")</p>
-                                    <p><strong>Статус:</strong> @booking.Status</p>
-                                    <p><strong>Цена:</strong> @booking.TotalPrice</p>
-                                    <hr />
-                                    <h6>Информация о пользователе</h6>
-                                    <p>Имя: @booking.User.FirstName @booking.User.SecondName @booking.User.LastName</p>
-                                    <p>Email: @booking.User.Email</p>
-                                    <p>Телефон: @booking.User.Phone</p>
-                                    <hr />
-                                    <h6>Информация о номере</h6>
-                                    <p>Название: @booking.Room.RoomName</p>
-                                    <p>Вместимость: @booking.Room.Capacity</p>
-                                    <hr />
-                                    <h6>Информация об отеле</h6>
-                                    <p>Название: @booking.Room.Hotel.Name</p>
-                                    <p>Адрес: @booking.Room.Hotel.Address</p>
-                                    <p>Компания: @booking.Room.Hotel.Company.Name</p>
-                                    <hr />
-                                    <form method="post">
-                                        <input type="hidden" name="bookingId" value="@booking.Id" />
-                                        <select name="newStatus" class="form-select mb-3">
-                                            <option value="Подтверждено">Подтверждено</option>
-                                            <option value="Отменено">Отменено</option>
-                                        </select>
-                                        <button type="submit" asp-page-handler="UpdateStatus" class="btn btn-primary update-status-btn w-100">
-                                            Обновить статус
-                                        </button>
-                                    </form>
-                                </div>
+                <!-- Модальное окно для управления бронированием -->
+                <div class="modal fade" id="adminBookingModal(@booking.Id)" tabindex="-1" aria-labelledby="adminBookingModalLabel(@booking.Id)" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="adminBookingModalLabel(@booking.Id)">Бронирование #@booking.Id</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Номер:</strong> @booking.Room.RoomName (@booking.Room.Capacity человек)</p>
+                                <p><strong>Дата заезда:</strong> @booking.CheckInDate.ToString("dd MMM yyyy")</p>
+                                <p><strong>Дата выезда:</strong> @booking.CheckOutDate.ToString("dd MMM yyyy")</p>
+                                <p><strong>Статус:</strong> @booking.Status</p>
+                                <p><strong>Цена:</strong> @booking.TotalPrice</p>
+                                <hr />
+                                <h6>Информация о пользователе</h6>
+                                <p>Имя: @booking.User.FirstName @booking.User.SecondName @booking.User.LastName</p>
+                                <p>Email: @booking.User.Email</p>
+                                <p>Телефон: @booking.User.Phone</p>
+                                <hr />
+                                <h6>Информация о номере</h6>
+                                <p>Название: @booking.Room.RoomName</p>
+                                <p>Вместимость: @booking.Room.Capacity</p>
+                                <hr />
+                                <h6>Информация об отеле</h6>
+                                <p>Название: @booking.Room.Hotel.Name</p>
+                                <p>Адрес: @booking.Room.Hotel.Address</p>
+                                <p>Компания: @booking.Room.Hotel.Company.Name</p>
+                                <hr />
+                                <form method="post">
+                                    <input type="hidden" name="bookingId" value="adminBookingModalLabel@booking.Id" />
+                                    <select name="newStatus" class="form-select mb-3">
+                                        <option value="Подтверждено">Подтверждено</option>
+                                        <option value="Отменено">Отменено</option>
+                                    </select>
+                                    <button type="submit" asp-page-handler="UpdateStatus" class="btn btn-primary update-status-btn w-100">
+                                        Обновить статус
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
-                }
-            </ul>
-        }
+                </div>
+            }
+        </ul>
     }
     else
     {
@@ -150,65 +145,61 @@
     <h1 class="text-center mb-4" style="color: #1a73e8;">Завершённые/отменённые бронирования</h1>
     @if (Model.BookingsList != null && Model.BookingsList.Any())
     {
-        @foreach (var group in Model.BookingsList.GroupBy(b => b.Room.Hotel.Name))
-        {
-            <h3 class="mt-4">@group.Key</h3>  <!-- Название отеля -->
+        <ul class="list-group mb-4">
+            @foreach (var booking in Model.BookingsList)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="fa fa-bed me-2"></i>
+                        @booking.Room.RoomName
+                        <span class="text-muted ms-2">#@booking.Id</span>
+                        <span class="badge bg-secondary ms-3">@booking.Status</span>
+                    </span>
+                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#adminBookingModalDone(@booking.Id)">
+                        Подробнее
+                    </button>
+                </li>
 
-            <ul class="list-group mb-4">
-                @foreach (var booking in group)
-                {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <i class="fa fa-bed me-2"></i>
-                            @booking.Room.RoomName
-                            <span class="text-muted ms-2">#@booking.Id</span>
-                            <span class="badge bg-secondary ms-3">@booking.Status</span>
-                        </span>
-                        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#adminBookingModalDone@booking.Id">
-                            Подробнее
-                        </button>
-                    </li>
-
-                    <!-- Модальное окно для просмотра завершённого/отменённого бронирования -->
-                    <div class="modal fade" id="adminBookingModalDone@booking.Id" tabindex="-1" aria-labelledby="adminBookingModalDoneLabel@booking.Id" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="adminBookingModalDoneLabel@booking.Id">Бронирование #@booking.Id</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p><strong>Номер:</strong> @booking.Room.RoomName (@booking.Room.Capacity человек)</p>
-                                    <p><strong>Дата заезда:</strong> @booking.CheckInDate.ToString("dd MMM yyyy")</p>
-                                    <p><strong>Дата выезда:</strong> @booking.CheckOutDate.ToString("dd MMM yyyy")</p>
-                                    <p><strong>Статус:</strong> @booking.Status</p>
-                                    <p><strong>Цена:</strong> @booking.TotalPrice</p>
-                                    <hr />
-                                    <h6>Информация о пользователе</h6>
-                                    <p>Имя: @booking.User.FirstName @booking.User.SecondName @booking.User.LastName</p>
-                                    <p>Email: @booking.User.Email</p>
-                                    <p>Телефон: @booking.User.Phone</p>
-                                    <hr />
-                                    <h6>Информация о номере</h6>
-                                    <p>Название: @booking.Room.RoomName</p>
-                                    <p>Вместимость: @booking.Room.Capacity</p>
-                                    <hr />
-                                    <h6>Информация об отеле</h6>
-                                    <p>Название: @booking.Room.Hotel.Name</p>
-                                    <p>Адрес: @booking.Room.Hotel.Address</p>
-                                    <p>Компания: @booking.Room.Hotel.Company.Name</p>
-                                </div>
+                <!-- Модальное окно для просмотра завершённого/отменённого бронирования -->
+                <div class="modal fade" id="adminBookingModalDone(@booking.Id)" tabindex="-1" aria-labelledby="adminBookingModalDoneLabel(@booking.Id)" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="adminBookingModalDoneLabel(@booking.Id)">Бронирование #@booking.Id</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Номер:</strong> @booking.Room.RoomName (@booking.Room.Capacity человек)</p>
+                                <p><strong>Дата заезда:</strong> @booking.CheckInDate.ToString("dd MMM yyyy")</p>
+                                <p><strong>Дата выезда:</strong> @booking.CheckOutDate.ToString("dd MMM yyyy")</p>
+                                <p><strong>Статус:</strong> @booking.Status</p>
+                                <p><strong>Цена:</strong> @booking.TotalPrice</p>
+                                <hr />
+                                <h6>Информация о пользователе</h6>
+                                <p>Имя: @booking.User.FirstName @booking.User.SecondName @booking.User.LastName</p>
+                                <p>Email: @booking.User.Email</p>
+                                <p>Телефон: @booking.User.Phone</p>
+                                <hr />
+                                <h6>Информация о номере</h6>
+                                <p>Название: @booking.Room.RoomName</p>
+                                <p>Вместимость: @booking.Room.Capacity</p>
+                                <hr />
+                                <h6>Информация об отеле</h6>
+                                <p>Название: @booking.Room.Hotel.Name</p>
+                                <p>Адрес: @booking.Room.Hotel.Address</p>
+                                <p>Компания: @booking.Room.Hotel.Company.Name</p>
                             </div>
                         </div>
                     </div>
-                }
-            </ul>
-        }
+                </div>
+            }
+        </ul>
     }
     else
     {
         <h2 class="text-center mb-4" style="color: #1a73e8;">Завершённых/отменённых бронирований пока нет.</h2>
     }
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

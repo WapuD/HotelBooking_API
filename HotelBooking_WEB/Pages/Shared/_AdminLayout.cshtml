@@ -20,17 +20,27 @@
                             <a class="nav-link text-dark textMain" asp-page="/AdminBookings">Бронирования</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark textMain" asp-page="/AdminAddHotel">Добавить отель</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark textMain" asp-page="/AdminAddRoom">Добавить комнату</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark textMain" asp-page="/AdminRegistration">Добавить пользователя</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark textMain" asp-page="/AdminCompanies">Компании</a>
-                        </li>
+                        @{
+                            var companyIdString = Context.Session.GetString("CompanyId");
+                            int.TryParse(companyIdString, out int companyId);
+                        }
+                        @if (companyId == 1)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark textMain" asp-page="/AdminCompanies">Компании</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark textMain" asp-page="/AdminHotels" asp-route-companyId="@companyId">Отели</a>
+                            </li>
+                        }
                     </ul>
                     <div class="profile">
                         <a class="nav-link text-dark textMain" asp-area="" asp-page="/Index">Выйти</a>

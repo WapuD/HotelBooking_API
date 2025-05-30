@@ -84,11 +84,11 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label">Мин. цена:</label>
-                <input type="number" class="form-control" name="MinPrice" value="@Model.MinPrice" min="0" step="500" />
+                <input type="number" class="form-control" name="MinPrice" value="@Model.MinPrice" min="0" step="1" />
             </div>
             <div class="col-md-4">
                 <label class="form-label">Макс. цена:</label>
-                <input type="number" class="form-control" name="MaxPrice" value="@Model.MaxPrice" min="0" step="500" />
+                <input type="number" class="form-control" name="MaxPrice" value="@Model.MaxPrice" min="0" step="1" />
             </div>
             <div class="col-md-4">
                 <label class="form-label">Вместимость:</label>
@@ -230,5 +230,18 @@
         // При первой загрузке тоже выставить min
         updateCheckOutMin();
     });
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+        var minInput = document.querySelector('input[name="MinPrice"]');
+        var maxInput = document.querySelector('input[name="MaxPrice"]');
+        var min = parseFloat(minInput.value) || 0;
+        var max = parseFloat(maxInput.value) || 0;
+        if (min > 0 && max > 0 && max < min) {
+            // Меняем местами значения
+            minInput.value = max;
+            maxInput.value = min;
+        }
+    });
+
 </script>
 

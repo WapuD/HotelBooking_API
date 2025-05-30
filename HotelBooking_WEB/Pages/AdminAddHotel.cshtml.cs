@@ -71,6 +71,8 @@ namespace HotelBooking_WEB.Pages
 
             try
             {
+                var companyId = Convert.ToInt32(HttpContext.Session.GetString("CompanyId"));
+
                 var newHotel = new HotelDtoCreate
                 {
                     Name = Hotel.Name,
@@ -79,7 +81,7 @@ namespace HotelBooking_WEB.Pages
                     Description = Hotel.Description,
                     ImageUrl = Hotel.ImageUrl,
                     Rating = 0,
-                    CompanyId = Hotel.CompanyId
+                    CompanyId = companyId
                 };
 
                 var result = await _apiClient.CreateHotel(newHotel);

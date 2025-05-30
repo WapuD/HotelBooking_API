@@ -33,8 +33,11 @@ namespace HotelBooking_WEB.Pages
 
                     if (verificationUser != null)
                     {
-                        if (verificationUser.CompanyId == 1)
+                        if (verificationUser.CompanyId != null)
+                        {
+                            HttpContext.Session.SetString("CompanyId", verificationUser.CompanyId.ToString());
                             return RedirectToPage("/AdminBookings");
+                        }
 
                         HttpContext.Session.SetString("UserId", verificationUser.Id.ToString());
                         return RedirectToPage("/Hotels");

@@ -91,7 +91,7 @@
         Task<IEnumerable<Booking>> GetUserBookings(int userId);
 
         [Get("/Bookings")]
-        Task<IEnumerable<Booking>> GetAllBookings();
+        Task<IEnumerable<Booking>> GetAllBookings(int companyId);
 
         [Put("/Bookings/update")]
         Task UpdateBookingStatus(int id, string newStatus);
