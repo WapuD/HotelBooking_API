@@ -23,10 +23,10 @@ namespace HotelBooking_API.Data.Models
         public string City { get; set; }
 
         [Range(0, 5)] // Ограничение для рейтинга (от 0 до 5)
-        public decimal Rating { get; set; }
+        public decimal? Rating { get; set; }
 
         [Required]
-        [MaxLength(255)]
+        [MaxLength(1000)]
         public string Description { get; set; }
 
         [MaxLength(100)]
@@ -59,7 +59,7 @@ namespace HotelBooking_API.Data.Models
         public string City { get; set; }
 
         [Range(0, 5)]
-        public decimal Rating { get; set; }
+        public decimal? Rating { get; set; }
 
         [Required]
         [MaxLength(255)]
@@ -69,4 +69,16 @@ namespace HotelBooking_API.Data.Models
         public string ImageUrl { get; set; }
         public int CompanyId { get; set; }
     }
+    public class HotelViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string City { get; set; }
+        public decimal Rating { get; set; }
+        public List<RoomDto> Rooms { get; set; } = new();
+        public string ImageUrl { get; set; }
+        public string Address { get; set; }
+        public string Description { get; set; }
+    }
+
 }

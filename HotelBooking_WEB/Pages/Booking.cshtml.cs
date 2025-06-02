@@ -14,7 +14,7 @@ namespace HotelBooking_WEB.Pages
         private readonly IApiClient _apiClient;
 
         [BindProperty]
-        public Room Room { get; set; }
+        public RoomDto Room { get; set; }  // Используем RoomDto
 
         [BindProperty]
         public DateTime CheckInDate { get; set; }
@@ -47,7 +47,8 @@ namespace HotelBooking_WEB.Pages
             if (roomId == 0)
                 roomId = Convert.ToInt32(HttpContext.Session.GetString("RoomId"));
             HttpContext.Session.SetString("RoomId", roomId.ToString());
-            Room = await _apiClient.GetRoomById(roomId);
+
+            Room = await _apiClient.GetRoomById(roomId); // Возвращает RoomDto
             RoomId = roomId;
 
             var bookings = await _apiClient.GetBookingsByRoomId(roomId);
@@ -122,11 +123,10 @@ namespace HotelBooking_WEB.Pages
             }
             catch (ValidationApiException ex)
             {
-                Console.WriteLine($"Ошибка API: {ex.Content}");
+                _logger.LogError($"Ошибка API: {ex.Content}");
                 ModelState.AddModelError(string.Empty, $"Ошибка сервера: {ex.Content}");
                 return Page();
             }
         }
-
     }
 }

@@ -9,6 +9,22 @@
 <div class="container py-5">
     <h1 class="text-center mb-4" style="color: #1a73e8;">Личный кабинет</h1>
 
+    @if (TempData["PasswordChangeSuccess"] != null && (bool)TempData["PasswordChangeSuccess"])
+    {
+        <div id="passwordChangeAlert" class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 2000; min-width: 350px;" role="alert">
+            @TempData["PasswordChangeMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+        </div>
+    }
+    @if (TempData["DataChangeSuccess"] != null && (bool)TempData["DataChangeSuccess"])
+    {
+        <div id="passwordChangeAlert" class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 2000; min-width: 350px;" role="alert">
+            @TempData["DataChangeMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+        </div>
+    }
+
+
     @if (Model.User != null)
     {
         <div class="card shadow profile-card">
@@ -33,12 +49,11 @@
                         <input type="tel" class="form-control" id="phone" asp-for="User.Phone" required>
                     </div>
 
-                    <button type="submit" class="btn btn-primary save-btn">
-                        <i class="fa fa-save me-2"></i>
-                        Сохранить
-                    </button>
+                    <button type="submit" class="btn btn-primary save-btn"><i class="fa fa-save me-2"></i>Сохранить</button>
 
-                    <a asp-page="/Bookings" class="btn btn-secondary my-bookings-btn">
+                    <button type="button" class="btn btn-warning save-btn" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Изменить пароль</button>
+
+                    <a asp-page="/Bookings" class="btn btn-success my-bookings-btn">
                         <i class="fa fa-calendar-check me-2"></i>
                         Мои бронирования
                     </a>
@@ -56,6 +71,42 @@
         <h2 class="text-center mb-4" style="color: #1a73e8;">Пользователь не найден.</h2>
     }
 </div>
+
+@* Модальное окно изменения пароля *@
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="ChangePassword">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Изменение пароля</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label asp-for="ChangePassword.OldPassword" class="form-label">Старый пароль</label>
+                        <input asp-for="ChangePassword.OldPassword" class="form-control" type="password" />
+                        <span asp-validation-for="ChangePassword.OldPassword" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ChangePassword.NewPassword" class="form-label">Новый пароль</label>
+                        <input asp-for="ChangePassword.NewPassword" class="form-control" type="password" />
+                        <span asp-validation-for="ChangePassword.NewPassword" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ChangePassword.ConfirmPassword" class="form-label">Новый пароль (повторно)</label>
+                        <input type="password" asp-for="ChangePassword.ConfirmPassword" autocomplete="off" class="form-control" onpaste="return false" oncopy="return false" oncut="return false" />
+                        <span asp-validation-for="ChangePassword.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <style>
     .profile-card {
@@ -81,4 +132,13 @@
         .my-bookings-btn:hover, .back-btn:hover {
             background-color: #0056b3;
         }
+
+    .btn-warning {
+        margin-top: 10px;
+    }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

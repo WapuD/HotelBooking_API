@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Refit;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using HotelBooking_WEB.Data.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddMvc();
 builder.Services.AddMvcCore();
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services
     .AddRefitClient<IApiClient>()

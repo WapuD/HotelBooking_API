@@ -21,5 +21,9 @@ namespace HotelBooking_API.Data.Models
         [JsonIgnore]
         public Room? Room { get; set; }
     }
-
+    public class RoomImageDto
+    {
+        public int Id { get; set; }
+        public string ImageUrl { get; set; }
+    }
 }

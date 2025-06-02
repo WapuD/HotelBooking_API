@@ -38,4 +38,16 @@ namespace HotelBooking_API.Data.Models
         public ICollection<RoomImages>? RoomImages { get; set; }
     }
 
+    public class RoomDto
+    {
+        public int Id { get; set; }
+        public string RoomName { get; set; }
+        public decimal PricePerNight { get; set; }
+        public int Capacity { get; set; }
+        public string Description { get; set; }
+        public int Count { get; set; }
+
+        public List<AmenityDto> Amenities { get; set; } = new();
+        public List<RoomImageDto> RoomImages { get; set; } = new();
+    }
 }

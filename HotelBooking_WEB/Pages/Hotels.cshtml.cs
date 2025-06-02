@@ -13,15 +13,12 @@ namespace HotelBooking_WEB.Pages
         private readonly ILogger<HotelsModel> _logger;
         private readonly IApiClient _apiClient;
 
-        [BindProperty]
-        public IEnumerable<Hotel> Hotels { get; set; }
-
-
         [BindProperty(SupportsGet = true)]
         public string SearchName { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string SearchCity { get; set; }
+        public List<string> Cities { get; set; } = new List<string>();
 
         [BindProperty(SupportsGet = true)]
         public decimal? MinRating { get; set; }
@@ -32,7 +29,8 @@ namespace HotelBooking_WEB.Pages
         [BindProperty(SupportsGet = true)]
         public decimal? MaxPrice { get; set; }
 
-
+        [BindProperty]
+        public List<HotelViewModel> Hotels { get; set; }
 
         public HotelsModel(ILogger<HotelsModel> logger, IApiClient apiClient)
         {
@@ -55,45 +53,70 @@ namespace HotelBooking_WEB.Pages
                 }
             }
 
-            var hotels = await _apiClient.GetHotelsAsync();
+            var apiHotels = await _apiClient.GetHotelsAsync();
 
-            foreach (var hotel in hotels)
+            Cities = apiHotels.Select(h => h.City?.Trim())
+                              .Where(c => !string.IsNullOrEmpty(c))
+                              .Distinct(StringComparer.OrdinalIgnoreCase)
+                              .OrderBy(c => c)
+                              .ToList();
+
+            var hotelViewModels = new List<HotelViewModel>();
+
+            foreach (var hotel in apiHotels)
             {
-                var rooms = await _apiClient.GetRoomByHotelId(hotel.Id);
-                hotel.Rooms = rooms.ToList();
+                var rooms = await _apiClient.GetRoomByHotelId(hotel.Id); // Возвращает List<RoomDto>
+
+                var hotelVm = new HotelViewModel
+                {
+                    Id = hotel.Id,
+                    Name = hotel.Name,
+                    City = hotel.City,
+                    Rating = (decimal)hotel.Rating,
+                    ImageUrl = hotel.ImageUrl,
+                    Address = hotel.Address,
+                    Description = hotel.Description,
+                    Rooms = rooms.ToList()
+                };
+
+                hotelViewModels.Add(hotelVm);
             }
 
+            // Фильтрация
+
+            var filteredHotels = hotelViewModels.AsEnumerable();
+
             if (!string.IsNullOrWhiteSpace(SearchName))
-                hotels = hotels.Where(h => h.Name.Contains(SearchName, StringComparison.OrdinalIgnoreCase));
+                filteredHotels = filteredHotels.Where(h => h.Name.Contains(SearchName, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(SearchCity))
-                hotels = hotels.Where(h => h.City.Contains(SearchCity, StringComparison.OrdinalIgnoreCase));
+                filteredHotels = filteredHotels.Where(h => h.City.Equals(SearchCity, StringComparison.OrdinalIgnoreCase));
 
             if (MinRating.HasValue)
-                hotels = hotels.Where(h => h.Rating >= MinRating.Value);
+                filteredHotels = filteredHotels.Where(h => h.Rating >= MinRating.Value);
 
             if (MinPrice.HasValue)
             {
-                hotels = hotels.Where(h =>
+                filteredHotels = filteredHotels.Where(h =>
                     h.Rooms.Any(r => r.PricePerNight >= MinPrice.Value)
                 );
             }
 
             if (MaxPrice.HasValue)
             {
-                hotels = hotels.Where(h =>
-                    h.Rooms.Any(r => r.PricePerNight <= MaxPrice.Value) 
+                filteredHotels = filteredHotels.Where(h =>
+                    h.Rooms.Any(r => r.PricePerNight <= MaxPrice.Value)
                 );
             }
 
             if (MinPrice.HasValue && MaxPrice.HasValue)
             {
-                hotels = hotels.Where(h =>
+                filteredHotels = filteredHotels.Where(h =>
                     h.Rooms.Any(r => r.PricePerNight >= MinPrice.Value && r.PricePerNight <= MaxPrice.Value)
                 );
             }
 
-            Hotels = hotels.ToList();
+            Hotels = filteredHotels.ToList();
         }
 
 

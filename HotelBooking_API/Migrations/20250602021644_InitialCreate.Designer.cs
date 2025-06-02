@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelBooking_API.Migrations
 {
     [DbContext(typeof(HBContext))]
-    [Migration("20250504232402_InitialCreate")]
+    [Migration("20250602021644_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -214,7 +214,6 @@ namespace HotelBooking_API.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("LogoUrl")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
@@ -246,6 +245,18 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 1,
+                            Description = "Сервис для бронирования отелей",
+                            Email = "HotelBooking@mail.ru",
+                            LegalAddress = "Тверская ул., 6с, Москва, 125009, Россия",
+                            LogoUrl = "https://www.HotelBooking/Logo.svg.png",
+                            Name = "Hotel Booking",
+                            Phone = "+79645873664",
+                            TaxId = "US-517351059",
+                            Website = "https://www.HotelBooking.ru"
+                        },
+                        new
+                        {
+                            Id = 2,
                             Description = "Международная сеть отелей класса люкс, основанная в 1919 году",
                             Email = "corporate@hilton.com",
                             LegalAddress = "7930 Jones Branch Dr, McLean, VA 22102, США",
@@ -257,7 +268,7 @@ namespace HotelBooking_API.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 3,
                             Description = "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами",
                             Email = "info@marriott.com",
                             LegalAddress = "10400 Fernwood Rd, Bethesda, MD 20817, США",
@@ -269,7 +280,7 @@ namespace HotelBooking_API.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 4,
                             Description = "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis",
                             Email = "contact@accor.com",
                             LegalAddress = "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция",
@@ -281,7 +292,7 @@ namespace HotelBooking_API.Migrations
                         },
                         new
                         {
-                            Id = 4,
+                            Id = 5,
                             Description = "Крупнейшая российская гостиничная сеть, основанная в 2010 году",
                             Email = "info@azimuthotels.com",
                             LegalAddress = "125040, Москва, Ленинградский проспект, 36",
@@ -293,7 +304,7 @@ namespace HotelBooking_API.Migrations
                         },
                         new
                         {
-                            Id = 5,
+                            Id = 6,
                             Description = "Российская гостиничная управляющая компания",
                             Email = "booking@cosmos-hotel.com",
                             LegalAddress = "150040, Ярославль, ул. Комсомольская, 2",
@@ -328,11 +339,10 @@ namespace HotelBooking_API.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
@@ -356,24 +366,24 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 1,
-                            Address = "Москва, ул. Ленина, 10",
+                            Address = "Москва, ул. Тверская, 15",
                             City = "Москва",
                             CompanyId = 1,
-                            Description = "Отель Премиум",
-                            ImageUrl = "Premium.png",
-                            Name = "Отель Премиум",
-                            Rating = 4.5m
+                            Description = "Grand Royal Hotel - это идеальное место для тех, кто ценит комфорт и высокий уровень сервиса.  \r\n                                    Расположенный в самом сердце Москвы, отель предлагает просторные номера с современным дизайном и всеми необходимыми удобствами.  \r\n                                    Гости могут насладиться панорамным видом на город из ресторанов на крыше и расслабиться в спа-центре с бассейном и сауной.  \r\n                                    Для деловых путешественников доступны конференц-залы с современным оборудованием.  \r\n                                    Отель также предлагает фитнес-зал, круглосуточную службу консьержа и бесплатный Wi-Fi по всей территории.  \r\n                                    Рядом находятся главные достопримечательности Москвы, включая Красную площадь и Большой театр, что делает Grand Royal отличным выбором как для туристов, так и для бизнесменов.",
+                            ImageUrl = "HotelPhoto.png",
+                            Name = "Grand Royal Hotel",
+                            Rating = 4.7m
                         },
                         new
                         {
                             Id = 2,
-                            Address = "Уфа, ул. Пушкина, 5",
+                            Address = "Уфа, ул. Ленина, 45",
                             City = "Уфа",
                             CompanyId = 2,
-                            Description = "Отель Эконом",
-                            ImageUrl = "Ekonom.png",
-                            Name = "Отель Эконом",
-                            Rating = 3.8m
+                            Description = "Comfort Inn Ufa - уютный и доступный отель, расположенный в живописном районе Уфы.  \r\n                                    Отель предлагает чистые и светлые номера с необходимым набором удобств для комфортного проживания.  \r\n                                    Завтрак включён в стоимость и подаётся в просторном зале с панорамными окнами.  \r\n                                    Гости могут воспользоваться бесплатной парковкой и круглосуточной рецепцией.  \r\n                                    Рядом с отелем находится несколько кафе и магазинов, а до центра города легко добраться на общественном транспорте.  \r\n                                    Comfort Inn Ufa - отличный выбор для тех, кто ищет спокойствие и удобство по разумной цене.",
+                            ImageUrl = "Premium.png",
+                            Name = "Comfort Inn Ufa",
+                            Rating = 4.0m
                         });
                 });
 
@@ -576,7 +586,6 @@ namespace HotelBooking_API.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -607,22 +616,43 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 1,
+                            Email = "qwe@mail.ru",
+                            FirstName = "qwe",
+                            LastName = "qwe",
+                            PasswordHash = new byte[] { 113, 119, 101, 113, 119, 101 },
+                            Phone = "+79172227890",
+                            SecondName = "qwe"
+                        },
+                        new
+                        {
+                            Id = 2,
                             CompanyId = 1,
+                            Email = "asd@mail.ru",
+                            FirstName = "asd",
+                            LastName = "asd",
+                            PasswordHash = new byte[] { 97, 115, 100, 97, 115, 100 },
+                            Phone = "+79172227890",
+                            SecondName = "asd"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CompanyId = 2,
                             Email = "ivan@example.com",
                             FirstName = "Иван",
                             LastName = "Иванович",
-                            PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                            PasswordHash = new byte[] { 97, 115, 100, 97, 115, 100 },
                             Phone = "+7 123 456 7890",
                             SecondName = "Иванов"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 4,
                             CompanyId = 2,
-                            Email = "maria@example.com",
+                            Email = "marias@example.com",
                             FirstName = "Мария",
                             LastName = "Николаевна",
-                            PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                            PasswordHash = new byte[] { 97, 115, 100, 97, 115, 100 },
                             Phone = "+7 987 654 3210",
                             SecondName = "Петрова"
                         });

@@ -13,11 +13,12 @@ public class Amenity
         [MaxLength(100)] // Ограничение длины для названия
         public string Name { get; set; }
 
-        [MaxLength(255)] // Ограничение длины для описания
-        public string Description { get; set; }
-
         // Навигационное свойство для связи с номерами
         public ICollection<RoomAmenity> RoomAmenities { get; set; }
     }
-
+    public class AmenityDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }

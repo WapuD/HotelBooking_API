@@ -23,14 +23,14 @@
                 <p class="lead">@Model.Hotel.Description</p>
                 <div class="mt-4">
                     <p><strong>Адрес:</strong> @Model.Hotel.Address, @Model.Hotel.City</p>
-                    <p><strong>Рейтинг:</strong> @Model.Hotel.Rating.ToString("0.0") <i class="fa fa-star text-warning"></i></p>
+                    <p><strong>Рейтинг:</strong> @Model.Hotel.(decimal)Rating.ToString("0.0") <i class="fa fa-star text-warning"></i></p>
                 </div>
             </div>
         </div>
         @* Блок отзывов *@
         @if (Model.Comments != null && Model.Comments.Any())
         {
-            <div id="commentsCarousel" class="carousel slide mb-5" data-bs-ride="carousel" style="max-width:600px;margin:auto;">
+            <div id="commentsCarousel" class="carousel slide mb-1" data-bs-ride="carousel" style="max-width:600px;margin:auto;">
                 <div class="carousel-inner">
                     @for (int i = 0; i < Model.Comments.Count(); i++)
                     {
@@ -43,7 +43,7 @@
                                         {
                                             <i class="fa fa-star text-warning"></i>
                                         }
-                                        @for (int s = comment.Rating; s < 5; s++)
+                                        @for (int s = (int)comment.Rating; s < 5; s++)
                                         {
                                             <i class="fa fa-star text-secondary"></i>
                                         }
@@ -63,12 +63,15 @@
                     <span class="carousel-control-prev-icon"></span>
                 </button>
             </div>
+
+            <button class="btn btn-success d-block mx-auto mb-5" onclick="scrollToReviews()">
+                Читать все отзывы
+            </button>
         }
         else
         {
             <div class="alert alert-info mb-5" style="max-width:600px;margin:auto;">Пока нет отзывов об этом отеле.</div>
         }
-
     }
 
     @* Форма фильтров *@
@@ -111,18 +114,33 @@
                         <div class="card-img-container">
                             @if (room.RoomImages != null && room.RoomImages.Any())
                             {
-                                <img src="@room.RoomImages.First().ImageUrl" class="img-fluid rounded-start" alt="@room.RoomName">
+                                <img src="@room.RoomImages.First().ImageUrl" class="card-img-top rounded-start" alt="@room.RoomName">
                             }
                             else
                             {
-                                <img src="/images/Default.png" class="img-fluid rounded-start" alt="Номер без фото">
+                                <img src="/images/Default.png" class="card-img-top rounded-start" alt="Номер без фото">
                             }
                         </div>
                         <div class="card-body">
                             <h3 class="card-title">@room.RoomName</h3>
-                            <p class="card-text"><strong>Вместимость:</strong> @room.Capacity чел.</p>
-                            <p class="card-text"><strong>Цена за ночь:</strong> @room.PricePerNight.ToString("C")</p>
-                            <a asp-page="/Booking" asp-route-roomId="@room.Id" class="btn btn-primary mt-3 book-btn">
+                            <p class="card-text mb-0"><strong>Вместимость:</strong> @room.Capacity чел.</p>
+
+                            @if (room.Amenities != null && room.Amenities.Any())
+                            {
+                                <div class="room-amenities">
+                                    <ul class="list-inline mb-0">
+                                        @foreach (var roomAmenity in room.Amenities)
+                                        {
+                                            <li class="list-inline-item badge btn-light text-dark me-1">
+                                                @roomAmenity.Name
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+
+                            <p class="card-text mt-2"><strong>Цена за ночь:</strong> @room.PricePerNight.ToString("C")</p>
+                            <a asp-page="/Booking" asp-route-roomId="@room.Id" class="btn btn-primary mt-0 book-btn">
                                 Забронировать
                             </a>
                         </div>
@@ -142,9 +160,52 @@
             <h2 class="text-center mb-4" style="color: #1a73e8;">Нет доступных комнат, соответствующих критериям.</h2>
         }
     }
+
+    <div class="reviews-section mt-5">
+        <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
+            <h2 style="color: #1a73e8; margin-right: auto;">Отзывы об отеле</h2>
+
+            <div class="d-flex align-items-center gap-1">
+                <select id="sortCommentsBy" class="form-select form-select-sm" style="width: 150px;">
+                    <option value="date" selected>По дате</option>
+                    <option value="rating">По оценке</option>
+                </select>
+
+                <button id="toggleSortDirection" class="btn btn-link p-0 m-0" title="Переключить направление сортировки" style="width: 28px; height: 28px;">
+                    <i id="sortDirectionIcon" class="fa fa-arrow-down" style="font-size: 1.2rem;"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="commentsContainer">
+            @await Html.PartialAsync("_CommentsPartial", Model.Comments)
+        </div>
+    </div>
+
+
 </div>
 
 <style>
+    #toggleSortDirection {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+    }
+
+        #toggleSortDirection i {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+
+    .room-amenities{
+        margin-top: auto
+    }
+
     .comment-text-truncate {
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -157,7 +218,6 @@
     .carousel-item {
         height: 120 px;
     }
-
 
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
@@ -178,7 +238,7 @@
 
     .card-img-top {
         width: 100%;
-        height: 100%;
+        height: 250px;
         object-fit: cover;
         transition: transform 0.3s ease;
     }
@@ -227,7 +287,6 @@
 
         checkIn.addEventListener('change', updateCheckOutMin);
 
-        // При первой загрузке тоже выставить min
         updateCheckOutMin();
     });
 
@@ -237,11 +296,68 @@
         var min = parseFloat(minInput.value) || 0;
         var max = parseFloat(maxInput.value) || 0;
         if (min > 0 && max > 0 && max < min) {
-            // Меняем местами значения
             minInput.value = max;
             maxInput.value = min;
         }
     });
+
+    document.getElementById('sortCommentsBy').addEventListener('change', async function () {
+        const sortBy = this.value;
+        const response = await fetch(`@Url.Page("Rooms")?handler=CommentsPartial&sortCommentsBy=${sortBy}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        if (response.ok) {
+            const html = await response.text();
+            document.getElementById('commentsContainer').innerHTML = html;
+        } else {
+            alert('Ошибка загрузки отзывов');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const sortSelect = document.getElementById('sortCommentsBy');
+        const toggleBtn = document.getElementById('toggleSortDirection');
+        const sortIcon = document.getElementById('sortDirectionIcon');
+
+        // Изначальное направление (можно брать из модели через data-атрибут)
+        let sortDescending = true;
+
+        async function updateComments() {
+            const sortBy = sortSelect.value;
+            const direction = sortDescending ? 'desc' : 'asc';
+            const response = await fetch(`@Url.Page("Rooms")?handler=CommentsPartial&sortCommentsBy=${sortBy}&sortDescending=${sortDescending}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (response.ok) {
+                const html = await response.text();
+                document.getElementById('commentsContainer').innerHTML = html;
+                sortIcon.className = sortDescending ? 'fa fa-arrow-down' : 'fa fa-arrow-up';
+            } else {
+                alert('Ошибка загрузки отзывов');
+            }
+        }
+
+        sortSelect.addEventListener('change', () => {
+            // При смене критерия сбрасываем направление на убывание (по умолчанию)
+            sortDescending = true;
+            updateComments();
+        });
+
+        toggleBtn.addEventListener('click', () => {
+            sortDescending = !sortDescending;
+            updateComments();
+        });
+
+        // Инициализация
+        updateComments();
+    });
+
+    function scrollToReviews() {
+        const reviewsSection = document.querySelector('.reviews-section');
+        if (reviewsSection) {
+            reviewsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
 
 </script>
 

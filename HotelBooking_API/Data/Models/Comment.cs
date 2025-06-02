@@ -12,7 +12,7 @@ namespace HotelBooking_API.Data.Models
 
         [Required]
         [Range(1, 5, ErrorMessage = "Рейтинг должен быть от 1 до 5")]
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
 
         [Required]
         [MaxLength(2000)]
@@ -35,7 +35,7 @@ namespace HotelBooking_API.Data.Models
     public class CommentDto
     {
         public int Id { get; set; }
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
         public string Text { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public string UserName { get; set; }  // Имя пользователя

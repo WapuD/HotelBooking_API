@@ -50,10 +50,10 @@
 
         // --- Номера ---
         [Get("/Rooms/Hotel/{hotelId}")]
-        Task<IEnumerable<Room>> GetRoomByHotelId(int hotelId);
+        Task<IEnumerable<RoomDto>> GetRoomByHotelId(int hotelId);
 
         [Get("/Rooms/{roomId}")]
-        Task<Room> GetRoomById(int roomId);
+        Task<RoomDto> GetRoomById(int roomId);
 
         [Get("/Rooms/{roomId}/{checkIn}_{checkOut}")]
         Task<int> GetAvailableRoomCount(int roomId, string checkIn, string checkOut);
@@ -85,6 +85,10 @@
 
         [Put("/Users/update")]
         Task UpdateUser(UpdateUserDto updateUserDto);
+
+        [Put("/Users/updatePassword")]
+        Task<bool> UpdateUserPassword([FromBody] UpdateUserPasswordDto dto);
+
 
         // --- Бронирования ---
         [Get("/Bookings/user/{userId}")]

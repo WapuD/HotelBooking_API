@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Shared\_AdminLayout.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Pages\Shared\_AdminLayout.cshtml.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.12.1" />
     <PackageReference Include="Refit" Version="8.0.0" />
     <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
     <PackageReference Include="Refitter.SourceGenerator" Version="1.5.2">

@@ -39,6 +39,21 @@
                             <i class="fa fa-users me-2"></i>
                             Вместимость: @Model.Room.Capacity человек
                         </p>
+
+                        @if (Model.Room?.Amenities != null && Model.Room.Amenities.Any())
+                        {
+                            <div class="mb-2">
+                                <ul class="list-inline mb-0">
+                                    @foreach (var amenity in Model.Room.Amenities)
+                                    {
+                                        <li class="list-inline-item badge btn-light text-dark me-1">
+                                            @amenity.Name
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
                         <p class="card-text">
                             <i class="fa fa-money-bill-wave me-2"></i>
                             Цена за ночь: @Model.Room.PricePerNight.ToString("C")

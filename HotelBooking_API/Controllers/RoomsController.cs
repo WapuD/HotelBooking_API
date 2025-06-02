@@ -22,6 +22,33 @@ namespace HotelBooking_API.Controllers
         }
 
         // GET: api/Rooms
+        [HttpPost("AddOneRoomToEachHotelAsync")]
+        public async Task AddOneRoomToEachHotelAsync()
+        {
+            // Получаем все отели из базы
+            var hotels = await _context.Hotel.ToListAsync();
+
+            foreach (var hotel in hotels)
+            {
+                var newRoom = new Room
+                {
+                    HotelId = hotel.Id,
+                    RoomName = $"Комната для отеля {hotel.Name}",
+                    PricePerNight = 1000, // Можно заменить на случайное или любое другое значение
+                    Capacity = 2,
+                    Description = "Автоматически добавленная комната",
+                    Count = 5
+                };
+
+                _context.Room.Add(newRoom);
+            }
+
+            // Сохраняем все добавленные комнаты одним запросом
+            await _context.SaveChangesAsync();
+        }
+
+
+        // GET: api/Rooms
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRoom()
         {
@@ -30,46 +57,80 @@ namespace HotelBooking_API.Controllers
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoomById(int id)
+        public async Task<ActionResult<RoomDto>> GetRoomById(int id)
         {
-            var room = await _context.Room.FindAsync(id);
+            var room = await _context.Room
+                .Include(r => r.RoomImages)
+                .Include(r => r.RoomAmenities)
+                    .ThenInclude(ra => ra.Amenity)
+                .FirstOrDefaultAsync(r => r.Id == id);
 
             if (room == null)
             {
                 return NotFound();
             }
 
-            room.RoomImages = await _context.RoomImages
-                .Where(ri => ri.RoomId == room.Id)
-                .ToListAsync();
+            var roomDto = new RoomDto
+            {
+                Id = room.Id,
+                RoomName = room.RoomName,
+                PricePerNight = room.PricePerNight,
+                Capacity = room.Capacity,
+                Description = room.Description,
+                Count = room.Count,
+                Amenities = room.RoomAmenities?.Select(ra => new AmenityDto
+                {
+                    Id = ra.Amenity.Id,
+                    Name = ra.Amenity.Name
+                }).ToList() ?? new List<AmenityDto>(),
+                RoomImages = room.RoomImages?.Select(img => new RoomImageDto
+                {
+                    Id = img.Id,
+                    ImageUrl = img.ImageUrl
+                }).ToList() ?? new List<RoomImageDto>()
+            };
 
-            return room;
+            return Ok(roomDto);
         }
+
 
         // GET: api/Rooms/Hotel/5
         [HttpGet("Hotel/{hotelId}")]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRoomByHotelId(int hotelId)
+        public async Task<ActionResult<IEnumerable<RoomDto>>> GetRoomByHotelId(int hotelId)
         {
-            var rooms = await _context.Room.Where(r => r.HotelId == hotelId)
-                                           .ToListAsync();
-            if (rooms == null)
-            {
-                return NotFound();
-            }
+            var rooms = await _context.Room
+                .Where(r => r.HotelId == hotelId)
+                .Include(r => r.RoomAmenities)
+                    .ThenInclude(ra => ra.Amenity)
+                .Include(r => r.RoomImages)
+                .ToListAsync();
 
-            foreach (var room in rooms)
+            var roomDtos = rooms.Select(room => new RoomDto
             {
-                if (room.RoomImages == null)
-                {
-                    room.RoomImages = await _context.RoomImages
-                        .Where(ri => ri.RoomId == room.Id)
-                        .Take(1)
-                        .ToListAsync();
-                }
-            }
+                Id = room.Id,
+                RoomName = room.RoomName,
+                PricePerNight = room.PricePerNight,
+                Capacity = room.Capacity,
+                Description = room.Description,
+                Count = room.Count,
+                Amenities = room.RoomAmenities?
+                    .Select(ra => new AmenityDto
+                    {
+                        Id = ra.Amenity.Id,
+                        Name = ra.Amenity.Name
+                    }).ToList() ?? new List<AmenityDto>(),
+                RoomImages = room.RoomImages?
+                    .Select(img => new RoomImageDto
+                    {
+                        Id = img.Id,
+                        ImageUrl = img.ImageUrl
+                    }).ToList() ?? new List<RoomImageDto>()
+            }).ToList();
 
-            return rooms;
+            return Ok(roomDtos);
         }
+
+
 
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

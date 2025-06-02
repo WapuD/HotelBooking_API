@@ -218,24 +218,35 @@ namespace HotelBooking_API.Data
                 new User
                 {
                     Id = 2,
-                    FirstName = "Иван",
-                    SecondName = "Иванов",
-                    LastName = "Иванович",
-                    Email = "ivan@example.com",
-                    Phone = "+7 123 456 7890",
+                    FirstName = "asd",
+                    SecondName = "asd",
+                    LastName = "asd",
+                    Email = "asd@mail.ru",
+                    Phone = "+79172227890",
                     CompanyId = 1,
                     PasswordHash = Encoding.UTF8.GetBytes("asdasd")
                 },
                 new User
                 {
                     Id = 3,
-                    FirstName = "Марияс",
+                    FirstName = "Иван",
+                    SecondName = "Иванов",
+                    LastName = "Иванович",
+                    Email = "ivan@example.com",
+                    Phone = "+7 123 456 7890",
+                    CompanyId = 2,
+                    PasswordHash = Encoding.UTF8.GetBytes("asdasd")
+                },
+                new User
+                {
+                    Id = 4,
+                    FirstName = "Мария",
                     SecondName = "Петрова",
                     LastName = "Николаевна",
                     Email = "marias@example.com",
                     Phone = "+7 987 654 3210",
                     CompanyId = 2,
-                    PasswordHash = Encoding.UTF8.GetBytes("marias")
+                    PasswordHash = Encoding.UTF8.GetBytes("asdasd")
                 }
             );
 
@@ -253,7 +264,7 @@ namespace HotelBooking_API.Data
                                     Рядом находятся главные достопримечательности Москвы, включая Красную площадь и Большой театр, что делает Grand Royal отличным выбором как для туристов, так и для бизнесменов.",
                     Address = "Москва, ул. Тверская, 15",
                     City = "Москва",
-                    ImageUrl = "GrandRoyal.png",
+                    ImageUrl = "HotelPhoto.png",
                     Rating = 4.7M
                 },
                 new Hotel
@@ -269,7 +280,7 @@ namespace HotelBooking_API.Data
                                     Comfort Inn Ufa - отличный выбор для тех, кто ищет спокойствие и удобство по разумной цене.",
                     Address = "Уфа, ул. Ленина, 45",
                     City = "Уфа",
-                    ImageUrl = "ComfortInn.png",
+                    ImageUrl = "Premium.png",
                     Rating = 4.0M
                 }
             );
@@ -322,20 +333,17 @@ namespace HotelBooking_API.Data
                 new Amenity
                 {
                     Id = 1,
-                    Name = "Wi-Fi",
-                    Description = "Современный 5G интернет"
+                    Name = "Современный 5G интернет (Wi-Fi)"
                 },
                 new Amenity
                 {
                     Id = 2,
-                    Name = "Завтрак",
-                    Description = "Личная кухня и первоклассные повара"
+                    Name = "Завтрак - Личная кухня и первоклассные повара"
                 },
                 new Amenity
                 {
                     Id = 3,
-                    Name = "Парковка",
-                    Description = "Прекрасная парковка на 2 машины"
+                    Name = "Прекрасная парковка на 2 машины"
                 }
             );
 

@@ -161,5 +161,18 @@ namespace HotelBooking_API.Controllers
         {
             return _context.User.Any(e => e.Id == id);
         }
+
+        // PUT: api/Users/updatePassword
+        [HttpPut("updatePassword")]
+        public async Task<bool> UpdateUserPassword([FromBody] UpdateUserPasswordDto dto)
+        {
+            var user = await _context.User.FindAsync(dto.UserId);
+            if (user == null)
+                return false;
+
+            user.PasswordHash = dto.PasswordHash;
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

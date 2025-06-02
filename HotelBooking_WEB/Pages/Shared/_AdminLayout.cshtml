@@ -16,30 +16,37 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between headerNew">
                     <ul class="navbar-nav flex-grow-1">
                         <img src="logo.png" alt="Logo" class="logo">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark textMain" asp-page="/AdminBookings">Бронирования</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark textMain" asp-page="/AdminAddRoom">Добавить комнату</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark textMain" asp-page="/AdminRegistration">Добавить пользователя</a>
-                        </li>
+                        <a class="nav-link text-dark textMain" asp-area="" asp-page="/Hotels">Главная</a>
+
                         @{
                             var companyIdString = Context.Session.GetString("CompanyId");
+                            var userEmail = Context.Session.GetString("UserEmail");
                             int.TryParse(companyIdString, out int companyId);
                         }
-                        @if (companyId == 1)
+
+                        @if (companyId != 0)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark textMain" asp-page="/AdminCompanies">Компании</a>
+                                <a class="nav-link text-dark textMain" asp-page="/AdminBookings">Бронирования</a>
                             </li>
-                        }
-                        else
-                        {
                             <li class="nav-item">
-                                <a class="nav-link text-dark textMain" asp-page="/AdminHotels" asp-route-companyId="@companyId">Отели</a>
+                                <a class="nav-link text-dark textMain" asp-page="/AdminAddRoom">Добавить комнату</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark textMain" asp-page="/AdminRegistration">Добавить пользователя</a>
+                            </li>
+                            @if (companyId == 1)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark textMain" asp-page="/AdminCompanies">Компании</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark textMain" asp-page="/AdminHotels" asp-route-companyId="@companyId">Отели</a>
+                                </li>
+                            }
                         }
                     </ul>
                     <div class="profile">

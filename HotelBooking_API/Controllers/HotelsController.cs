@@ -19,11 +19,32 @@ namespace HotelBooking_API.Controllers
             _context = context;
         }
 
+
+
+        // GET: api/Hotels
+        [HttpPost("LoadCompaniesIfNull")]
+        public async Task<ActionResult> LoadCompaniesIfNull(List<Hotel> hotels)
+        {
+            foreach (var hotel in hotels)
+            {
+                if (hotel.Company == null && hotel.CompanyId != null)
+                {
+                    hotel.Company = await _context.Company.FindAsync(hotel.CompanyId);
+                }
+            }
+
+            // Сохраняем изменения, если были загружены компании
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+
         // GET: api/Hotels
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotel()
         {
             return await _context.Hotel.Include(h => h.Rooms)
+                                       .Include(h => h.Company)
                                        .ToListAsync();
         }
 
@@ -77,6 +98,7 @@ namespace HotelBooking_API.Controllers
 
             return NoContent();
         }
+
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateHotel(int id, HotelDtoCreate hotelDto)
         {

@@ -85,4 +85,26 @@ namespace HotelBooking_API.Data.Models
         public string Phone { get; set; }
         public int? CompanyId { get; set; }
     }
+    public class ChangePasswordDto
+    {
+        [Required(ErrorMessage = "Введите старый пароль")]
+        [DataType(DataType.Password)]
+        public string OldPassword { get; set; }
+
+        [Required(ErrorMessage = "Введите новый пароль")]
+        [MinLength(6, ErrorMessage = "Пароль должен быть не менее 6 символов")]
+        [DataType(DataType.Password)]
+        public string NewPassword { get; set; }
+
+        [Required(ErrorMessage = "Повторите новый пароль")]
+        [Compare("NewPassword", ErrorMessage = "Пароли не совпадают")]
+        [DataType(DataType.Password)]
+        public string ConfirmPassword { get; set; }
+    }
+
+    public class UpdateUserPasswordDto
+    {
+        public int UserId { get; set; }
+        public byte[] PasswordHash { get; set; }
+    }
 }

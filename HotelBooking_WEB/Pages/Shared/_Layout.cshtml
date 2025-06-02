@@ -1,23 +1,54 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>@ViewData["Title"] - Бронирование</title>
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/HotelBooking_WEB.styles.css" asp-append-version="true" />
-        <link rel="icon" type="image/x-icon" href="~/Logo.png" />
-    </head>
-    <body>
-        <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container">
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between headerNew">
-                        <ul class="navbar-nav flex-grow-1">
-                            <img src="logo.png" alt="Logo" class="logo">
-                            <a class="nav-link text-dark textMain" asp-area="" asp-page="/Hotels">Главная</a>
-                        </ul>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Бронирование</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HotelBooking_WEB.styles.css" asp-append-version="true" />
+    <link rel="icon" type="image/x-icon" href="~/Logo.png" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between headerNew">
+                    <ul class="navbar-nav flex-grow-1">
+                        <img src="logo.png" alt="Logo" class="logo">
+                        <a class="nav-link text-dark textMain" asp-area="" asp-page="/Hotels">Главная</a>
+
+                        @{
+                            var companyId = Context.Session.GetString("CompanyId");
+                            var userEmail = Context.Session.GetString("UserEmail");
+                        }
+
+                        @if (companyId != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark textMain" asp-page="/AdminBookings">Бронирования</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark textMain" asp-page="/AdminAddRoom">Добавить комнату</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark textMain" asp-page="/AdminRegistration">Добавить пользователя</a>
+                            </li>
+                            @if (Int32.Parse(companyId) == 1)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark textMain" asp-page="/AdminCompanies">Компании</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark textMain" asp-page="/AdminHotels" asp-route-companyId="@companyId">Отели</a>
+                                </li>
+                            }
+                        }
+
+                    </ul>
                     <div class="profile d-flex flex-column align-items-end">
                         <a class="nav-link text-dark d-flex align-items-center mb-1" asp-area="" asp-page="/Profile">
                             <i class="fa fa-user-circle me-2" style="font-size: 24px;"></i>
@@ -26,29 +57,29 @@
                         <a class="nav-link text-dark" asp-area="" asp-page="/Index">Выйти</a>
                     </div>
 
-                    </div>
                 </div>
-            </nav>
-        </header>
-
-        <div class="container">
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
-        </div>
-
-        <footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2025 - HotelBooking_WEB - <a asp-area="" asp-page="/Privacy">Privacy</a>
             </div>
-        </footer>
+        </nav>
+    </header>
 
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
 
-        @await RenderSectionAsync("Scripts", required: false)
-    </body>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - HotelBooking_WEB - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
 </html>
 
 <style>
@@ -58,14 +89,14 @@
         align-items: center;
         padding: 10px;
         font-weight: bold;
-        margin-right: 20px;
+        margin-right: 10px;
     }
 
     .textMain {
         font-weight: bold;
-        margin-right: 20px;
-        font-size: 22px;
-        margin-left: 20px;
+        margin-right: 10px;
+        font-size: 18px;
+        margin-left: 15px;
     }
 
     .logo {

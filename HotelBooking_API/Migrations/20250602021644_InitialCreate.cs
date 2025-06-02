@@ -39,7 +39,7 @@ namespace HotelBooking_API.Migrations
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Website = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    LogoUrl = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    LogoUrl = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     TaxId = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     LegalAddress = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
@@ -58,8 +58,8 @@ namespace HotelBooking_API.Migrations
                     Address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     City = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Rating = table.Column<decimal>(type: "numeric", nullable: false),
-                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    ImageUrl = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    ImageUrl = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     CompanyId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -81,7 +81,7 @@ namespace HotelBooking_API.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     SecondName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "bytea", nullable: false),
@@ -241,20 +241,26 @@ namespace HotelBooking_API.Migrations
                 columns: new[] { "Id", "Description", "Email", "LegalAddress", "LogoUrl", "Name", "Phone", "TaxId", "Website" },
                 values: new object[,]
                 {
-                    { 1, "Международная сеть отелей класса люкс, основанная в 1919 году", "corporate@hilton.com", "7930 Jones Branch Dr, McLean, VA 22102, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Hilton_Logo_2019.svg/1200px-Hilton_Logo_2019.svg.png", "Hilton Worldwide", "+1 800 445 8667", "US-123456789", "https://www.hilton.com" },
-                    { 2, "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами", "info@marriott.com", "10400 Fernwood Rd, Bethesda, MD 20817, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Marriott_International_logo_2019.svg/1280px-Marriott_International_logo_2019.svg.png", "Marriott International", "+1 301 380 3000", "US-987654321", "https://www.marriott.com" },
-                    { 3, "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis", "contact@accor.com", "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Accor_logo_2022.svg/1280px-Accor_logo_2022.svg.png", "Accor Group", "+33 1 45 38 86 00", "FR-789123456", "https://group.accor.com" },
-                    { 4, "Крупнейшая российская гостиничная сеть, основанная в 2010 году", "info@azimuthotels.com", "125040, Москва, Ленинградский проспект, 36", "https://www.azimuthotels.com/local/templates/azimuth_main/img/logo.svg", "Азимут Отели Россия", "+7 495 225 25 25", "RU-1234567890", "https://www.azimuthotels.com" },
-                    { 5, "Российская гостиничная управляющая компания", "booking@cosmos-hotel.com", "150040, Ярославль, ул. Комсомольская, 2", "https://cosmos-hotel.com/local/templates/cosmos/img/logo.svg", "Cosmos Hotel Group", "+7 495 785 45 45", "RU-0987654321", "https://cosmos-hotel.com" }
+                    { 1, "Сервис для бронирования отелей", "HotelBooking@mail.ru", "Тверская ул., 6с, Москва, 125009, Россия", "https://www.HotelBooking/Logo.svg.png", "Hotel Booking", "+79645873664", "US-517351059", "https://www.HotelBooking.ru" },
+                    { 2, "Международная сеть отелей класса люкс, основанная в 1919 году", "corporate@hilton.com", "7930 Jones Branch Dr, McLean, VA 22102, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Hilton_Logo_2019.svg/1200px-Hilton_Logo_2019.svg.png", "Hilton Worldwide", "+1 800 445 8667", "US-123456789", "https://www.hilton.com" },
+                    { 3, "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами", "info@marriott.com", "10400 Fernwood Rd, Bethesda, MD 20817, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Marriott_International_logo_2019.svg/1280px-Marriott_International_logo_2019.svg.png", "Marriott International", "+1 301 380 3000", "US-987654321", "https://www.marriott.com" },
+                    { 4, "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis", "contact@accor.com", "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Accor_logo_2022.svg/1280px-Accor_logo_2022.svg.png", "Accor Group", "+33 1 45 38 86 00", "FR-789123456", "https://group.accor.com" },
+                    { 5, "Крупнейшая российская гостиничная сеть, основанная в 2010 году", "info@azimuthotels.com", "125040, Москва, Ленинградский проспект, 36", "https://www.azimuthotels.com/local/templates/azimuth_main/img/logo.svg", "Азимут Отели Россия", "+7 495 225 25 25", "RU-1234567890", "https://www.azimuthotels.com" },
+                    { 6, "Российская гостиничная управляющая компания", "booking@cosmos-hotel.com", "150040, Ярославль, ул. Комсомольская, 2", "https://cosmos-hotel.com/local/templates/cosmos/img/logo.svg", "Cosmos Hotel Group", "+7 495 785 45 45", "RU-0987654321", "https://cosmos-hotel.com" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "Id", "CompanyId", "Email", "FirstName", "LastName", "PasswordHash", "Phone", "SecondName" },
+                values: new object[] { 1, null, "qwe@mail.ru", "qwe", "qwe", new byte[] { 113, 119, 101, 113, 119, 101 }, "+79172227890", "qwe" });
 
             migrationBuilder.InsertData(
                 table: "Hotel",
                 columns: new[] { "Id", "Address", "City", "CompanyId", "Description", "ImageUrl", "Name", "Rating" },
                 values: new object[,]
                 {
-                    { 1, "Москва, ул. Ленина, 10", "Москва", 1, "Отель Премиум", "Premium.png", "Отель Премиум", 4.5m },
-                    { 2, "Уфа, ул. Пушкина, 5", "Уфа", 2, "Отель Эконом", "Ekonom.png", "Отель Эконом", 3.8m }
+                    { 1, "Москва, ул. Тверская, 15", "Москва", 1, "Grand Royal Hotel - это идеальное место для тех, кто ценит комфорт и высокий уровень сервиса.  \r\n                                    Расположенный в самом сердце Москвы, отель предлагает просторные номера с современным дизайном и всеми необходимыми удобствами.  \r\n                                    Гости могут насладиться панорамным видом на город из ресторанов на крыше и расслабиться в спа-центре с бассейном и сауной.  \r\n                                    Для деловых путешественников доступны конференц-залы с современным оборудованием.  \r\n                                    Отель также предлагает фитнес-зал, круглосуточную службу консьержа и бесплатный Wi-Fi по всей территории.  \r\n                                    Рядом находятся главные достопримечательности Москвы, включая Красную площадь и Большой театр, что делает Grand Royal отличным выбором как для туристов, так и для бизнесменов.", "HotelPhoto.png", "Grand Royal Hotel", 4.7m },
+                    { 2, "Уфа, ул. Ленина, 45", "Уфа", 2, "Comfort Inn Ufa - уютный и доступный отель, расположенный в живописном районе Уфы.  \r\n                                    Отель предлагает чистые и светлые номера с необходимым набором удобств для комфортного проживания.  \r\n                                    Завтрак включён в стоимость и подаётся в просторном зале с панорамными окнами.  \r\n                                    Гости могут воспользоваться бесплатной парковкой и круглосуточной рецепцией.  \r\n                                    Рядом с отелем находится несколько кафе и магазинов, а до центра города легко добраться на общественном транспорте.  \r\n                                    Comfort Inn Ufa - отличный выбор для тех, кто ищет спокойствие и удобство по разумной цене.", "Premium.png", "Comfort Inn Ufa", 4.0m }
                 });
 
             migrationBuilder.InsertData(
@@ -262,8 +268,9 @@ namespace HotelBooking_API.Migrations
                 columns: new[] { "Id", "CompanyId", "Email", "FirstName", "LastName", "PasswordHash", "Phone", "SecondName" },
                 values: new object[,]
                 {
-                    { 1, 1, "ivan@example.com", "Иван", "Иванович", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 123 456 7890", "Иванов" },
-                    { 2, 2, "maria@example.com", "Мария", "Николаевна", new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, "+7 987 654 3210", "Петрова" }
+                    { 2, 1, "asd@mail.ru", "asd", "asd", new byte[] { 97, 115, 100, 97, 115, 100 }, "+79172227890", "asd" },
+                    { 3, 2, "ivan@example.com", "Иван", "Иванович", new byte[] { 97, 115, 100, 97, 115, 100 }, "+7 123 456 7890", "Иванов" },
+                    { 4, 2, "marias@example.com", "Мария", "Николаевна", new byte[] { 97, 115, 100, 97, 115, 100 }, "+7 987 654 3210", "Петрова" }
                 });
 
             migrationBuilder.InsertData(

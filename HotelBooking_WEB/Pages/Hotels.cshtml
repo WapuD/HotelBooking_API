@@ -1,7 +1,7 @@
 ﻿@page
 @using System.Globalization
 
-@model HotelsModel
+@model HotelBooking_WEB.Pages.HotelsModel
 @{
     ViewData["Title"] = "Главная";
 }
@@ -17,7 +17,13 @@
                 <input type="text" name="SearchName" value="@Model.SearchName" class="form-control" placeholder="Поиск по названию" />
             </div>
             <div class="col-md-3">
-                <input type="text" name="SearchCity" value="@Model.SearchCity" class="form-control" placeholder="Город" />
+                <select name="SearchCity" class="form-select">
+                    <option value="">Все города</option>
+                    @foreach (var city in Model.Cities)
+                    {
+                        <option value="@city" selected="@(Model.SearchCity == city)">@city</option>
+                    }
+                </select>
             </div>
             <div class="col-md-2">
                 <select name="MinRating" class="form-select">
@@ -49,7 +55,8 @@
         </form>
     </div>
 
-    <h1 class="text-center mb-4" style="color: #1a73e8;">Лучшие предложения</h1>
+    <p>Всего найдено отелей: @(Model.Hotels?.Count ?? 0)</p>
+
 
     @if (Model.Hotels != null && Model.Hotels.Any())
     {
@@ -80,7 +87,7 @@
                                             @hotel.Rating
                                         </div>
                                     </div>
-                                    <p class="card-text">@hotel.Description</p>
+                                    <p class="card-text hotel-description">@hotel.Description</p>
                                     <p>Адрес: @hotel.Address</p>
                                     <p>Диапазон цен за ночь: @minPrice - @maxPrice</p>
                                 </div>
@@ -94,7 +101,7 @@
                             </div>
                         </div>
                     </div>
-                 }
+                }
             }
         </div>
     }
@@ -119,24 +126,20 @@
     }
 
     .hotel-card {
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         border-radius: 15px;
         overflow: hidden;
+        min-width: 290px;
     }
 
         .hotel-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
-    
+
     .card-body {
         display: flex;
         flex-direction: column;
-        height: 100%;
-    }
-
-    .card-content {
-        flex-grow: 1;
     }
 
     .book-btn {
@@ -163,19 +166,19 @@
         display: inline-block;
     }
 
-    .star-rating .fa-star {
-        margin: 2px;
-        color: white;
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    }
+        .star-rating .fa-star {
+            margin: 2px;
+            color: white;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        }
 
     .rating-value {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        color: black; 
-        font-size: 1.2em; 
+        color: black;
+        font-size: 1.2em;
         opacity: 0;
         transition: opacity 0.3s ease;
     }
@@ -195,6 +198,14 @@
     .star-rating .fa-star.half-checked {
         color: yellow;
         clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .hotel-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
 
