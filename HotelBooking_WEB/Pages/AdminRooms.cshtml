@@ -7,6 +7,7 @@
 <h1>Список комнат отеля: @Model.HotelName</h1>
 
 <a asp-page="/AdminAddRoom" asp-route-hotelId="@Model.HotelId" class="btn btn-primary mb-3">Добавить комнату</a>
+<a asp-page="/AdminHotels" asp-route-companyId="@Model.CompanyId" class="btn btn-primary mb-3">Назад</a>
 
 <table class="table table-striped">
     <thead>

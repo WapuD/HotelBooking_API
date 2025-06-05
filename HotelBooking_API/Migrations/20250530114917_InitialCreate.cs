@@ -20,8 +20,7 @@ namespace HotelBooking_API.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,12 +53,12 @@ namespace HotelBooking_API.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     City = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Rating = table.Column<decimal>(type: "numeric", nullable: false),
-                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    ImageUrl = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Rating = table.Column<decimal>(type: "numeric", nullable: true),
+                    Description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
+                    ImageUrl = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     CompanyId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -228,12 +227,12 @@ namespace HotelBooking_API.Migrations
 
             migrationBuilder.InsertData(
                 table: "Amenity",
-                columns: new[] { "Id", "Description", "Name" },
+                columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Современный 5G интернет", "Wi-Fi" },
-                    { 2, "Личная кухня и первоклассные повара", "Завтрак" },
-                    { 3, "Прекрасная парковка на 2 машины", "Парковка" }
+                    { 1, "Современный 5G интернет (Wi-Fi)" },
+                    { 2, "Завтрак - Личная кухня и первоклассные повара" },
+                    { 3, "Прекрасная парковка на 2 машины" }
                 });
 
             migrationBuilder.InsertData(
@@ -242,25 +241,22 @@ namespace HotelBooking_API.Migrations
                 values: new object[,]
                 {
                     { 1, "Сервис для бронирования отелей", "HotelBooking@mail.ru", "Тверская ул., 6с, Москва, 125009, Россия", "https://www.HotelBooking/Logo.svg.png", "Hotel Booking", "+79645873664", "US-517351059", "https://www.HotelBooking.ru" },
-                    { 2, "Международная сеть отелей класса люкс, основанная в 1919 году", "corporate@hilton.com", "7930 Jones Branch Dr, McLean, VA 22102, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Hilton_Logo_2019.svg/1200px-Hilton_Logo_2019.svg.png", "Hilton Worldwide", "+1 800 445 8667", "US-123456789", "https://www.hilton.com" },
-                    { 3, "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами", "info@marriott.com", "10400 Fernwood Rd, Bethesda, MD 20817, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Marriott_International_logo_2019.svg/1280px-Marriott_International_logo_2019.svg.png", "Marriott International", "+1 301 380 3000", "US-987654321", "https://www.marriott.com" },
-                    { 4, "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis", "contact@accor.com", "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Accor_logo_2022.svg/1280px-Accor_logo_2022.svg.png", "Accor Group", "+33 1 45 38 86 00", "FR-789123456", "https://group.accor.com" },
-                    { 5, "Крупнейшая российская гостиничная сеть, основанная в 2010 году", "info@azimuthotels.com", "125040, Москва, Ленинградский проспект, 36", "https://www.azimuthotels.com/local/templates/azimuth_main/img/logo.svg", "Азимут Отели Россия", "+7 495 225 25 25", "RU-1234567890", "https://www.azimuthotels.com" },
-                    { 6, "Российская гостиничная управляющая компания", "booking@cosmos-hotel.com", "150040, Ярославль, ул. Комсомольская, 2", "https://cosmos-hotel.com/local/templates/cosmos/img/logo.svg", "Cosmos Hotel Group", "+7 495 785 45 45", "RU-0987654321", "https://cosmos-hotel.com" }
+                    { 2, "Международная сеть отелей класса люкс, основанная в 1919 году", "corporate@hilton.com", "7930 Jones Branch Dr, McLean, VA 22102, США", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Hilton_Logo_2019.svg/1200px-Hilton_Logo_2019.svg.png", "Hilton Worldwide", "+1 800 445 8667", "US-123456789", "https://www.hilton.com" }
                 });
 
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "Id", "CompanyId", "Email", "FirstName", "LastName", "PasswordHash", "Phone", "SecondName" },
-                values: new object[] { 1, null, "qwe@mail.ru", "qwe", "qwe", new byte[] { 113, 119, 101, 113, 119, 101 }, "+79172227890", "qwe" });
+                values: new object[] { 1, null, "Sergei@mail.ru", "Сергей", "Александрович", new byte[] { 97, 115, 100, 97, 115, 100 }, "+79172227890", "Иванов" });
 
             migrationBuilder.InsertData(
                 table: "Hotel",
                 columns: new[] { "Id", "Address", "City", "CompanyId", "Description", "ImageUrl", "Name", "Rating" },
                 values: new object[,]
                 {
-                    { 1, "Москва, ул. Тверская, 15", "Москва", 1, "Grand Royal Hotel - это идеальное место для тех, кто ценит комфорт и высокий уровень сервиса.  \r\n                                    Расположенный в самом сердце Москвы, отель предлагает просторные номера с современным дизайном и всеми необходимыми удобствами.  \r\n                                    Гости могут насладиться панорамным видом на город из ресторанов на крыше и расслабиться в спа-центре с бассейном и сауной.  \r\n                                    Для деловых путешественников доступны конференц-залы с современным оборудованием.  \r\n                                    Отель также предлагает фитнес-зал, круглосуточную службу консьержа и бесплатный Wi-Fi по всей территории.  \r\n                                    Рядом находятся главные достопримечательности Москвы, включая Красную площадь и Большой театр, что делает Grand Royal отличным выбором как для туристов, так и для бизнесменов.", "HotelPhoto.png", "Grand Royal Hotel", 4.7m },
-                    { 2, "Уфа, ул. Ленина, 45", "Уфа", 2, "Comfort Inn Ufa - уютный и доступный отель, расположенный в живописном районе Уфы.  \r\n                                    Отель предлагает чистые и светлые номера с необходимым набором удобств для комфортного проживания.  \r\n                                    Завтрак включён в стоимость и подаётся в просторном зале с панорамными окнами.  \r\n                                    Гости могут воспользоваться бесплатной парковкой и круглосуточной рецепцией.  \r\n                                    Рядом с отелем находится несколько кафе и магазинов, а до центра города легко добраться на общественном транспорте.  \r\n                                    Comfort Inn Ufa - отличный выбор для тех, кто ищет спокойствие и удобство по разумной цене.", "Premium.png", "Comfort Inn Ufa", 4.0m }
+                    { 1, "ул. Тверская, 15", "Москва", 1, "Grand Royal Hotel - это идеальное место для тех, кто ценит комфорт и высокий уровень сервиса. Расположенный в самом сердце Москвы, отель предлагает просторные номера с современным дизайном и всеми необходимыми удобствами. Гости могут насладиться панорамным видом на город из ресторанов на крыше и расслабиться в спа-центре с бассейном и сауной. Для деловых путешественников доступны конференц-залы с современным оборудованием. Отель также предлагает фитнес-зал, круглосуточную службу консьержа и бесплатный Wi-Fi по всей территории. Рядом находятся главные достопримечательности Москвы, включая Красную площадь и Большой театр, что делает Grand Royal отличным выбором как для туристов, так и для бизнесменов.", "https://cf.bstatic.com/xdata/images/hotel/max1024x768/483452095.jpg?k=6bcbc9f9509821add5c51d951a4e6d837eab8d326154142bedb0f20fb4a5c333&o=", "Grand Royal Hotel", 0m },
+                    { 2, "Уфа, ул. Ленина, 45", "Уфа", 1, "Comfort Inn Ufa - уютный и доступный отель, расположенный в живописном районе Уфы. Отель предлагает чистые и светлые номера с необходимым набором удобств для комфортного проживания. Завтрак включён в стоимость и подаётся в просторном зале с панорамными окнами. Гости могут воспользоваться бесплатной парковкой и круглосуточной рецепцией. Рядом с отелем находится несколько кафе и магазинов, а до центра города легко добраться на общественном транспорте. Comfort Inn Ufa - отличный выбор для тех, кто ищет спокойствие и удобство по разумной цене.", "https://cdn.worldota.net/t/640x400/extranet/9e/51/9e51944fa5956df322cc10fce8156e0bcd940280.jpeg", "Comfort Inn Ufa", 0m },
+                    { 3, "Черниковская улица, д.51", "Уфа", 1, "Общая кухня оборудована для самостоятельного приготовления пищи. На территории работает бесплатный Wi-Fi. Уточняйте информацию сразу при заезде. Специально для автопутешественников организована бесплатная парковка. Дополнительно: гладильные услуги. Персонал отеля говорит на русском.", "https://cdn.worldota.net/t/640x400/extranet/ef/a2/efa2fd8ad78697669e4dc12d2d47f052b377f6b8.jpeg", "Малый отель на Черниковской", 0m }
                 });
 
             migrationBuilder.InsertData(
@@ -268,9 +264,10 @@ namespace HotelBooking_API.Migrations
                 columns: new[] { "Id", "CompanyId", "Email", "FirstName", "LastName", "PasswordHash", "Phone", "SecondName" },
                 values: new object[,]
                 {
-                    { 2, 1, "asd@mail.ru", "asd", "asd", new byte[] { 97, 115, 100, 97, 115, 100 }, "+79172227890", "asd" },
-                    { 3, 2, "ivan@example.com", "Иван", "Иванович", new byte[] { 97, 115, 100, 97, 115, 100 }, "+7 123 456 7890", "Иванов" },
-                    { 4, 2, "marias@example.com", "Мария", "Николаевна", new byte[] { 97, 115, 100, 97, 115, 100 }, "+7 987 654 3210", "Петрова" }
+                    { 2, 1, "Ann@mail.ru", "Смирнова", "Сергеевна", new byte[] { 97, 115, 100, 97, 115, 100 }, "+79177222780", "Анна" },
+                    { 3, 2, "ivan@mail.ru", "Иван", "Иванович", new byte[] { 97, 115, 100, 97, 115, 100 }, "+71234567890", "Иванов" },
+                    { 4, 2, "maria@mail.ru", "Мария", "Николаевна", new byte[] { 97, 115, 100, 97, 115, 100 }, "+79876543210", "Петрова" },
+                    { 5, 2, "Miha@gmail.com", "Андрей", "Евгеньевич", new byte[] { 97, 115, 100, 97, 115, 100 }, "+79876543210", "Михайлов" }
                 });
 
             migrationBuilder.InsertData(
@@ -280,7 +277,9 @@ namespace HotelBooking_API.Migrations
                 {
                     { 1, new DateTimeOffset(new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 5, "Отличный отель! Всем рекомендую.", 1 },
                     { 2, new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 4, "Хороший сервис, но дорогой мини-бар.", 2 },
-                    { 3, new DateTimeOffset(new DateTime(2025, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 2, 3, "Усталый номер, требует ремонта.", 1 }
+                    { 3, new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 3, "Всё хорошо, но дорого.", 3 },
+                    { 4, new DateTimeOffset(new DateTime(2025, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 5, "Номер так и просит ремонта", 1 },
+                    { 5, new DateTimeOffset(new DateTime(2025, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), 1, 1, "Достаточно просто, но и цена соответствующая", 1 }
                 });
 
             migrationBuilder.InsertData(

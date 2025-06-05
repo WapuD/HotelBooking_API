@@ -102,10 +102,11 @@
     </form>
 
     @* Форма комнат *@
-    <h1 class="text-center mb-4" style="color: #1a73e8;">Доступные комнаты</h1>
-
     @if (Model.Rooms != null && Model.Rooms.Any() && Model.CheckInDate.HasValue && Model.CheckOutDate.HasValue)
     {
+
+        <h1 class="text-center mb-4" style="color: #1a73e8;">Доступные комнаты</h1>
+
         <div class="row g-4">
             @foreach (var room in Model.Rooms)
             {

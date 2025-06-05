@@ -11,7 +11,7 @@ namespace HotelBooking_API.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(255)]
         public string Name { get; set; }
 
         [Required]
@@ -26,10 +26,10 @@ namespace HotelBooking_API.Data.Models
         public decimal? Rating { get; set; }
 
         [Required]
-        [MaxLength(1000)]
+        [MaxLength(2000)]
         public string Description { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(1000)]
         public string? ImageUrl { get; set; }
 
         // Навигационное свойство для номеров

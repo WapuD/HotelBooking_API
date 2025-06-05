@@ -21,6 +21,7 @@ namespace HotelBooking_WEB.Pages
         public int HotelId { get; set; }
 
         public string HotelName { get; set; }
+        public int CompanyId { get; set; }
         public List<RoomDto> Rooms { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync()
@@ -31,6 +32,7 @@ namespace HotelBooking_WEB.Pages
                 return RedirectToPage("/AdminHotels");
             }
             HotelName = hotel.Name;
+            CompanyId = hotel.CompanyId;
             Rooms = (await _apiClient.GetRoomByHotelId(HotelId)).ToList();
             return Page();
         }

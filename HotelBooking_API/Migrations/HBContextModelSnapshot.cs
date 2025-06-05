@@ -30,11 +30,6 @@ namespace HotelBooking_API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -48,20 +43,17 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Современный 5G интернет",
-                            Name = "Wi-Fi"
+                            Name = "Современный 5G интернет (Wi-Fi)"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Личная кухня и первоклассные повара",
-                            Name = "Завтрак"
+                            Name = "Завтрак - Личная кухня и первоклассные повара"
                         },
                         new
                         {
                             Id = 3,
-                            Description = "Прекрасная парковка на 2 машины",
-                            Name = "Парковка"
+                            Name = "Прекрасная парковка на 2 машины"
                         });
                 });
 
@@ -179,10 +171,28 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTimeOffset(new DateTime(2025, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            HotelId = 2,
+                            CreatedDate = new DateTimeOffset(new DateTime(2025, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            HotelId = 1,
                             Rating = 3,
-                            Text = "Усталый номер, требует ремонта.",
+                            Text = "Всё хорошо, но дорого.",
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedDate = new DateTimeOffset(new DateTime(2025, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            HotelId = 1,
+                            Rating = 5,
+                            Text = "Номер так и просит ремонта",
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedDate = new DateTimeOffset(new DateTime(2025, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            HotelId = 1,
+                            Rating = 1,
+                            Text = "Достаточно просто, но и цена соответствующая",
                             UserId = 1
                         });
                 });
@@ -262,54 +272,6 @@ namespace HotelBooking_API.Migrations
                             Phone = "+1 800 445 8667",
                             TaxId = "US-123456789",
                             Website = "https://www.hilton.com"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами",
-                            Email = "info@marriott.com",
-                            LegalAddress = "10400 Fernwood Rd, Bethesda, MD 20817, США",
-                            LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Marriott_International_logo_2019.svg/1280px-Marriott_International_logo_2019.svg.png",
-                            Name = "Marriott International",
-                            Phone = "+1 301 380 3000",
-                            TaxId = "US-987654321",
-                            Website = "https://www.marriott.com"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis",
-                            Email = "contact@accor.com",
-                            LegalAddress = "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция",
-                            LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Accor_logo_2022.svg/1280px-Accor_logo_2022.svg.png",
-                            Name = "Accor Group",
-                            Phone = "+33 1 45 38 86 00",
-                            TaxId = "FR-789123456",
-                            Website = "https://group.accor.com"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Крупнейшая российская гостиничная сеть, основанная в 2010 году",
-                            Email = "info@azimuthotels.com",
-                            LegalAddress = "125040, Москва, Ленинградский проспект, 36",
-                            LogoUrl = "https://www.azimuthotels.com/local/templates/azimuth_main/img/logo.svg",
-                            Name = "Азимут Отели Россия",
-                            Phone = "+7 495 225 25 25",
-                            TaxId = "RU-1234567890",
-                            Website = "https://www.azimuthotels.com"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "Российская гостиничная управляющая компания",
-                            Email = "booking@cosmos-hotel.com",
-                            LegalAddress = "150040, Ярославль, ул. Комсомольская, 2",
-                            LogoUrl = "https://cosmos-hotel.com/local/templates/cosmos/img/logo.svg",
-                            Name = "Cosmos Hotel Group",
-                            Phone = "+7 495 785 45 45",
-                            TaxId = "RU-0987654321",
-                            Website = "https://cosmos-hotel.com"
                         });
                 });
 
@@ -336,19 +298,19 @@ namespace HotelBooking_API.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("ImageUrl")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
-                    b.Property<decimal>("Rating")
+                    b.Property<decimal?>("Rating")
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
@@ -363,24 +325,35 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 1,
-                            Address = "Москва, ул. Тверская, 15",
+                            Address = "ул. Тверская, 15",
                             City = "Москва",
                             CompanyId = 1,
-                            Description = "Grand Royal Hotel - это идеальное место для тех, кто ценит комфорт и высокий уровень сервиса.  \r\n                                    Расположенный в самом сердце Москвы, отель предлагает просторные номера с современным дизайном и всеми необходимыми удобствами.  \r\n                                    Гости могут насладиться панорамным видом на город из ресторанов на крыше и расслабиться в спа-центре с бассейном и сауной.  \r\n                                    Для деловых путешественников доступны конференц-залы с современным оборудованием.  \r\n                                    Отель также предлагает фитнес-зал, круглосуточную службу консьержа и бесплатный Wi-Fi по всей территории.  \r\n                                    Рядом находятся главные достопримечательности Москвы, включая Красную площадь и Большой театр, что делает Grand Royal отличным выбором как для туристов, так и для бизнесменов.",
-                            ImageUrl = "HotelPhoto.png",
+                            Description = "Grand Royal Hotel - это идеальное место для тех, кто ценит комфорт и высокий уровень сервиса. Расположенный в самом сердце Москвы, отель предлагает просторные номера с современным дизайном и всеми необходимыми удобствами. Гости могут насладиться панорамным видом на город из ресторанов на крыше и расслабиться в спа-центре с бассейном и сауной. Для деловых путешественников доступны конференц-залы с современным оборудованием. Отель также предлагает фитнес-зал, круглосуточную службу консьержа и бесплатный Wi-Fi по всей территории. Рядом находятся главные достопримечательности Москвы, включая Красную площадь и Большой театр, что делает Grand Royal отличным выбором как для туристов, так и для бизнесменов.",
+                            ImageUrl = "https://cf.bstatic.com/xdata/images/hotel/max1024x768/483452095.jpg?k=6bcbc9f9509821add5c51d951a4e6d837eab8d326154142bedb0f20fb4a5c333&o=",
                             Name = "Grand Royal Hotel",
-                            Rating = 4.7m
+                            Rating = 0m
                         },
                         new
                         {
                             Id = 2,
                             Address = "Уфа, ул. Ленина, 45",
                             City = "Уфа",
-                            CompanyId = 2,
-                            Description = "Comfort Inn Ufa - уютный и доступный отель, расположенный в живописном районе Уфы.  \r\n                                    Отель предлагает чистые и светлые номера с необходимым набором удобств для комфортного проживания.  \r\n                                    Завтрак включён в стоимость и подаётся в просторном зале с панорамными окнами.  \r\n                                    Гости могут воспользоваться бесплатной парковкой и круглосуточной рецепцией.  \r\n                                    Рядом с отелем находится несколько кафе и магазинов, а до центра города легко добраться на общественном транспорте.  \r\n                                    Comfort Inn Ufa - отличный выбор для тех, кто ищет спокойствие и удобство по разумной цене.",
-                            ImageUrl = "Premium.png",
+                            CompanyId = 1,
+                            Description = "Comfort Inn Ufa - уютный и доступный отель, расположенный в живописном районе Уфы. Отель предлагает чистые и светлые номера с необходимым набором удобств для комфортного проживания. Завтрак включён в стоимость и подаётся в просторном зале с панорамными окнами. Гости могут воспользоваться бесплатной парковкой и круглосуточной рецепцией. Рядом с отелем находится несколько кафе и магазинов, а до центра города легко добраться на общественном транспорте. Comfort Inn Ufa - отличный выбор для тех, кто ищет спокойствие и удобство по разумной цене.",
+                            ImageUrl = "https://cdn.worldota.net/t/640x400/extranet/9e/51/9e51944fa5956df322cc10fce8156e0bcd940280.jpeg",
                             Name = "Comfort Inn Ufa",
-                            Rating = 4.0m
+                            Rating = 0m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Черниковская улица, д.51",
+                            City = "Уфа",
+                            CompanyId = 1,
+                            Description = "Общая кухня оборудована для самостоятельного приготовления пищи. На территории работает бесплатный Wi-Fi. Уточняйте информацию сразу при заезде. Специально для автопутешественников организована бесплатная парковка. Дополнительно: гладильные услуги. Персонал отеля говорит на русском.",
+                            ImageUrl = "https://cdn.worldota.net/t/640x400/extranet/ef/a2/efa2fd8ad78697669e4dc12d2d47f052b377f6b8.jpeg",
+                            Name = "Малый отель на Черниковской",
+                            Rating = 0m
                         });
                 });
 
@@ -613,45 +586,56 @@ namespace HotelBooking_API.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "qwe@mail.ru",
-                            FirstName = "qwe",
-                            LastName = "qwe",
-                            PasswordHash = new byte[] { 113, 119, 101, 113, 119, 101 },
+                            Email = "Sergei@mail.ru",
+                            FirstName = "Сергей",
+                            LastName = "Александрович",
+                            PasswordHash = new byte[] { 97, 115, 100, 97, 115, 100 },
                             Phone = "+79172227890",
-                            SecondName = "qwe"
+                            SecondName = "Иванов"
                         },
                         new
                         {
                             Id = 2,
                             CompanyId = 1,
-                            Email = "asd@mail.ru",
-                            FirstName = "asd",
-                            LastName = "asd",
+                            Email = "Ann@mail.ru",
+                            FirstName = "Смирнова",
+                            LastName = "Сергеевна",
                             PasswordHash = new byte[] { 97, 115, 100, 97, 115, 100 },
-                            Phone = "+79172227890",
-                            SecondName = "asd"
+                            Phone = "+79177222780",
+                            SecondName = "Анна"
                         },
                         new
                         {
                             Id = 3,
                             CompanyId = 2,
-                            Email = "ivan@example.com",
+                            Email = "ivan@mail.ru",
                             FirstName = "Иван",
                             LastName = "Иванович",
                             PasswordHash = new byte[] { 97, 115, 100, 97, 115, 100 },
-                            Phone = "+7 123 456 7890",
+                            Phone = "+71234567890",
                             SecondName = "Иванов"
                         },
                         new
                         {
                             Id = 4,
                             CompanyId = 2,
-                            Email = "marias@example.com",
+                            Email = "maria@mail.ru",
                             FirstName = "Мария",
                             LastName = "Николаевна",
                             PasswordHash = new byte[] { 97, 115, 100, 97, 115, 100 },
-                            Phone = "+7 987 654 3210",
+                            Phone = "+79876543210",
                             SecondName = "Петрова"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CompanyId = 2,
+                            Email = "Miha@gmail.com",
+                            FirstName = "Андрей",
+                            LastName = "Евгеньевич",
+                            PasswordHash = new byte[] { 97, 115, 100, 97, 115, 100 },
+                            Phone = "+79876543210",
+                            SecondName = "Михайлов"
                         });
                 });
 

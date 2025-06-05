@@ -62,7 +62,7 @@ namespace HotelBooking_WEB.Pages
                 await _apiClient.UpdateUser(User);
                 TempData["DataChangeSuccess"] = true;
                 TempData["DataChangeMessage"] = "Пароль успешно изменён.";
-                await _emailService.SendEmailAsync(HttpContext.Session.GetString("UserEmail").ToString(), "Личный кабинет", "Вы изменили данные вашего профиля. Если это были не вы, смените пароль");
+/*                await _emailService.SendEmailAsync(HttpContext.Session.GetString("UserEmail").ToString(), "Личный кабинет", "Линые данные вашего профиля были успешно изменены");*/
                 return Page();
             }
             catch (Exception ex)

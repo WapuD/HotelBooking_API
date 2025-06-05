@@ -121,6 +121,20 @@ namespace HotelBooking_WEB.Pages
         public async Task<IActionResult> OnPostUpdateStatus(int bookingId, string newStatus)
         {
             await _apiClient.UpdateBookingStatus(bookingId, newStatus);
+
+            /*try
+              {
+                  await _emailService.SendEmailAsync(email.ToString(), "Регистрация", "Статус вашей брони был изменён, проверьте личный кабинет");
+              }
+              catch (SmtpCommandException ex)
+              {
+                  _logger.LogError($"Ошибка SMTP: {ex.Message}");
+              }
+              catch (Exception ex)
+              {
+                  _logger.LogError($"Ошибка отправки письма: {ex.Message}");
+              }*/
+
             return RedirectToPage("/AdminBookings");
         }
     }
