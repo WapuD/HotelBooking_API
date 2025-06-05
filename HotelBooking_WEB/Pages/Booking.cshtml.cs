@@ -48,7 +48,7 @@ namespace HotelBooking_WEB.Pages
                 roomId = Convert.ToInt32(HttpContext.Session.GetString("RoomId"));
             HttpContext.Session.SetString("RoomId", roomId.ToString());
 
-            Room = await _apiClient.GetRoomById(roomId); // Возвращает RoomDto
+            Room = await _apiClient.GetRoomById(roomId);
             RoomId = roomId;
 
             var bookings = await _apiClient.GetBookingsByRoomId(roomId);

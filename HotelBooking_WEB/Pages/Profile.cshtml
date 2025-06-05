@@ -49,11 +49,11 @@
                         <input type="tel" class="form-control" id="phone" asp-for="User.Phone" required>
                     </div>
 
-                    <button type="submit" class="btn btn-primary save-btn"><i class="fa fa-save me-2"></i>Сохранить</button>
+                    <button type="submit" class="btn btn-light save-btn"><i class="fa fa-save me-2"></i>Сохранить</button>
 
-                    <button type="button" class="btn btn-warning save-btn" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Изменить пароль</button>
+                    <button type="button" class="btn btn-primary save-btn" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Изменить пароль</button>
 
-                    <a asp-page="/Bookings" class="btn btn-success my-bookings-btn">
+                    <a asp-page="/Bookings" class="btn btn-danger my-bookings-btn">
                         <i class="fa fa-calendar-check me-2"></i>
                         Мои бронирования
                     </a>
@@ -133,8 +133,9 @@
             background-color: #0056b3;
         }
 
-    .btn-warning {
+    .btn-primary {
         margin-top: 10px;
+        border-block-color: black;
     }
 </style>
 

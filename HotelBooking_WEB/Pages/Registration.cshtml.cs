@@ -44,41 +44,48 @@ namespace HotelBooking_WEB.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (ModelState.IsValid)
+            try
             {
-                var newUser = new CreateUserDto
+                if (ModelState.IsValid)
                 {
-                    FirstName = firstName,
-                    SecondName = secondName,
-                    LastName = lastName,
-                    Email = email,
-                    Phone = phoneNumber,
-                    Password = password,
-                    CompanyId = null
-                };
-
-                try
-                {
-                    bool itog = await _apiClient.CreateUser(newUser);
-
-                    if (itog)
-                        return RedirectToPage("/Index");
-                }
-                catch (ApiException ex) // Используйте нужный тип исключения для вашего клиента
-                {
-                    // Например, если вернулся BadRequest
-                    if (ex.StatusCode == HttpStatusCode.BadRequest)
+                    var newUser = new CreateUserDto
                     {
-                        ModelState.AddModelError(string.Empty, "Пользователь с таким email уже существует.");
-                    }
-                    else
+                        FirstName = firstName,
+                        SecondName = secondName,
+                        LastName = lastName,
+                        Email = email,
+                        Phone = phoneNumber,
+                        Password = password,
+                        CompanyId = null
+                    };
+
+                    try
                     {
-                        ModelState.AddModelError(string.Empty, "Ошибка при создании пользователя.");
+                        bool itog = await _apiClient.CreateUser(newUser);
+
+                        if (itog)
+                            return RedirectToPage("/Index");
+                    }
+                    catch (ApiException ex) // Используйте нужный тип исключения для вашего клиента
+                    {
+                        // Например, если вернулся BadRequest
+                        if (ex.StatusCode == HttpStatusCode.BadRequest)
+                        {
+                            ModelState.AddModelError(string.Empty, "Пользователь с таким email уже существует.");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Ошибка при создании пользователя.");
+                        }
                     }
                 }
+
+                return Page();
             }
-
-            return Page();
+            catch
+            {
+                return Page();
+            }
         }
 
     }

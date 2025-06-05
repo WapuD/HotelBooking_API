@@ -84,6 +84,7 @@ namespace HotelBooking_API.Controllers
             var bookings = await _context.Booking
                 .Include(b => b.User)
                 .Include(b => b.Room)
+                    .ThenInclude(r => r.Hotel)
                 .Where(b => b.UserId == userId)
                 .ToListAsync();
 

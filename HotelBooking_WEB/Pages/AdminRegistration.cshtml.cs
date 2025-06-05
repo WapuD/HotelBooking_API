@@ -54,24 +54,31 @@ namespace HotelBooking_WEB.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (ModelState.IsValid)
+            try
             {
-                var newUser = new CreateUserDto
+                if (ModelState.IsValid)
                 {
-                    FirstName = firstName,
-                    SecondName = secondName,
-                    LastName = lastName,
-                    Email = email,
-                    Phone = phoneNumber,
-                    Password = password,
-                    CompanyId = CompanyId
-                };
-                bool itog = await _apiClient.CreateUser(newUser);
-                if (itog)
-                    return RedirectToPage("/AdminBookings");
+                    var newUser = new CreateUserDto
+                    {
+                        FirstName = firstName,
+                        SecondName = secondName,
+                        LastName = lastName,
+                        Email = email,
+                        Phone = phoneNumber,
+                        Password = password,
+                        CompanyId = CompanyId
+                    };
+                    bool itog = await _apiClient.CreateUser(newUser);
+                    if (itog)
+                        return RedirectToPage("/AdminBookings");
+                }
+                Companies = (await _apiClient.GetCompaniesAsync()).ToList();
+                return RedirectToPage("/AdminBookings");
             }
-            Companies = (await _apiClient.GetCompaniesAsync()).ToList();
-            return Page();
+            catch
+            {
+                return Page();
+            }
         }
     }
 }

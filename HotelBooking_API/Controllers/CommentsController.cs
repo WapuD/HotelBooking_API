@@ -96,8 +96,18 @@ namespace HotelBooking_API.Controllers
         {
             comment.User = await _context.User.FindAsync(comment.UserId);
             comment.Hotel = await _context.Hotel.FindAsync(comment.HotelId);
+            var commentNew = new Comment
+            {
+                Hotel = comment.Hotel,
+                User = comment.User,
+                CreatedDate = comment.CreatedDate,
+                HotelId = comment.HotelId,
+                Rating = comment.Rating,
+                Text = comment.Text,
+                UserId = comment.UserId
+            };
 
-            _context.Comment.Add(comment);
+            _context.Comment.Add(commentNew);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
