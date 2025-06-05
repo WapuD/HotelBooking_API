@@ -12,31 +12,38 @@ namespace HotelBooking_API.Data.Models
 
         [Required]
         [MaxLength(100)]
+        [Display(Name = "Название компании")]
         public string Name { get; set; }
 
         [MaxLength(500)]
+        [Display(Name = "Описание")]
         public string Description { get; set; }
 
         [EmailAddress]
         [MaxLength(100)]
+        [Display(Name = "Электронная почта")]
         public string Email { get; set; }
 
         [Phone]
         [MaxLength(20)]
+        [Display(Name = "Телефон")]
         public string Phone { get; set; }
 
         [MaxLength(200)]
+        [Display(Name = "Веб-сайт")]
         public string Website { get; set; }
 
         [MaxLength(200)]
+        [Display(Name = "Логотип (URL)")]
         public string? LogoUrl { get; set; }
 
         [MaxLength(20)]
+        [Display(Name = "ИНН")]
         public string TaxId { get; set; }
 
         [MaxLength(100)]
+        [Display(Name = "Юридический адрес")]
         public string LegalAddress { get; set; }
-
 
         [JsonIgnore]
         public ICollection<Hotel>? Hotels { get; set; }

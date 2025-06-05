@@ -64,6 +64,15 @@
         [Post("/RoomImages")]
         Task<RoomImages> PostRoomImage([Body] RoomImages roomImage);
 
+        [Delete("/{id}")]
+        Task<IActionResult> DeleteRoom(int id);
+
+        [Put("/Rooms/{id}")]
+        Task UpdateRoom(int id, [Body] RoomDto roomDto);
+
+        [Get("/Rooms/HotelIdByRoom/{roomId}")]
+        Task<int?> GetHotelIdByRoomIdAsync(int roomId);
+
 
         // --- Комментарии ---
         [Get("/Comments/Hotel/{hotelId}")]

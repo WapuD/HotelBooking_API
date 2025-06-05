@@ -131,37 +131,42 @@ namespace HotelBooking_API.Controllers
         }
 
 
+        // Метод для получения HotelId по id комнаты
+        [HttpGet("HotelIdByRoom/{roomId}")]
+        public async Task<int?> GetHotelIdByRoomIdAsync(int roomId)
+        {
+            var room = await _context.Room.FirstOrDefaultAsync(r => r.Id == roomId);
+            return room.HotelId;
+        }
+
 
         // PUT: api/Rooms/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(int id, Room room)
+        public async Task<IActionResult> PutRoom(int id, RoomDto roomDto)
         {
-            if (id != room.Id)
+            if (id != roomDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(room).State = EntityState.Modified;
+            var existingRoom = await _context.Room.FindAsync(id);
+            if (existingRoom == null)
+            {
+                return NotFound();
+            }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            existingRoom.RoomName = roomDto.RoomName;
+            existingRoom.PricePerNight = roomDto.PricePerNight;
+            existingRoom.Capacity = roomDto.Capacity;
+            existingRoom.Description = roomDto.Description;
+            existingRoom.Count = roomDto.Count;
+
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
+
+
 
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

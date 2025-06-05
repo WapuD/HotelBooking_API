@@ -121,54 +121,6 @@ namespace HotelBooking_API.Data
                     LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Hilton_Logo_2019.svg/1200px-Hilton_Logo_2019.svg.png",
                     TaxId = "US-123456789",
                     LegalAddress = "7930 Jones Branch Dr, McLean, VA 22102, США"
-                },
-                new Company
-                {
-                    Id = 3,
-                    Name = "Marriott International",
-                    Description = "Крупнейшая гостиничная сеть мира, управляющая более чем 8000 объектами",
-                    Email = "info@marriott.com",
-                    Phone = "+1 301 380 3000",
-                    Website = "https://www.marriott.com",
-                    LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Marriott_International_logo_2019.svg/1280px-Marriott_International_logo_2019.svg.png",
-                    TaxId = "US-987654321",
-                    LegalAddress = "10400 Fernwood Rd, Bethesda, MD 20817, США"
-                },
-                new Company
-                {
-                    Id = 4,
-                    Name = "Accor Group",
-                    Description = "Французская гостиничная группа, управляющая брендами Sofitel, Novotel, Ibis",
-                    Email = "contact@accor.com",
-                    Phone = "+33 1 45 38 86 00",
-                    Website = "https://group.accor.com",
-                    LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Accor_logo_2022.svg/1280px-Accor_logo_2022.svg.png",
-                    TaxId = "FR-789123456",
-                    LegalAddress = "82 rue Henri Farman, 92130 Issy-les-Moulineaux, Франция"
-                },
-                new Company
-                {
-                    Id = 5,
-                    Name = "Азимут Отели Россия",
-                    Description = "Крупнейшая российская гостиничная сеть, основанная в 2010 году",
-                    Email = "info@azimuthotels.com",
-                    Phone = "+7 495 225 25 25",
-                    Website = "https://www.azimuthotels.com",
-                    LogoUrl = "https://www.azimuthotels.com/local/templates/azimuth_main/img/logo.svg",
-                    TaxId = "RU-1234567890",
-                    LegalAddress = "125040, Москва, Ленинградский проспект, 36"
-                },
-                new Company
-                {
-                    Id = 6,
-                    Name = "Cosmos Hotel Group",
-                    Description = "Российская гостиничная управляющая компания",
-                    Email = "booking@cosmos-hotel.com",
-                    Phone = "+7 495 785 45 45",
-                    Website = "https://cosmos-hotel.com",
-                    LogoUrl = "https://cosmos-hotel.com/local/templates/cosmos/img/logo.svg",
-                    TaxId = "RU-0987654321",
-                    LegalAddress = "150040, Ярославль, ул. Комсомольская, 2"
                 }
             );
 
@@ -195,10 +147,28 @@ namespace HotelBooking_API.Data
                 new Comment
                 {
                     Id = 3,
-                    UserId = 1,
-                    HotelId = 2,
+                    UserId = 3,
+                    HotelId = 1,
                     Rating = 3,
-                    Text = "Усталый номер, требует ремонта.",
+                    Text = "Всё хорошо, но дорого.",
+                    CreatedDate = new DateTime(2025, 4, 10, 0, 0, 0, DateTimeKind.Utc)
+                },
+                new Comment
+                {
+                    Id = 4,
+                    UserId = 1,
+                    HotelId = 1,
+                    Rating = 5,
+                    Text = "Номер так и просит ремонта",
+                    CreatedDate = new DateTime(2025, 4, 20, 0, 0, 0, DateTimeKind.Utc)
+                },
+                new Comment
+                {
+                    Id = 5,
+                    UserId = 1,
+                    HotelId = 1,
+                    Rating = 1,
+                    Text = "Достаточно просто, но и цена соответствующая",
                     CreatedDate = new DateTime(2025, 4, 20, 0, 0, 0, DateTimeKind.Utc)
                 }
             );
@@ -207,10 +177,10 @@ namespace HotelBooking_API.Data
                 new User
                 {
                     Id = 1,
-                    FirstName = "qwe",
-                    SecondName = "qwe",
-                    LastName = "qwe",
-                    Email = "qwe@mail.ru",
+                    FirstName = "Сергей",
+                    SecondName = "Иванов",
+                    LastName = "Александрович",
+                    Email = "Sergei@mail.ru",
                     Phone = "+79172227890",
                     CompanyId = null,
                     PasswordHash = Encoding.UTF8.GetBytes("qweqwe")
@@ -218,11 +188,11 @@ namespace HotelBooking_API.Data
                 new User
                 {
                     Id = 2,
-                    FirstName = "asd",
-                    SecondName = "asd",
-                    LastName = "asd",
-                    Email = "asd@mail.ru",
-                    Phone = "+79172227890",
+                    FirstName = "Смирнова",
+                    SecondName = "Анна",
+                    LastName = "Сергеевна",
+                    Email = "Ann@mail.ru",
+                    Phone = "+79177222780",
                     CompanyId = 1,
                     PasswordHash = Encoding.UTF8.GetBytes("asdasd")
                 },
@@ -232,8 +202,8 @@ namespace HotelBooking_API.Data
                     FirstName = "Иван",
                     SecondName = "Иванов",
                     LastName = "Иванович",
-                    Email = "ivan@example.com",
-                    Phone = "+7 123 456 7890",
+                    Email = "ivan@mail.ru",
+                    Phone = "+71234567890",
                     CompanyId = 2,
                     PasswordHash = Encoding.UTF8.GetBytes("asdasd")
                 },
@@ -243,8 +213,19 @@ namespace HotelBooking_API.Data
                     FirstName = "Мария",
                     SecondName = "Петрова",
                     LastName = "Николаевна",
-                    Email = "marias@example.com",
-                    Phone = "+7 987 654 3210",
+                    Email = "maria@mail.ru",
+                    Phone = "+79876543210",
+                    CompanyId = 2,
+                    PasswordHash = Encoding.UTF8.GetBytes("asdasd")
+                },
+                new User
+                {
+                    Id = 5,
+                    FirstName = "Андрей",
+                    SecondName = "Михайлов",
+                    LastName = "Евгеньевич",
+                    Email = "Miha@gmail.com",
+                    Phone = "+79876543210",
                     CompanyId = 2,
                     PasswordHash = Encoding.UTF8.GetBytes("asdasd")
                 }
@@ -256,32 +237,66 @@ namespace HotelBooking_API.Data
                     Id = 1,
                     Name = "Grand Royal Hotel",
                     CompanyId = 1,
-                    Description = @"Grand Royal Hotel - это идеальное место для тех, кто ценит комфорт и высокий уровень сервиса.  
-                                    Расположенный в самом сердце Москвы, отель предлагает просторные номера с современным дизайном и всеми необходимыми удобствами.  
-                                    Гости могут насладиться панорамным видом на город из ресторанов на крыше и расслабиться в спа-центре с бассейном и сауной.  
-                                    Для деловых путешественников доступны конференц-залы с современным оборудованием.  
-                                    Отель также предлагает фитнес-зал, круглосуточную службу консьержа и бесплатный Wi-Fi по всей территории.  
-                                    Рядом находятся главные достопримечательности Москвы, включая Красную площадь и Большой театр, что делает Grand Royal отличным выбором как для туристов, так и для бизнесменов.",
-                    Address = "Москва, ул. Тверская, 15",
+                    Description = @"Grand Royal Hotel - это идеальное место для тех, кто ценит комфорт и высокий уровень сервиса. Расположенный в самом сердце Москвы, отель предлагает просторные номера с современным дизайном и всеми необходимыми удобствами. Гости могут насладиться панорамным видом на город из ресторанов на крыше и расслабиться в спа-центре с бассейном и сауной. Для деловых путешественников доступны конференц-залы с современным оборудованием. Отель также предлагает фитнес-зал, круглосуточную службу консьержа и бесплатный Wi-Fi по всей территории. Рядом находятся главные достопримечательности Москвы, включая Красную площадь и Большой театр, что делает Grand Royal отличным выбором как для туристов, так и для бизнесменов.",
+                    Address = "ул. Тверская, 15",
                     City = "Москва",
-                    ImageUrl = "HotelPhoto.png",
-                    Rating = 4.7M
+                    ImageUrl = "https://cf.bstatic.com/xdata/images/hotel/max1024x768/483452095.jpg?k=6bcbc9f9509821add5c51d951a4e6d837eab8d326154142bedb0f20fb4a5c333&o=",
+                    Rating = 0
                 },
                 new Hotel
                 {
                     Id = 2,
                     Name = "Comfort Inn Ufa",
-                    CompanyId = 2,
-                    Description = @"Comfort Inn Ufa - уютный и доступный отель, расположенный в живописном районе Уфы.  
-                                    Отель предлагает чистые и светлые номера с необходимым набором удобств для комфортного проживания.  
-                                    Завтрак включён в стоимость и подаётся в просторном зале с панорамными окнами.  
-                                    Гости могут воспользоваться бесплатной парковкой и круглосуточной рецепцией.  
-                                    Рядом с отелем находится несколько кафе и магазинов, а до центра города легко добраться на общественном транспорте.  
-                                    Comfort Inn Ufa - отличный выбор для тех, кто ищет спокойствие и удобство по разумной цене.",
+                    CompanyId = 1,
+                    Description = @"Comfort Inn Ufa - уютный и доступный отель, расположенный в живописном районе Уфы. Отель предлагает чистые и светлые номера с необходимым набором удобств для комфортного проживания. Завтрак включён в стоимость и подаётся в просторном зале с панорамными окнами. Гости могут воспользоваться бесплатной парковкой и круглосуточной рецепцией. Рядом с отелем находится несколько кафе и магазинов, а до центра города легко добраться на общественном транспорте. Comfort Inn Ufa - отличный выбор для тех, кто ищет спокойствие и удобство по разумной цене.",
                     Address = "Уфа, ул. Ленина, 45",
                     City = "Уфа",
-                    ImageUrl = "Premium.png",
-                    Rating = 4.0M
+                    ImageUrl = "https://cdn.worldota.net/t/640x400/extranet/9e/51/9e51944fa5956df322cc10fce8156e0bcd940280.jpeg",
+                    Rating = 0
+                },
+                new Hotel
+                {
+                    Id = 3,
+                    Name = "Малый отель на Черниковской",
+                    CompanyId = 1,
+                    Description = @"Общая кухня оборудована для самостоятельного приготовления пищи. На территории работает бесплатный Wi-Fi. Уточняйте информацию сразу при заезде. Специально для автопутешественников организована бесплатная парковка. Дополнительно: гладильные услуги. Персонал отеля говорит на русском.",
+                    Address = "Черниковская улица, д.51",
+                    City = "Уфа",
+                    ImageUrl = "https://cdn.worldota.net/t/640x400/extranet/ef/a2/efa2fd8ad78697669e4dc12d2d47f052b377f6b8.jpeg",
+                    Rating = 0
+                },
+                new Hotel
+                {
+                    Id = 4,
+                    Name = "",
+                    CompanyId = 1,
+                    Description = @"",
+                    Address = "",
+                    City = "Уфа",
+                    ImageUrl = "",
+                    Rating = 0
+                },
+                new Hotel
+                {
+                    Id = 5,
+                    Name = "",
+                    CompanyId = 1,
+                    Description = @"",
+                    Address = "",
+                    City = "Уфа",
+                    ImageUrl = "",
+                    Rating = 0
+                },
+                new Hotel
+                {
+                    Id = 6,
+                    Name = "",
+                    CompanyId = 1,
+                    Description = @"",
+                    Address = "",
+                    City = "Уфа",
+                    ImageUrl = "",
+                    Rating = 0
                 }
             );
 

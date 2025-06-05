@@ -1,0 +1,49 @@
+﻿@page "{id:int}"
+@model HotelBooking_WEB.Pages.AdminEditRoomModel
+@{
+    ViewData["Title"] = "Редактировать номер";
+}
+
+<h1>Редактировать номер</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="Room.Id" />
+    <input type="hidden" asp-for="HotelId" />
+
+    <div class="form-group">
+        <label asp-for="Room.RoomName"></label>
+        <input asp-for="Room.RoomName" class="form-control" />
+        <span asp-validation-for="Room.RoomName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Room.PricePerNight"></label>
+        <input asp-for="Room.PricePerNight" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Room.PricePerNight" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Room.Capacity"></label>
+        <input asp-for="Room.Capacity" class="form-control" type="number" min="1" max="10" />
+        <span asp-validation-for="Room.Capacity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Room.Description"></label>
+        <textarea asp-for="Room.Description" class="form-control"></textarea>
+        <span asp-validation-for="Room.Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Room.Count"></label>
+        <input asp-for="Room.Count" class="form-control" type="number" min="0" />
+        <span asp-validation-for="Room.Count" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a asp-page="/AdminRooms" asp-route-hotelId="HotelId" class="btn btn-secondary">Отмена</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

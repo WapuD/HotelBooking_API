@@ -10,26 +10,30 @@ namespace HotelBooking_API.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [ForeignKey("Hotel")] // Внешний ключ
+        [ForeignKey("Hotel")]
         public int HotelId { get; set; }
 
         [Required]
         [MaxLength(100)]
+        [Display(Name = "Название комнаты")]
         public string RoomName { get; set; }
         
         [Required]
+        [Display(Name = "Цена за ночь")]
         public decimal PricePerNight { get; set; }
 
-        [Range(1, 10)] // Ограничение для вместимости
+        [Range(1, 10)]
+        [Display(Name = "Вместимость")]
         public int Capacity { get; set; }
 
         [Required]
         [MaxLength(500)]
+        [Display(Name = "Описание")]
         public string Description { get; set; }
 
+        [Display(Name = "Количество")]
         public int Count { get; set; }
 
-        // Навигационные свойства
         public Hotel? Hotel { get; set; }
 
         [JsonIgnore]
@@ -41,10 +45,20 @@ namespace HotelBooking_API.Data.Models
     public class RoomDto
     {
         public int Id { get; set; }
+
+        [Display(Name = "Название комнаты")]
         public string RoomName { get; set; }
+
+        [Display(Name = "Цена за ночь")]
         public decimal PricePerNight { get; set; }
+
+        [Display(Name = "Вместимость")]
         public int Capacity { get; set; }
+
+        [Display(Name = "Описание")]
         public string Description { get; set; }
+
+        [Display(Name = "Количество")]
         public int Count { get; set; }
 
         public List<AmenityDto> Amenities { get; set; } = new();

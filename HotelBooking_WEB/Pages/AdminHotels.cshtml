@@ -26,8 +26,15 @@
                 <td>@hotel.City</td>
                 <td>@hotel.Rating</td>
                 <td>
-                    <a asp-page="/AdminEditHotel" asp-route-id="@hotel.Id" class="btn btn-sm btn-warning">Редактировать</a>
-                    <a asp-page="/RoomsList" asp-route-hotelId="@hotel.Id" class="btn btn-sm btn-secondary">Номера</a>
+                    @{
+                        var companyId = HttpContext.Session.GetString("CompanyId");
+                        var userEmail = HttpContext.Session.GetString("UserEmail");
+                    }
+                    @if (Int32.Parse(companyId) != 1)
+                    {
+                        <a asp-page="/AdminEditHotel" asp-route-id="@hotel.Id" class="btn btn-sm btn-warning">Редактировать</a>
+                    }
+                    <a asp-page="/AdminRooms" asp-route-hotelId="@hotel.Id" class="btn btn-sm btn-secondary">Номера</a>
                     <form method="post" asp-page-handler="Delete" asp-route-id="@hotel.Id" class="d-inline" onsubmit="return confirm('Удалить отель?');">
                         <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
                     </form>
