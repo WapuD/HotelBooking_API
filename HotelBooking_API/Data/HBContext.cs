@@ -183,7 +183,7 @@ namespace HotelBooking_API.Data
                     Email = "Sergei@mail.ru",
                     Phone = "+79172227890",
                     CompanyId = null,
-                    PasswordHash = Encoding.UTF8.GetBytes("qweqwe")
+                    PasswordHash = Encoding.UTF8.GetBytes("asdasd")
                 },
                 new User
                 {
@@ -263,39 +263,6 @@ namespace HotelBooking_API.Data
                     Address = "Черниковская улица, д.51",
                     City = "Уфа",
                     ImageUrl = "https://cdn.worldota.net/t/640x400/extranet/ef/a2/efa2fd8ad78697669e4dc12d2d47f052b377f6b8.jpeg",
-                    Rating = 0
-                },
-                new Hotel
-                {
-                    Id = 4,
-                    Name = "",
-                    CompanyId = 1,
-                    Description = @"",
-                    Address = "",
-                    City = "Уфа",
-                    ImageUrl = "",
-                    Rating = 0
-                },
-                new Hotel
-                {
-                    Id = 5,
-                    Name = "",
-                    CompanyId = 1,
-                    Description = @"",
-                    Address = "",
-                    City = "Уфа",
-                    ImageUrl = "",
-                    Rating = 0
-                },
-                new Hotel
-                {
-                    Id = 6,
-                    Name = "",
-                    CompanyId = 1,
-                    Description = @"",
-                    Address = "",
-                    City = "Уфа",
-                    ImageUrl = "",
                     Rating = 0
                 }
             );
