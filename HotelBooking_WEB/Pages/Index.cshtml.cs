@@ -41,7 +41,7 @@ namespace HotelBooking_WEB.Pages
                         {
                             HttpContext.Session.SetString("CompanyId", verificationUser.CompanyId.ToString());
                         }
-/*                        try
+                        /*try
                         {
                             await _emailService.SendEmailAsync(email.ToString(), "Регистрация", "Поздравляем вас с регистрацией в сервисе HotelBooking");
                         }
@@ -51,7 +51,7 @@ namespace HotelBooking_WEB.Pages
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError($"Ошибка отправки письма: {ex.Message}");
+                           _logger.LogError($"Ошибка отправки письма: {ex.Message}");
                         }*/
 
                         HttpContext.Session.SetString("UserId", verificationUser.Id.ToString());

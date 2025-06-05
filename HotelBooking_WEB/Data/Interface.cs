@@ -62,7 +62,7 @@
         Task<bool> CreateRoom([Body] Room room);
 
         [Post("/RoomImages")]
-        Task<RoomImages> PostRoomImage([Body] RoomImages roomImage);
+        Task<RoomImages> PostRoomImage([Body] RoomImageCreateDto roomImage);
 
         [Delete("/{id}")]
         Task<IActionResult> DeleteRoom(int id);

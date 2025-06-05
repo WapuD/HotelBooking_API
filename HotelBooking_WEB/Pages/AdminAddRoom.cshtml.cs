@@ -27,6 +27,8 @@ namespace HotelBooking_WEB.Pages
         public async Task OnGet()
         {
             Hotels = await _apiClient.GetHotelsAsync();
+            var companyId = int.Parse(HttpContext.Session.GetString("CompanyId"));
+            Hotels = Hotels.Where(h => h.CompanyId == companyId).ToList();
         }
 
         public async Task<IActionResult> OnPost()
@@ -81,7 +83,7 @@ namespace HotelBooking_WEB.Pages
                     }
 
                     // Сохраняем ссылку в базе
-                    var roomImage = new RoomImages
+                    var roomImage = new RoomImageCreateDto
                     {
                         RoomId = Room.Id,
                         ImageUrl = "/RoomImg/" + fileName.Replace("\\", "/")

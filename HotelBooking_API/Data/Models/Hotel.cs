@@ -47,7 +47,7 @@ namespace HotelBooking_API.Data.Models
     public class HotelDtoCreate
     {
         [Required]
-        [MaxLength(100)]
+        [MaxLength(255)]
         public string Name { get; set; }
 
         [Required]
@@ -55,14 +55,14 @@ namespace HotelBooking_API.Data.Models
         public string Address { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string City { get; set; }
 
         [Range(0, 5)]
         public decimal? Rating { get; set; }
 
         [Required]
-        [MaxLength(255)]
+        [MaxLength(2000)]
         public string Description { get; set; }
 
         [MaxLength(100)]

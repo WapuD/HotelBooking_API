@@ -76,8 +76,13 @@ namespace HotelBooking_API.Controllers
         // POST: api/RoomImages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<RoomImages>> PostRoomImages(RoomImages roomImages)
+        public async Task<ActionResult<RoomImages>> PostRoomImages(RoomImageCreateDto roomImage)
         {
+            var roomImages = new RoomImages
+            {
+                ImageUrl = roomImage.ImageUrl
+            };
+
             roomImages.RoomId = _context.Room.OrderByDescending(r => r.Id).FirstOrDefault().Id;
             roomImages.Room = await _context.Room.FindAsync(roomImages.RoomId);
             _context.RoomImages.Add(roomImages);

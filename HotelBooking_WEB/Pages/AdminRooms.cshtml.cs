@@ -33,6 +33,7 @@ namespace HotelBooking_WEB.Pages
             }
             HotelName = hotel.Name;
             CompanyId = hotel.CompanyId;
+            HttpContext.Session.SetString("CompanyId", CompanyId.ToString());
             Rooms = (await _apiClient.GetRoomByHotelId(HotelId)).ToList();
             return Page();
         }
