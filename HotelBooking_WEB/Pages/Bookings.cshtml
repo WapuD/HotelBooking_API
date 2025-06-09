@@ -2,6 +2,9 @@
 @model HotelBooking_WEB.Pages.BookingsModel
 @{
     ViewData["Title"] = "Мои бронирования";
+
+    var cancelledBookings = Model.Bookings?.Where(b => b.Status == "Отменено").ToList();
+    var activeBookings = Model.Bookings?.Where(b => b.Status != "Отменено").ToList();
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -10,29 +13,38 @@
 <div class="container py-4">
     <h1 class="text-center mb-4" style="color: #1a73e8;">Мои бронирования</h1>
 
-    @if (Model.Bookings != null && Model.Bookings.Any())
+    @* Карточки активных бронирований (все, кроме отменённых) *@
+    @if (activeBookings != null && activeBookings.Any())
     {
-        <ul class="list-group list-group-flush">
-            @foreach (var booking in Model.Bookings)
+        <div class="row g-4 mb-5">
+            @foreach (var booking in activeBookings)
             {
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>
-                        <i class="fa fa-bed me-2"></i>
-                        @booking.Room.RoomName
-                        <span class="text-muted ms-2">#@booking.Id</span>
-                        <span class="text-muted ms-2">#@booking.Room.Hotel.Name</span>
-                    </span>
-                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#bookingModal@booking.Id">
-                        Подробнее
-                    </button>
-                </li>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow">
+                        <img src="@booking.Room.Hotel.ImageUrl" class="card-img-top" alt="@booking.Room.Hotel.Name" onerror="this.onerror=null;this.src='DefaultHotel.png';" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@booking.Room.Hotel.Name</h5>
+                            <p class="card-text">
+                                <strong>Номер:</strong> @booking.Room.RoomName<br />
+                                <strong>Вместимость:</strong> @booking.Room.Capacity человек<br />
+                                <strong>Дата заезда:</strong> @booking.CheckInDate.ToString("dd MMMM yyyy")<br />
+                                <strong>Дата выезда:</strong> @booking.CheckOutDate.ToString("dd MMMM yyyy")<br />
+                                <strong>Общая стоимость:</strong> @booking.TotalPrice.ToString("C")<br />
+                                <strong>Статус:</strong> @booking.Status
+                            </p>
+                            <button type="button" class="btn btn-link mt-auto" data-bs-toggle="modal" data-bs-target="#bookingModal(@booking.Id)">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Модальное окно для этого бронирования -->
-                <div class="modal fade" id="bookingModal@booking.Id" tabindex="-1" aria-labelledby="bookingModalLabel@booking.Id" aria-hidden="true">
+                @* Модальное окно для этого бронирования *@
+                <div class="modal fade" id="bookingModal(@booking.Id)" tabindex="-1" aria-labelledby="bookingModalLabel(@booking.Id)" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="bookingModalLabel@booking.Id">Бронирование #@booking.Id</h5>
+                                <h5 class="modal-title" id="bookingModalLabel(@booking.Id)">Бронирование #@booking.Id</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                             </div>
                             <div class="modal-body">
@@ -79,9 +91,52 @@
                     </div>
                 </div>
             }
+        </div>
+    }
+
+    @* Список отменённых бронирований снизу *@
+    @if (cancelledBookings != null && cancelledBookings.Any())
+    {
+        <h3 class="mb-3" style="color:#1a73e8;">Отменённые бронирования</h3>
+        <ul class="list-group list-group-flush">
+            @foreach (var booking in cancelledBookings)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="fa fa-bed me-2"></i>
+                        @booking.Room.RoomName
+                        <span class="text-muted ms-2">#@booking.Id</span>
+                        <span class="text-muted ms-2">#@booking.Room.Hotel.Name</span>
+                    </span>
+                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#bookingModal(@booking.Id)">
+                        Подробнее
+                    </button>
+                </li>
+
+                @* Модальное окно для отменённого бронирования *@
+                <div class="modal fade" id="bookingModal(@booking.Id)" tabindex="-1" aria-labelledby="bookingModalLabel(@booking.Id)" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="bookingModalLabel(@booking.Id)">Бронирование #@booking.Id</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Номер:</strong> @booking.Room.RoomName (@booking.Room.Capacity человек)</p>
+                                <p><strong>Дата заезда:</strong> @booking.CheckInDate.ToString("dd MMMM yyyy")</p>
+                                <p><strong>Дата выезда:</strong> @booking.CheckOutDate.ToString("dd MMMM yyyy")</p>
+                                <p><strong>Общая стоимость:</strong> @booking.TotalPrice.ToString("C")</p>
+                                <p><strong>Статус:</strong> @booking.Status</p>
+                                @* Для отменённых бронирований обычно нет действий *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </ul>
     }
-    else
+
+    @if ((activeBookings == null || !activeBookings.Any()) && (cancelledBookings == null || !cancelledBookings.Any()))
     {
         <h2 class="text-center mb-4" style="color: #1a73e8;">Бронирований пока нет.</h2>
     }

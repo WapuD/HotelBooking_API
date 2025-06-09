@@ -12,7 +12,6 @@ namespace HotelBooking_WEB.Pages
     {
         private readonly ILogger<IngexModel> _logger;
         private readonly IApiClient _apiClient;
-        private readonly IEmailService _emailService;
 
         [BindProperty]
         public string email { get; set; }
@@ -20,11 +19,10 @@ namespace HotelBooking_WEB.Pages
         public string password { get; set; }
         public string ErrorMessage { get; set; }
 
-        public IngexModel(ILogger<IngexModel> logger, IApiClient apiClient, IEmailService emailService)
+        public IngexModel(ILogger<IngexModel> logger, IApiClient apiClient)
         {
             _logger = logger;
             _apiClient = apiClient;
-            _emailService = emailService;
         }
 
         public async Task<IActionResult> OnPost()
@@ -41,18 +39,6 @@ namespace HotelBooking_WEB.Pages
                         {
                             HttpContext.Session.SetString("CompanyId", verificationUser.CompanyId.ToString());
                         }
-                        /*try
-                        {
-                            await _emailService.SendEmailAsync(email.ToString(), "Регистрация", "Поздравляем вас с регистрацией в сервисе HotelBooking");
-                        }
-                        catch (SmtpCommandException ex)
-                        {
-                            _logger.LogError($"Ошибка SMTP: {ex.Message}");
-                        }
-                        catch (Exception ex)
-                        {
-                           _logger.LogError($"Ошибка отправки письма: {ex.Message}");
-                        }*/
 
                         HttpContext.Session.SetString("UserId", verificationUser.Id.ToString());
                         HttpContext.Session.SetString("UserEmail", verificationUser.Email.ToString());

@@ -1,5 +1,7 @@
 using HotelBooking_API.Data.Models;
 using HotelBooking_WEB.Data;
+using HotelBooking_WEB.Data.Service;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -9,6 +11,7 @@ namespace HotelBooking_WEB.Pages
     {
         private readonly ILogger<BookingsModel> _logger;
         private readonly IApiClient _apiClient;
+        private readonly IEmailService _emailService;
 
         public IEnumerable<Booking> Bookings { get; set; }
         public IEnumerable<Booking> BookingsRedact { get; set; }
@@ -43,10 +46,11 @@ namespace HotelBooking_WEB.Pages
     ?? new Dictionary<string, List<Booking>>();
 
 
-        public AdminBookingsModel(ILogger<BookingsModel> logger, IApiClient apiClient)
+        public AdminBookingsModel(ILogger<BookingsModel> logger, IApiClient apiClient, IEmailService emailService)
         {
             _logger = logger;
             _apiClient = apiClient;
+            _emailService = emailService;
         }
 
         public async Task OnGet()
@@ -120,20 +124,27 @@ namespace HotelBooking_WEB.Pages
         }
         public async Task<IActionResult> OnPostUpdateStatus(int bookingId, string newStatus)
         {
+            var booking = await _apiClient.GetBookingById(bookingId);
+
+            if (booking == null)
+            {
+                ErrorMessage = "Бронирование не найдено.";
+                return RedirectToPage("/AdminBookings");
+            }
+
             await _apiClient.UpdateBookingStatus(bookingId, newStatus);
 
-            /*try
-              {
-                  await _emailService.SendEmailAsync(email.ToString(), "Регистрация", "Статус вашей брони был изменён, проверьте личный кабинет");
-              }
-              catch (SmtpCommandException ex)
-              {
-                  _logger.LogError($"Ошибка SMTP: {ex.Message}");
-              }
-              catch (Exception ex)
-              {
-                  _logger.LogError($"Ошибка отправки письма: {ex.Message}");
-              }*/
+            await _emailService.SendEmailAsync(
+                booking.User.Email,
+                "Изменение статуса бронирования в HotelBooking",
+                $"Уважаемый(ая) {booking.User.SecondName + " " + booking.User.FirstName},<br/><br/>" +
+                $"Ваше бронирование №{booking.Id} {newStatus}.<br/>" +
+                $"Дата заезда: {booking.CheckInDate:dd MMMM yyyy}<br/>" +
+                $"Дата выезда: {booking.CheckOutDate:dd MMMM yyyy}<br/>" +
+                $"Общая стоимость: {booking.TotalPrice:C}<br/><br/>" +
+                "Спасибо, что выбрали HotelBooking.<br/><br/>" +
+                "С уважением,<br/>Команда HotelBooking");
+
 
             return RedirectToPage("/AdminBookings");
         }

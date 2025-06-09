@@ -1,5 +1,7 @@
 using HotelBooking_API.Data.Models;
 using HotelBooking_WEB.Data;
+using HotelBooking_WEB.Data.Service;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -13,6 +15,7 @@ namespace HotelBooking_WEB.Pages
     {
         private readonly ILogger<RegistrationModel> _logger;
         private readonly IApiClient _apiClient;
+        private readonly IEmailService _emailService;
 
         [BindProperty]
         public string email { get; set; }
@@ -32,10 +35,11 @@ namespace HotelBooking_WEB.Pages
         [BindProperty]
         public string password { get; set; }
 
-        public RegistrationModel(ILogger<RegistrationModel> logger, IApiClient apiClient)
+        public RegistrationModel(ILogger<RegistrationModel> logger, IApiClient apiClient, IEmailService emailService)
         {
             _logger = logger;
             _apiClient = apiClient;
+            _emailService = emailService;
         }
 
         public void OnGet()
@@ -62,6 +66,26 @@ namespace HotelBooking_WEB.Pages
                     try
                     {
                         bool itog = await _apiClient.CreateUser(newUser);
+
+
+                        try
+                        {
+                            await _emailService.SendEmailAsync(email.ToString(), "Регистрация в HotelBooking",
+                                "Уважаемый(ая) пользователь,\n\n" +
+                                "Благодарим вас за регистрацию в сервисе HotelBooking.\n" +
+                                "Мы рады приветствовать вас и надеемся, что наш сервис поможет вам удобно и быстро бронировать отели.\n\n" +
+                                "Если у вас возникнут вопросы или потребуется помощь, пожалуйста, свяжитесь с нашей службой поддержки.\n\n" +
+                                "С уважением,\n" +
+                                "Команда HotelBooking");
+                        }
+                        catch (SmtpCommandException ex)
+                        {
+                            _logger.LogError($"Ошибка SMTP: {ex.Message}");
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError($"Ошибка отправки письма: {ex.Message}");
+                        }
 
                         if (itog)
                             return RedirectToPage("/Index");

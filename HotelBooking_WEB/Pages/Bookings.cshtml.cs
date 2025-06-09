@@ -1,5 +1,6 @@
 ﻿using HotelBooking_API.Data.Models;
 using HotelBooking_WEB.Data;
+using HotelBooking_WEB.Data.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
@@ -10,15 +11,15 @@ namespace HotelBooking_WEB.Pages
     {
         private readonly ILogger<BookingsModel> _logger;
         private readonly IApiClient _apiClient;
+        private readonly IEmailService _emailService;
 
         public IEnumerable<Booking> Bookings { get; set; }
-        public Dictionary<int, Comment> UserCommentsByHotel { get; set; } = new();
 
-
-        public BookingsModel(ILogger<BookingsModel> logger, IApiClient apiClient)
+        public BookingsModel(ILogger<BookingsModel> logger, IApiClient apiClient, IEmailService emailService)
         {
             _logger = logger;
             _apiClient = apiClient;
+            _emailService = emailService;
         }
 
         public async Task OnGet()
@@ -48,9 +49,24 @@ namespace HotelBooking_WEB.Pages
                 throw;
             }
         }
-        public async Task<IActionResult> OnPost(int bookingId)
+
+        public async Task<IActionResult> OnPostCancelBooking(int bookingId)
         {
             await _apiClient.UpdateBookingStatus(bookingId, "Отменено");
+
+            var booking = await _apiClient.GetBookingById(bookingId);
+
+            await _emailService.SendEmailAsync(
+                booking.User.Email,
+                "Изменение статуса бронирования в HotelBooking",
+                $"Уважаемый(ая) {booking.User.SecondName + " " + booking.User.FirstName},<br/><br/>" +
+                $"Ваше бронирование №{booking.Id} было отменено.<br/>" +
+                $"Дата заезда: {booking.CheckInDate:dd MMMM yyyy}<br/>" +
+                $"Дата выезда: {booking.CheckOutDate:dd MMMM yyyy}<br/>" +
+                $"Общая стоимость: {booking.TotalPrice:C}<br/><br/>" +
+                "Спасибо, что выбрали HotelBooking.<br/><br/>" +
+                "С уважением,<br/>Команда HotelBooking");
+
             return RedirectToPage("/Bookings");
         }
 
@@ -58,18 +74,18 @@ namespace HotelBooking_WEB.Pages
         {
             try
             {
-                var userId = int.Parse(HttpContext.Session.GetString("UserId"));
-                if (userId == null)
+                var userIdString = HttpContext.Session.GetString("UserId");
+                if (string.IsNullOrEmpty(userIdString))
                 {
                     return RedirectToPage("/Login");
                 }
 
+                var userId = int.Parse(userIdString);
+
                 var comment = new Comment
                 {
                     HotelId = hotelId,
-                    Hotel = null,
                     UserId = userId,
-                    User = null,
                     Rating = rating,
                     Text = text,
                     CreatedDate = DateTimeOffset.UtcNow
@@ -83,7 +99,6 @@ namespace HotelBooking_WEB.Pages
             {
                 _logger.LogError(ex, "Ошибка при добавлении отзыва");
                 ModelState.AddModelError(string.Empty, "Ошибка при добавлении отзыва");
-                // Перезагрузить страницу с ошибкой
                 await OnGet();
                 return Page();
             }

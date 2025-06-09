@@ -80,7 +80,7 @@ namespace HotelBooking_WEB.Pages
             var hotelId = int.Parse(hotelIdStr);
 
             CheckInDate = checkInDate ?? DateTime.Today;
-            CheckOutDate = checkOutDate;
+            CheckOutDate = checkOutDate ?? DateTime.Today.AddDays(1);
 
             var allRooms = await _apiClient.GetRoomByHotelId(hotelId); // Возвращает IEnumerable<RoomDto>
             Hotel = await _apiClient.GetHotelById(hotelId);

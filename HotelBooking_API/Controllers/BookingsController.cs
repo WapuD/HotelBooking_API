@@ -21,6 +21,7 @@ namespace HotelBooking_API.Controllers
             _context = context;
         }
 
+
         // GET: api/Bookings
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetAllBookings(int companyId)
@@ -58,7 +59,8 @@ namespace HotelBooking_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Booking>> GetBooking(int id)
         {
-            var booking = await _context.Booking.FindAsync(id);
+            var booking = await _context.Booking.Include(b => b.User)
+                                                .FirstOrDefaultAsync(b => b.Id == id);
 
             if (booking == null)
             {
@@ -124,7 +126,6 @@ namespace HotelBooking_API.Controllers
                     throw;
                 }
             }
-
             return Ok(new { message = "Booking status updated successfully" });
         }
 
