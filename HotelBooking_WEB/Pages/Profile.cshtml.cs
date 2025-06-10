@@ -52,16 +52,11 @@ namespace HotelBooking_WEB.Pages
 
         public async Task<IActionResult> OnPost()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             try
             {
                 await _apiClient.UpdateUser(User);
                 TempData["DataChangeSuccess"] = true;
-                TempData["DataChangeMessage"] = "Пароль успешно изменён.";
+                TempData["DataChangeMessage"] = "Данные успешно изменены.";
 /*                await _emailService.SendEmailAsync(HttpContext.Session.GetString("UserEmail").ToString(), "Личный кабинет", "Линые данные вашего профиля были успешно изменены");*/
                 return Page();
             }

@@ -54,6 +54,7 @@
                 <option value="Ожидание" selected="@("Ожидание" == Request.Query["StatusFilter"])">Ожидание</option>
                 <option value="Подтверждено" selected="@("Подтверждено" == Request.Query["StatusFilter"])">Подтверждено</option>
                 <option value="Отменено" selected="@("Отменено" == Request.Query["StatusFilter"])">Отменено</option>
+                <option value="Активно" selected="@("Отменено" == Request.Query["StatusFilter"])">Активно</option>
             </select>
         </div>
         <div class="col-md-3">
@@ -72,21 +73,36 @@
 
     @if (Model.BookingsRedact != null && Model.BookingsRedact.Any())
     {
-        <ul class="list-group mb-4">
+        <div class="row g-4 mb-4">
             @foreach (var booking in Model.BookingsRedact)
             {
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>
-                        <i class="fa fa-bed me-2"></i>
-                        @booking.Room.RoomName
-                        <span class="text-muted ms-2">#@booking.Id</span>
-                        <span class="badge bg-warning text-dark ms-3">@booking.Status</span>
-                    </span>
-                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#adminBookingModal(@booking.Id)">
-                        Подробнее
-                    </button>
-                </li>
-
+                <div class="col-md-4">
+                    <div class="card h-100 shadow">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@booking.Room.Hotel.Name <span class="text-muted ms-2">#@booking.Id</span></h5>
+                            <p class="card-text mb-2">
+                                @if (booking.Status == "Активно")
+                                {
+                                    <span class="badge bg-warning text-white" style="background-color: forestgreen !important">@booking.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">@booking.Status</span>
+                                }
+                            </p>
+                            <p class="card-text">
+                                <strong>Номер:</strong> @booking.Room.RoomName<br />
+                                <strong>Дата заезда:</strong> @booking.CheckInDate.ToString("dd MMM yyyy")<br />
+                                <strong>Дата выезда:</strong> @booking.CheckOutDate.ToString("dd MMM yyyy")<br />
+                                <strong>Цена:</strong> @booking.TotalPrice<br />
+                                <strong>Пользователь:</strong> @booking.User.FirstName @booking.User.SecondName @booking.User.LastName
+                            </p>
+                            <button type="button" class="btn btn-link mt-auto" data-bs-toggle="modal" data-bs-target="#adminBookingModal(@booking.Id)">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Модальное окно для управления бронированием -->
                 <div class="modal fade" id="adminBookingModal(@booking.Id)" tabindex="-1" aria-labelledby="adminBookingModalLabel(@booking.Id)" aria-hidden="true">
@@ -122,6 +138,7 @@
                                     <select name="newStatus" class="form-select mb-3">
                                         <option value="Подтверждено">Подтверждено</option>
                                         <option value="Отменено">Отменено</option>
+                                        <option value="Активно">Активно</option>
                                     </select>
                                     <button type="submit" asp-page-handler="UpdateStatus" class="btn btn-primary update-status-btn w-100">
                                         Обновить статус
@@ -132,7 +149,7 @@
                     </div>
                 </div>
             }
-        </ul>
+        </div>
     }
     else
     {
@@ -148,7 +165,7 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span>
                         <i class="fa fa-bed me-2"></i>
-                        @booking.Room.RoomName
+                        @booking.Room.Hotel.Name
                         <span class="text-muted ms-2">#@booking.Id</span>
                         @if (booking.Status == "Подтверждено")
                         {

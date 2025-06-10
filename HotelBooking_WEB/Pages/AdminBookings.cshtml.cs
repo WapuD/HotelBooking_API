@@ -4,6 +4,7 @@ using HotelBooking_WEB.Data.Service;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace HotelBooking_WEB.Pages
 {
@@ -83,11 +84,11 @@ namespace HotelBooking_WEB.Pages
                     "date_desc" => Bookings.OrderByDescending(b => b.CheckInDate).ToList(),
                     "price_asc" => Bookings.OrderBy(b => b.TotalPrice).ToList(),
                     "price_desc" => Bookings.OrderByDescending(b => b.TotalPrice).ToList(),
-                    _ => Bookings.OrderBy(b => b.CheckInDate).ToList(), // date_asc по умолчанию
+                    _ => Bookings.OrderBy(b => b.Room.Hotel.Name).ToList(),
                 };
 
                 // Разделение на активные и завершённые
-                BookingsRedact = Bookings.Where(b => b.Status == "Ожидание").ToList();
+                BookingsRedact = Bookings.Where(b => b.Status == "Ожидание" || b.Status == "Активно").ToList();
                 BookingsList = Bookings.Where(b => b.Status == "Подтверждено" || b.Status == "Отменено").ToList();
 
                 // Статистика
@@ -134,17 +135,30 @@ namespace HotelBooking_WEB.Pages
 
             await _apiClient.UpdateBookingStatus(bookingId, newStatus);
 
-            await _emailService.SendEmailAsync(
-                booking.User.Email,
-                "Изменение статуса бронирования в HotelBooking",
-                $"Уважаемый(ая) {booking.User.SecondName + " " + booking.User.FirstName},<br/><br/>" +
-                $"Ваше бронирование №{booking.Id} {newStatus}.<br/>" +
-                $"Дата заезда: {booking.CheckInDate:dd MMMM yyyy}<br/>" +
-                $"Дата выезда: {booking.CheckOutDate:dd MMMM yyyy}<br/>" +
-                $"Общая стоимость: {booking.TotalPrice:C}<br/><br/>" +
-                "Спасибо, что выбрали HotelBooking.<br/><br/>" +
-                "С уважением,<br/>Команда HotelBooking");
 
+            try
+            {
+                await _emailService.SendEmailAsync(
+                    booking.User.Email,
+                    "Изменение статуса бронирования в HotelBooking",
+                    $"Уважаемый(ая) {booking.User.SecondName + " " + booking.User.FirstName},<br/><br/>" +
+                    $"Ваше бронирование №{booking.Id} {newStatus}.<br/>" +
+                    $"Дата заезда: {booking.CheckInDate:dd MMMM yyyy}<br/>" +
+                    $"Дата выезда: {booking.CheckOutDate:dd MMMM yyyy}<br/>" +
+                    $"Общая стоимость: {booking.TotalPrice:C}<br/><br/>" +
+                    "Спасибо, что выбрали HotelBooking.<br/><br/>" +
+                    "С уважением,<br/>Команда HotelBooking");
+            }
+            catch (SmtpCommandException ex)
+            {
+                _logger.LogError($"Ошибка SMTP: {ex.Message}");
+                return RedirectToPage("/AdminBookings");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Ошибка отправки письма: {ex.Message}");
+                return RedirectToPage("/AdminBookings");
+            }
 
             return RedirectToPage("/AdminBookings");
         }
