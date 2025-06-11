@@ -118,11 +118,15 @@ namespace HotelBooking_WEB.Pages
 
             try
             {
+                TempData["SuccessMessage"] = true;
+                TempData["SuccessMessage"] = "Бронирование успешно создано.";
                 await _apiClient.CreateBooking(bookingDTO);
                 return RedirectToPage("/Bookings");
             }
             catch (ValidationApiException ex)
             {
+                TempData["ErrorMessage"] = false;
+                TempData["ErrorMessage"] = "Произошла ошибка, повторите попытку позже.";
                 _logger.LogError($"Ошибка API: {ex.Content}");
                 ModelState.AddModelError(string.Empty, $"Ошибка сервера: {ex.Content}");
                 return Page();

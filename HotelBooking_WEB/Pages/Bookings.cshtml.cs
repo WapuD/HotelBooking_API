@@ -1,6 +1,7 @@
 ﻿using HotelBooking_API.Data.Models;
 using HotelBooking_WEB.Data;
 using HotelBooking_WEB.Data.Service;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
@@ -56,16 +57,28 @@ namespace HotelBooking_WEB.Pages
 
             var booking = await _apiClient.GetBookingById(bookingId);
 
-            await _emailService.SendEmailAsync(
-                booking.User.Email,
-                "Изменение статуса бронирования в HotelBooking",
-                $"Уважаемый(ая) {booking.User.SecondName + " " + booking.User.FirstName},<br/><br/>" +
-                $"Ваше бронирование №{booking.Id} было отменено.<br/>" +
-                $"Дата заезда: {booking.CheckInDate:dd MMMM yyyy}<br/>" +
-                $"Дата выезда: {booking.CheckOutDate:dd MMMM yyyy}<br/>" +
-                $"Общая стоимость: {booking.TotalPrice:C}<br/><br/>" +
-                "Спасибо, что выбрали HotelBooking.<br/><br/>" +
-                "С уважением,<br/>Команда HotelBooking");
+
+            try
+            {
+                await _emailService.SendEmailAsync(
+                    booking.User.Email,
+                    "Изменение статуса бронирования в HotelBooking",
+                    $"Уважаемый(ая) {booking.User.SecondName + " " + booking.User.FirstName},<br/><br/>" +
+                    $"Ваше бронирование №{booking.Id} было отменено.<br/>" +
+                    $"Дата заезда: {booking.CheckInDate:dd MMMM yyyy}<br/>" +
+                    $"Дата выезда: {booking.CheckOutDate:dd MMMM yyyy}<br/>" +
+                    $"Общая стоимость: {booking.TotalPrice:C}<br/><br/>" +
+                    "Спасибо, что выбрали HotelBooking.<br/><br/>" +
+                    "С уважением,<br/>Команда HotelBooking");
+            }
+            catch (SmtpCommandException ex)
+            {
+                _logger.LogError($"Ошибка SMTP: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Ошибка отправки письма: {ex.Message}");
+            }
 
             return RedirectToPage("/Bookings");
         }
@@ -92,6 +105,9 @@ namespace HotelBooking_WEB.Pages
                 };
 
                 await _apiClient.PostComment(comment);
+
+                TempData["SuccessMessage"] = true;
+                TempData["SuccessMessage"] = "Отзыв успешно добавлен.";
 
                 return RedirectToPage("/Bookings");
             }

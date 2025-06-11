@@ -77,6 +77,8 @@ public class AddCompanyModel : PageModel
         try
         {
             var result = await _apiClient.CreateCompany(NewCompany);
+            TempData["SuccessMessage"] = true;
+            TempData["SuccessMessage"] = "Компания успешно добавлена.";
             if (result)
                 return RedirectToPage("/AdminBookings");
             ModelState.AddModelError("", "Ошибка при добавлении компании.");

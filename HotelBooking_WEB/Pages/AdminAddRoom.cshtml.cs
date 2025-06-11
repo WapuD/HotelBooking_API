@@ -90,6 +90,8 @@ namespace HotelBooking_WEB.Pages
                     };
 
                     await _apiClient.PostRoomImage(roomImage);
+                    TempData["SuccessMessage"] = true;
+                    TempData["SuccessMessage"] = "Комната успешно добавлена.";
                 }
             }
             catch (Exception ex)

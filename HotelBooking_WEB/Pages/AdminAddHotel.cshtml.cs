@@ -86,8 +86,13 @@ namespace HotelBooking_WEB.Pages
 
                 var result = await _apiClient.CreateHotel(newHotel);
 
+                TempData["SuccessMessage"] = true;
+                TempData["SuccessMessage"] = "Отель успешно добавлен.";
+
                 if (!result)
                 {
+                    TempData["ErrorMessage"] = false;
+                    TempData["ErrorMessage"] = "Произошла ошибка, повторите попытку позже.";
                     ModelState.AddModelError(string.Empty, "Ошибка при создании отеля");
                     Companies = (await _apiClient.GetCompaniesAsync()).ToList();
                     return Page();

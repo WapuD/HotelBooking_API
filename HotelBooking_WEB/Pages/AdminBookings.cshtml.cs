@@ -133,6 +133,8 @@ namespace HotelBooking_WEB.Pages
                 return RedirectToPage("/AdminBookings");
             }
 
+            TempData["SuccessMessage"] = true;
+            TempData["SuccessMessage"] = "Статус бронирования успешно обновлён.";
             await _apiClient.UpdateBookingStatus(bookingId, newStatus);
 
 

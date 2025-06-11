@@ -23,7 +23,7 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services
     .AddRefitClient<IApiClient>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:44353/api"));
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7059/api"));
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

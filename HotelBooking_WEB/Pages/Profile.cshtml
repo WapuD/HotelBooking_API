@@ -9,22 +9,6 @@
 <div class="container py-5">
     <h1 class="text-center mb-4" style="color: #1a73e8;">Личный кабинет</h1>
 
-    @if (TempData["PasswordChangeSuccess"] != null && (bool)TempData["PasswordChangeSuccess"])
-    {
-        <div id="passwordChangeAlert" class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 2000; min-width: 350px;" role="alert">
-            @TempData["PasswordChangeMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
-        </div>
-    }
-    @if (TempData["DataChangeSuccess"] != null && (bool)TempData["DataChangeSuccess"])
-    {
-        <div id="passwordChangeAlert" class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 2000; min-width: 350px;" role="alert">
-            @TempData["DataChangeMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
-        </div>
-    }
-
-
     @if (Model.User != null)
     {
         <div class="card shadow profile-card">
