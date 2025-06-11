@@ -30,6 +30,8 @@
         @* Блок отзывов *@
         @if (Model.Comments != null && Model.Comments.Any())
         {
+            <h2 class="text-center mb-4" style="color: forestgreen;">Отзывы</h2>
+
             <div id="commentsCarousel" class="carousel slide mb-1" data-bs-ride="carousel" style="max-width:600px;margin:auto;">
                 <div class="carousel-inner">
                     @for (int i = 0; i < Model.Comments.Count(); i++)
@@ -77,23 +79,23 @@
     @* Форма фильтров *@
     <form method="get">
         <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-2">
                 <label for="checkInDate" class="form-label">Дата заезда:</label>
                 <input type="date" class="form-control" id="checkInDate" name="checkInDate" value="@Model.CheckInDate?.ToString("yyyy-MM-dd")" required min="@DateTime.Now.ToString("yyyy-MM-dd")">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-2">
                 <label for="checkOutDate" class="form-label">Дата выезда:</label>
                 <input type="date" class="form-control" id="checkOutDate" name="checkOutDate" value="@Model.CheckOutDate?.ToString("yyyy-MM-dd")">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label class="form-label">Мин. цена:</label>
                 <input type="number" class="form-control" name="MinPrice" value="@Model.MinPrice" min="0" step="1" />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label class="form-label">Макс. цена:</label>
                 <input type="number" class="form-control" name="MaxPrice" value="@Model.MaxPrice" min="0" step="1" />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label class="form-label">Вместимость:</label>
                 <input type="number" class="form-control" name="FilterCapacity" value="@Model.FilterCapacity" min="1" />
             </div>
